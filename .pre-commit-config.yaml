@@ -13,7 +13,7 @@ repos:
     rev: v1.15.0
     hooks:
       - id: check-autopkg-recipes
-        args: [--recipe-prefix=com.github.smithjw., --strict, --]
+        args: [--recipe-prefix=com.github.smithjw-actions., --strict, --]
       - id: forbid-autopkg-overrides
       - id: forbid-autopkg-trust-info
 
