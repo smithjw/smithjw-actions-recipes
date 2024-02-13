@@ -1,0 +1,100 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://github.com/smithjw/smithjw-actions-recipes/blob/main/smithjw-autopkg-recipe.schema.json",
+    "$comment": "v0.1",
+    "title": "AutoPkg Recipe YAML schema",
+    "description": "A schema for validating autopkg Recipe YAML files. Less opiniated than jgstew's one.",
+    "$ref": "#/definitions/AutoPkgRecipe",
+    "definitions": {
+        "AutoPkgRecipe": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+                "Description": {
+                    "type": "string"
+                },
+                "Identifier": {
+                    "type": "string",
+                    "comment": "No Spaces Allowed",
+                    "pattern": "^[^\\s]*$"
+                },
+                "Input": {
+                    "$ref": "#/definitions/Input"
+                },
+                "MinimumVersion": {
+                    "type": "string",
+                    "comment": "Allow 0.0 through 3.9.9, does not support RC's",
+                    "pattern": "[0-3](\\.\\d){1,2}"
+                },
+                "ParentRecipe": {
+                    "type": "string",
+                    "comment": "No Spaces Allowed",
+                    "pattern": "^[^\\s]*$"
+                },
+                "Process": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Process"
+                    }
+                }
+            },
+            "required": [
+                "Description",
+                "Identifier",
+                "Input",
+                "MinimumVersion"
+            ],
+            "title": "AutoPkgRecipe"
+        },
+        "Input": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+                "NAME": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "NAME"
+            ],
+            "title": "Input"
+        },
+        "Process": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "Processor": {
+                    "type": "string"
+                },
+                "Arguments": {
+                    "$ref": "#/definitions/Arguments"
+                }
+            },
+            "required": [
+                "Processor"
+            ],
+            "title": "Process"
+        },
+        "Arguments": {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "format": "uri"
+                },
+                "re_pattern": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "COMPUTE_HASHES": {
+                    "type": "boolean"
+                }
+            },
+            "required": [],
+            "title": "Arguments"
+        }
+    }
+}
