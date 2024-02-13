@@ -2,8 +2,8 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://github.com/smithjw/smithjw-actions-recipes/blob/main/smithjw-autopkg-recipe.schema.json",
     "$comment": "v0.1",
-    "title": "AutoPkg Recipe YAML schema",
-    "description": "A schema for validating autopkg Recipe YAML files. Less opiniated than jgstew's one.",
+    "title": "autopkg schema for YAML recipes",
+    "description": "A schema for validating autopkg recipes written in YAML. Less opiniated than jgstew's one.",
     "$ref": "#/definitions/AutoPkgRecipe",
     "definitions": {
         "AutoPkgRecipe": {
