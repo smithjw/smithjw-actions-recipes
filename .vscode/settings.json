@@ -1,0 +1,8 @@
+{
+    "yaml.schemas": {
+        "./smithjw-autopkg-recipe.schema.json": [
+            "**.recipe.yaml",
+            "**.recipe.yml"
+        ]
+    }
+}
