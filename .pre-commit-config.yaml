@@ -1,0 +1,30 @@
+---
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-xml
+      - id: check-added-large-files
+
+  - repo: https://github.com/homebysix/pre-commit-macadmin
+    rev: v1.15.0
+    hooks:
+      - id: check-autopkg-recipes
+        args: [--recipe-prefix=com.github.smithjw., --strict, --]
+      - id: forbid-autopkg-overrides
+      - id: forbid-autopkg-trust-info
+
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.34.0
+    hooks:
+      - id: yamllint
+        args: [--format, parsable, --strict]
+
+  - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
+    rev: 0.2.3
+    hooks:
+      - id: yamlfmt
+        args: [--mapping, '2', --sequence, '4', --offset, '2', --width, '80']
