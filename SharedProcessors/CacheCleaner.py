@@ -23,8 +23,15 @@ from autopkglib import Processor, ProcessorError
 __all__ = ["CacheCleaner"]
 
 
-def get_size(folder: str) -> int:
-    dir_size = sum(p.stat().st_size for p in Path(folder).rglob("*"))
+def get_size(folder: str):
+    try:
+        dir_size = sum(p.stat().st_size for p in Path(folder).rglob("*"))
+    except FileNotFoundError:
+        error = (
+            "Either the permissions for the given RECIPE_CACHE_DIR are incorect"
+            "or we're looking at the incorrect directory."
+        )
+        raise ProcessorError(error) from None
 
     for unit in ("B", "K", "M", "G", "T"):  # noqa: B007
         if dir_size < 1024:
@@ -33,6 +40,19 @@ def get_size(folder: str) -> int:
     readable_size = f"{dir_size:.1f}{unit}"
 
     return readable_size
+
+
+def convert_bool(value):
+    if isinstance(value, bool):
+        return value
+
+    value = value.lower()
+    if value in ("y", "yes", "t", "true", "on", "1"):
+        return True
+    elif value in ("n", "no", "f", "false", "off", "0"):
+        return False
+    else:
+        raise ValueError(f"Invalid input: {value}")
 
 
 class CacheCleaner(Processor):
@@ -68,60 +88,90 @@ class CacheCleaner(Processor):
 
     description = __doc__
 
-    def main(self):
+    def validate_recipe_cache_dir(self, recipe_cache_dir: str) -> Path:
         try:
-            self.recipe_cache_dir = Path(self.env.get("RECIPE_CACHE_DIR", None))
+            cache_dir = recipe_cache_dir.strip()
+            if not cache_dir:
+                raise ProcessorError("RECIPE_CACHE_DIR wasn't set correctly") from None
+        except AttributeError:
+            raise ProcessorError("RECIPE_CACHE_DIR was set to None") from None
+
+        try:
+            cache_dir = Path(cache_dir).resolve()
+
+            if cache_dir == Path(cache_dir.anchor):
+                raise ProcessorError(
+                    "RECIPE_CACHE_DIR is set to the file system root!"
+                ) from None
+
         except TypeError:
             raise ProcessorError("RECIPE_CACHE_DIR not found") from None
 
-        self.file_retention_patterns = (
-            self.env.get("file_retention_patterns")
-            if isinstance(self.env.get("file_retention_patterns"), list)
-            else [self.env.get("file_retention_patterns")]
+        return cache_dir
+
+    def validate_file_retention_patterns(self, file_retention_patterns) -> list:
+        patterns = (
+            file_retention_patterns
+            if isinstance(file_retention_patterns, list)
+            else [file_retention_patterns]
         )
 
-        recipe_cache_dir = Path(self.env["RECIPE_CACHE_DIR"])
-        self.output(f"Looking for files under {recipe_cache_dir}")
+        return patterns
 
-        self.recipe_cache_dir_size = get_size(recipe_cache_dir)
-        self.env["folder_size_pre"] = self.recipe_cache_dir_size
-        self.output(f"Folder size before CacheCleaner: {self.recipe_cache_dir_size}")
+    def main(self):
+        # Inputs
+        self.recipe_cache_dir = self.validate_recipe_cache_dir(
+            self.env.get("RECIPE_CACHE_DIR", None)
+        )
+        self.file_retention_patterns = self.validate_file_retention_patterns(
+            self.env.get("file_retention_patterns")
+        )
+        self.enable_deletion = convert_bool(self.env.get("delete_files_folders"))
 
-        files_to_remove = [
+        self.output(f"RECIPE_CACHE_DIR: {self.recipe_cache_dir}")
+        self.output(f"File retention patterns: {self.file_retention_patterns}")
+        self.output(f"File deletion enabled: {self.enable_deletion}")
+
+        self.folder_size = get_size(self.recipe_cache_dir)
+        self.env["folder_size_pre"] = self.folder_size
+        self.output(f"Folder size before CacheCleaner: {self.folder_size}")
+
+        self.files_to_remove = [
             item
-            for item in recipe_cache_dir.rglob("*")
+            for item in self.recipe_cache_dir.rglob("*")
             if not any(
                 fnmatch(item, pattern) for pattern in self.file_retention_patterns
             )
             and (not item.is_dir() or len(list(item.iterdir())) == 0)
         ]
 
-        self.env["removed_files"] = []
-        removed_files = self.env["removed_files"]
+        self.removed_files = []
 
-        # for item in files_to_remove:
-        #     if not self.env["delete_files_folders"]:
-        #         removed_files.append(str(item))
-        #         continue
+        for item in self.files_to_remove:
+            if not self.enable_deletion:
+                self.removed_files.append(str(item))
+                continue
 
-        #     if item.is_dir():
-        #         self.output(f"Removing directory: {item}")
-        #         item.rmdir()
+            if item.is_dir():
+                self.output(f"Removing directory: {item}")
+                item.rmdir()
 
-        #     if item.is_file():
-        #         self.output(f"Removing file: {item}")
-        #         item.unlink(missing_ok=True)
+            if item.is_file():
+                self.output(f"Removing file: {item}")
+                item.unlink(missing_ok=True)
 
-        #     if item.exists():
-        #         self.output(f"Could not remove {item}")
+            if item.exists():
+                self.output(f"Could not remove {item}")
 
-        #     else:
-        #         removed_files.append(str(item))
+            else:
+                self.removed_files.append(str(item))
 
-        self.recipe_cache_dir_size = get_size(recipe_cache_dir)
-        self.env["folder_size_post"] = self.recipe_cache_dir_size
-        self.output(f"Folder size after CacheCleaner: {self.recipe_cache_dir_size}")
-        self.output(f"Items removed: {removed_files}")
+        self.folder_size = get_size(self.recipe_cache_dir)
+        self.env["folder_size_post"] = self.folder_size
+        self.output(f"Folder size after CacheCleaner: {self.folder_size}")
+
+        self.output(f"Items removed: {self.removed_files}")
+        self.env["removed_files"] = self.removed_files
 
 
 if __name__ == "__main__":
