@@ -21,10 +21,11 @@ repos:
     rev: v1.34.0
     hooks:
       - id: yamllint
-        args: [--format, parsable, --strict]
-
-  - repo: https://github.com/jumanjihouse/pre-commit-hook-yamlfmt
-    rev: 0.2.3
-    hooks:
-      - id: yamlfmt
-        args: [--mapping, '2', --sequence, '4', --offset, '2', --width, '80']
+        args:
+          [
+            --format,
+            parsable,
+            -d,
+            '{extends: default, rules: {line-length: disable}}',
+            --strict,
+          ]
