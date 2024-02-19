@@ -64,12 +64,13 @@ class CacheCleaner(Processor):
 
     input_variables = {
         "RECIPE_CACHE_DIR": {"required": False, "description": ("RECIPE_CACHE_DIR.")},
+        "pkg_uploaded": {"required": False, "description": ("pkg_uploaded.")},
         "file_retention_patterns": {
             "description": "Pattern(s) to identify all files we're retaining",
             "default": ["*.plist", "*.info.json"],
             "required": False,
         },
-        "delete_files_folders": {
+        "dry_run": {
             "description": "Determines if the Processor will attempt to remove items within the cache folder not matching the patterns",
             "default": True,
             "required": False,
@@ -128,11 +129,18 @@ class CacheCleaner(Processor):
         self.file_retention_patterns = self.validate_file_retention_patterns(
             self.env.get("file_retention_patterns")
         )
-        self.enable_deletion = convert_bool(self.env.get("delete_files_folders"))
+        self.pkg_uploaded = convert_bool(self.env.get("pkg_uploaded"))
+        self.dry_run = convert_bool(self.env.get("dry_run"))
+
+        if not self.pkg_uploaded:
+            # If no package was uploaded, exit as we don't want to clean the cache folder
+            self.output(f"Package Uploaded: {self.pkg_uploaded}")
+            self.output("Exiting as no package was uploaded in prior steps")
+            return
 
         self.output(f"RECIPE_CACHE_DIR: {self.recipe_cache_dir}")
         self.output(f"File retention patterns: {self.file_retention_patterns}")
-        self.output(f"File deletion enabled: {self.enable_deletion}")
+        self.output(f"Dry Run: {self.dry_run}")
 
         self.folder_size = get_size(self.recipe_cache_dir)
         self.env["folder_size_pre"] = self.folder_size
@@ -150,7 +158,15 @@ class CacheCleaner(Processor):
         self.removed_files = []
 
         for item in self.files_to_remove:
-            if not self.enable_deletion:
+            # match item:
+            #     case Path.is_dir():
+            #         self.output(f"Removing directory: {item}")
+            #         item.rmdir()
+            #     case Path.is_file():
+            #         self.output(f"Removing file: {item}")
+            #         item.unlink(missing_ok=True)
+
+            if self.dry_run:
                 self.removed_files.append(str(item))
                 continue
 
@@ -164,7 +180,6 @@ class CacheCleaner(Processor):
 
             if item.exists():
                 self.output(f"Could not remove {item}")
-
             else:
                 self.removed_files.append(str(item))
 
