@@ -9,14 +9,14 @@ MinimumVersion: '2.3'
 Input:
   NAME: Microsoft Edge
   SOFTWARE_TITLE: Microsoft_Edge
-  ALL_COMPUTERS: 'true'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
   CATEGORY: Browsers
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
-  POLICY_TEMPLATE: Policy_Template-Default.xml
-  RUN_RECON: 'false'
+  POLICY_TEMPLATE: Policy_Template-Actions.xml
+  POLICY_RUN_RECON: 'false'
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
   SELF_SERVICE_DESCRIPTION:
@@ -26,7 +26,6 @@ Input:
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SELF_SERVICE_INSTALL_BUTTON: Install
   SELF_SERVICE_REINSTALL_BUTTON: Install
-  UPDATE_PREDICATE: pkg_uploaded == False
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
@@ -37,12 +36,9 @@ Process:
     Arguments:
       pkg_category: '%CATEGORY%'
 
-  - Processor: StopProcessingIf
-    Arguments:
-      predicate: '%UPDATE_PREDICATE%'
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
       policy_template: '%POLICY_TEMPLATE%'
       policy_name: '%POLICY_NAME%'
       icon: '%SELF_SERVICE_ICON%'
+      replace_policy: true
