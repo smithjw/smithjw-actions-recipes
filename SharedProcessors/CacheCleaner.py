@@ -43,16 +43,18 @@ def get_size(folder: str):
 
 
 def convert_bool(value):
-    if isinstance(value, bool):
-        return value
+    if isinstance(value, str):
+        value = value.lower()
 
-    value = value.lower()
-    if value in ("y", "yes", "t", "true", "on", "1"):
-        return True
-    elif value in ("n", "no", "f", "false", "off", "0"):
-        return False
-    else:
-        raise ValueError(f"Invalid input: {value}")
+    match value:
+        case bool():
+            return value
+        case "y" | "yes" | "t" | "true" | "on" | "1":
+            return True
+        case "n" | "no" | "f" | "false" | "off" | "0":
+            return False
+        case _:
+            raise ValueError(f"Invalid input: {value}")
 
 
 class CacheCleaner(Processor):
