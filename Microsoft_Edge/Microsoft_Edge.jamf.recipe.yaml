@@ -1,5 +1,5 @@
 ---
-Description:
+Description: |
   Downloads the latest version and makes a pkg. Then, uploads the package to the
   Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.smithjw-actions.jamf.Microsoft_Edge
@@ -9,17 +9,17 @@ MinimumVersion: '2.3'
 Input:
   NAME: Microsoft Edge
   SOFTWARE_TITLE: Microsoft_Edge
-  POLICY_SCOPE_ALL_COMPUTERS: 'true'
   CATEGORY: Browsers
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
-  POLICY_TEMPLATE: Policy_Template-Actions.xml
   POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_TEMPLATE: Policy_Template-Actions.xml
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
-  SELF_SERVICE_DESCRIPTION:
+  SELF_SERVICE_DESCRIPTION: |
     Microsoft Edge is a cross-platform web browser created and developed by
     Microsoft.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
