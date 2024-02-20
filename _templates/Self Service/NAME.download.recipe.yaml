@@ -1,0 +1,27 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.download.Self_Service
+MinimumVersion: '2.3'
+
+Input:
+  NAME: ''
+  SOFTWARE_TITLE: ''
+  DOWNLOAD_URL: ''
+
+Process:
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
+      url: '%DOWNLOAD_URL%'
+      download_missing_file: false
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - ''
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
