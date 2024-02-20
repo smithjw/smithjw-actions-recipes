@@ -2,8 +2,8 @@
 
 - [x] [Mac Admins Python](https://github.com/macadmins/python)
 - [x] [Nudge](https://github.com/macadmins/nudge)
-- [ ] [desktoppr](https://github.com/scriptingosx/desktoppr)
-- [ ] [Support App](https://github.com/root3nl/SupportApp)
+- [x] [desktoppr](https://github.com/scriptingosx/desktoppr)
+- [x] [Support App](https://github.com/root3nl/SupportApp)
 - [ ] [Privileges](https://github.com/SAP/macOS-enterprise-privileges)
 - [ ] [dockutil](https://github.com/kcrawford/dockutil)
 - [ ] [Microsoft Company Portal](https://github.com/autopkg/smithjw-recipes/blob/master/Microsoft/Microsoft_Company_Portal.jamf.recipe.yaml)

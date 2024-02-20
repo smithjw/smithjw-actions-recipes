@@ -9,7 +9,7 @@ Identifier: com.github.smithjw-actions.download.Nudge
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Mac Admins Python
+  NAME: Nudge
   INCLUDE_PRERELEASES: 'True'
 
 Process:
