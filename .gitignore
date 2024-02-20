@@ -2,7 +2,7 @@
 .DS_Store
 __pycache__
 processor.plist
-env/*
+.env/
 
 # Ignore symlinked templates within recipe folders
 */*.xml
