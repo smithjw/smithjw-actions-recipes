@@ -1,26 +1,20 @@
 ---
-Description: |
-  Downloads the most recent signed release pkg of macadmins/nudge from GitHub and
-  uploads it to your Jamf Pro instance.
-
-  In order to get the latest pre-release, set the Input variable INCLUDE_PRERELEASES to a non-empty
-  string (such as 'True'; this is the default). If you just want the latest full release instead,
-  INCLUDE_PRERELEASES must be set to an empty string.
-Identifier: com.github.smithjw-actions.jamf.Nudge
-ParentRecipe: com.github.smithjw-actions.download.Nudge
+Description: ' '
+Identifier: com.github.smithjw-actions.jamf.
+ParentRecipe: com.github.smithjw-actions.pkg.
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Nudge
-  SOFTWARE_TITLE: '%NAME%'
-  CATEGORY: Utilities
-  POLICY_CATEGORY: '%CATEGORY%'
+  NAME:
+  SOFTWARE_TITLE:
+  CATEGORY:
+  POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
   POLICY_RUN_RECON: 'false'
   POLICY_SCOPE_ALL_COMPUTERS: 'true'
-  POLICY_TEMPLATE: Policy_Template-Utilities.xml
+  POLICY_TEMPLATE: Policy_Template-Management_Utilities.xml
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader

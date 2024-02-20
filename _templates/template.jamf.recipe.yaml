@@ -1,7 +1,5 @@
 ---
-Description:
-  Downloads the latest version and makes a pkg. Then, uploads the package to the
-  Jamf Pro Server and creates a Self Service Policy and Smart Group.
+Description: ' '
 Identifier: com.github.smithjw-actions.jamf.
 ParentRecipe: com.github.smithjw-actions.pkg.
 MinimumVersion: '2.3'
@@ -9,14 +7,14 @@ MinimumVersion: '2.3'
 Input:
   NAME:
   SOFTWARE_TITLE:
-  POLICY_SCOPE_ALL_COMPUTERS: 'true'
   CATEGORY:
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
-  POLICY_TEMPLATE: Policy_Template-Actions.xml
   POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_TEMPLATE: Policy_Template-Actions.xml
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
   SELF_SERVICE_DESCRIPTION:
