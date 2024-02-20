@@ -3,3 +3,7 @@
 __pycache__
 processor.plist
 env/*
+
+# Ignore symlinked templates within recipe folders
+*/*.xml
+!/_templates/*
