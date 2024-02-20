@@ -10,6 +10,7 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: Support App
+  SOFTWARE_TITLE: Support_App
   INCLUDE_PRERELEASES: 'True'
 
 Process:
@@ -21,6 +22,7 @@ Process:
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
       download_missing_file: false
 
   - Processor: EndOfCheckPhase
