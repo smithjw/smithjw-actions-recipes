@@ -1,0 +1,35 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.pkg.Privileges
+ParentRecipe: com.github.smithjw-actions.download.Privileges
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Privileges
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/payload/%SOFTWARE_TITLE%.app'
+      target: '%pkgroot%/Applications/%SOFTWARE_TITLE%.app'
+
+  - Processor: PkgCreator
+    Arguments:
+      force_pkg_build: true
+      pkg_request:
+        chown:
+          - group: wheel
+            path: Applications
+            user: root
+        id: com.sap.privileges
+        options: purge_ds_store
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        scripts: scripts
+        version: '%version%'
