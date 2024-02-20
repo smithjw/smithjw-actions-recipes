@@ -33,3 +33,10 @@ Process:
         pkgname: '%SOFTWARE_TITLE%-%version%'
         scripts: scripts
         version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/downloads/unpack'
+        - '%RECIPE_CACHE_DIR%/downloads/payload'

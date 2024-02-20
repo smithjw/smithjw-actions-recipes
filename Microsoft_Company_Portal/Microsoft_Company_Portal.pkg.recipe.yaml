@@ -1,0 +1,42 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.pkg.Microsoft_Company_Portal
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Company_Portal
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft Company Portal
+  SOFTWARE_TITLE: Microsoft_Company_Portal
+  VERSIONTYPE: CFBundleShortVersionString
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/unpack'
+      flat_pkg_path: '%pathname%'
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/CompanyPortal-Component.pkg'
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/payload'
+      pkg_payload_path: '%found_filename%/Payload'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/payload/Applications/Company Portal.app/Contents/Info.plist'
+      plist_version_key: '%VERSIONTYPE%'
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/downloads/unpack'
+        - '%RECIPE_CACHE_DIR%/downloads/payload'
