@@ -1,0 +1,34 @@
+---
+Description: |
+  Downloads the most recent signed release pkg of desktoppr from GitHub.
+
+  In order to get the latest pre-release, set the Input variable INCLUDE_PRERELEASES to a non-empty
+  string (such as 'True'; this is the default). If you just want the latest full release instead,
+  INCLUDE_PRERELEASES must be set to an empty string.
+Identifier: com.github.smithjw-actions.download.desktoppr
+MinimumVersion: '2.3'
+
+Input:
+  NAME: desktoppr
+  INCLUDE_PRERELEASES: 'True'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: scriptingosx/desktoppr
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      download_missing_file: false
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Armin Briegel (JME5BW3F3R)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

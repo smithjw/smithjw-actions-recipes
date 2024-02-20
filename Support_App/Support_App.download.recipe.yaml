@@ -1,0 +1,35 @@
+---
+Description: |
+  Downloads the most recent signed release pkg of Support App from GitHub.
+
+  In order to get the latest pre-release, set the Input variable INCLUDE_PRERELEASES to a non-empty
+  string (such as 'True'; this is the default). If you just want the latest full release instead,
+  INCLUDE_PRERELEASES must be set to an empty string.
+Identifier: com.github.smithjw-actions.download.Support_App
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Support App
+  INCLUDE_PRERELEASES: 'True'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: Support.[\d.]+.pkg
+      github_repo: root3nl/SupportApp
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      download_missing_file: false
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Root3 B.V. (98LJ4XBGYK)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
