@@ -1,7 +1,7 @@
 ---
 Description: ''
-Identifier: com.github.smithjw-actions.pkg.
-ParentRecipe: com.github.smithjw-actions.download.
+Identifier: com.github.smithjw-actions.pkg.Utilities
+ParentRecipe: com.github.smithjw-actions.download.Utilities
 MinimumVersion: '2.3'
 
 Input:
