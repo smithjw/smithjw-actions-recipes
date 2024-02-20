@@ -9,7 +9,7 @@ MinimumVersion: '2.3'
 Input:
   NAME: Microsoft Edge
   SOFTWARE_TITLE: Microsoft_Edge
-  VERSIONTYPE: CFBundleShortVersionString
+  VERSION_TYPE: CFBundleShortVersionString
 
 Process:
   - Processor: FlatPkgUnpacker
@@ -29,7 +29,7 @@ Process:
   - Processor: Versioner
     Arguments:
       input_plist_path: '%RECIPE_CACHE_DIR%/downloads/payload/Microsoft Edge.app/Contents/Info.plist'
-      plist_version_key: '%VERSIONTYPE%'
+      plist_version_key: '%VERSION_TYPE%'
 
   - Processor: PkgCopier
     Arguments:
