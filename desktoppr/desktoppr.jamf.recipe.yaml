@@ -1,0 +1,32 @@
+---
+Description: ' '
+Identifier: com.github.smithjw-actions.jamf.desktoppr
+ParentRecipe: com.github.smithjw-actions.pkg.desktoppr
+MinimumVersion: '2.3'
+
+Input:
+  NAME: desktoppr
+  SOFTWARE_TITLE: '%NAME%'
+  CATEGORY: Utilities
+  POLICY_CATEGORY: '%CATEGORY%'
+  POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
+  POLICY_NAME: '%NAME%'
+  POLICY_RUN_COMMAND: ' '
+  POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_TEMPLATE: Policy_Template-Utilities.xml
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      replace_policy: true
