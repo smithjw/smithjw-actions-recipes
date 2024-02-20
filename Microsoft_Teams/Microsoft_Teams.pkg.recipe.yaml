@@ -1,12 +1,12 @@
 ---
 Description: ''
-Identifier: com.github.smithjw-actions.pkg.Microsoft_Company_Portal
-ParentRecipe: com.github.smithjw-actions.download.Microsoft_Company_Portal
+Identifier: com.github.smithjw-actions.pkg.Microsoft_Teams
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Teams
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Microsoft Company Portal
-  SOFTWARE_TITLE: Microsoft_Company_Portal
+  NAME: Microsoft Teams
+  SOFTWARE_TITLE: Microsoft_Teams
   VERSION_TYPE: CFBundleShortVersionString
 
 Process:
@@ -17,16 +17,20 @@ Process:
 
   - Processor: FileFinder
     Arguments:
-      pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/CompanyPortal-Component.pkg'
+      pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/*Teams*.pkg'
 
   - Processor: PkgPayloadUnpacker
     Arguments:
       destination_path: '%RECIPE_CACHE_DIR%/downloads/payload'
       pkg_payload_path: '%found_filename%/Payload'
 
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/payload/*Microsoft Teams*.app/Contents/Info.plist'
+
   - Processor: Versioner
     Arguments:
-      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/payload/Applications/Company Portal.app/Contents/Info.plist'
+      input_plist_path: '%found_filename%'
       plist_version_key: '%VERSION_TYPE%'
 
   - Processor: PkgCopier
