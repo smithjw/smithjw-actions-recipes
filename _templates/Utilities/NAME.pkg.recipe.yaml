@@ -1,0 +1,15 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.pkg.
+ParentRecipe: com.github.smithjw-actions.download.
+MinimumVersion: '2.3'
+
+Input:
+  NAME: ''
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
