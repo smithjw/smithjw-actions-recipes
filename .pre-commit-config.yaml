@@ -8,6 +8,7 @@ repos:
       - id: check-yaml
       - id: check-xml
       - id: check-added-large-files
+        args: ['--maxkb=1000']
 
   - repo: https://github.com/homebysix/pre-commit-macadmin
     rev: v1.15.0
