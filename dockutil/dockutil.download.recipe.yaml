@@ -1,0 +1,31 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.download.dockutil
+MinimumVersion: '2.3'
+
+Input:
+  NAME: dockutil
+  SOFTWARE_TITLE: '%NAME%'
+  INCLUDE_PRERELEASES: 'True'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: kcrawford/dockutil
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
+      download_missing_file: false
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Kyle Crawford (Z5J8CJBUWC)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
