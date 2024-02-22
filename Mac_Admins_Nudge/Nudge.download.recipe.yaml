@@ -2,6 +2,9 @@
 Description: |
   Downloads the most recent signed release pkg of macadmins/nudge from GitHub.
 
+  By default, this will grab the latest Nudge-X.X.X.pkg, if you want the suite installer, instead
+  set the PACKAGE_PREFIX to "Nudge_Suite".
+
   In order to get the latest pre-release, set the Input variable INCLUDE_PRERELEASES to a non-empty
   string (such as 'True'; this is the default). If you just want the latest full release instead,
   INCLUDE_PRERELEASES must be set to an empty string.
@@ -12,11 +15,12 @@ Input:
   NAME: Nudge
   SOFTWARE_TITLE: '%NAME%'
   INCLUDE_PRERELEASES: 'True'
+  PACKAGE_PREFIX: Nudge
 
 Process:
   - Processor: GitHubReleasesInfoProvider
     Arguments:
-      asset_regex: Nudge_Suite-[\d.]+.pkg
+      asset_regex: '%PACKAGE_PREFIX%-[\d.]+.pkg'
       github_repo: macadmins/nudge
       include_prereleases: '%INCLUDE_PRERELEASES%'
 
