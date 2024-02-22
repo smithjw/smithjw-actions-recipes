@@ -49,6 +49,8 @@ def convert_bool(value):
     match value:
         case bool():
             return value
+        case None:
+            return None
         case "y" | "yes" | "t" | "true" | "on" | "1":
             return True
         case "n" | "no" | "f" | "false" | "off" | "0":
@@ -70,9 +72,9 @@ class CacheCleaner(Processor):
             "default": ["*.plist", "*.info.json"],
             "required": False,
         },
-        "dry_run": {
+        "cache_cleaner_dry_run": {
             "description": "Determines if the Processor will attempt to remove items within the cache folder not matching the patterns",
-            "default": True,
+            "default": False,
             "required": False,
         },
     }
@@ -130,10 +132,12 @@ class CacheCleaner(Processor):
             self.env.get("file_retention_patterns")
         )
         self.pkg_uploaded = convert_bool(self.env.get("pkg_uploaded"))
-        self.dry_run = convert_bool(self.env.get("dry_run"))
 
-        if not self.pkg_uploaded:
+        self.dry_run = convert_bool(self.env.get("cache_cleaner_dry_run"))
+
+        if self.pkg_uploaded is False:
             # If no package was uploaded, exit as we don't want to clean the cache folder
+            # This is different to pkg_uploaded being None as that indicates the value was never set
             self.output(f"Package Uploaded: {self.pkg_uploaded}")
             self.output("Exiting as no package was uploaded in prior steps")
             return
