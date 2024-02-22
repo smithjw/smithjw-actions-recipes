@@ -135,12 +135,12 @@ class CacheCleaner(Processor):
 
         self.dry_run = convert_bool(self.env.get("cache_cleaner_dry_run"))
 
-        if self.pkg_uploaded is False:
-            # If no package was uploaded, exit as we don't want to clean the cache folder
-            # This is different to pkg_uploaded being None as that indicates the value was never set
-            self.output(f"Package Uploaded: {self.pkg_uploaded}")
-            self.output("Exiting as no package was uploaded in prior steps")
-            return
+        # if self.pkg_uploaded is False:
+        #     # If no package was uploaded, exit as we don't want to clean the cache folder
+        #     # This is different to pkg_uploaded being None as that indicates the value was never set
+        #     self.output(f"Package Uploaded: {self.pkg_uploaded}")
+        #     self.output("Exiting as no package was uploaded in prior steps")
+        #     return
 
         self.output(f"RECIPE_CACHE_DIR: {self.recipe_cache_dir}")
         self.output(f"File retention patterns: {self.file_retention_patterns}")
