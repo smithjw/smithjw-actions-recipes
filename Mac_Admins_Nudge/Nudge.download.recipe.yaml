@@ -15,7 +15,7 @@ Input:
   NAME: Nudge
   SOFTWARE_TITLE: '%NAME%'
   INCLUDE_PRERELEASES: 'True'
-  PACKAGE_PREFIX: Nudge
+  PACKAGE_PREFIX: Nudge_Essentials
 
 Process:
   - Processor: GitHubReleasesInfoProvider
@@ -26,7 +26,7 @@ Process:
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%.pkg'
+      filename: '%PACKAGE_PREFIX%-%version%.pkg'
       download_missing_file: false
 
   - Processor: EndOfCheckPhase
