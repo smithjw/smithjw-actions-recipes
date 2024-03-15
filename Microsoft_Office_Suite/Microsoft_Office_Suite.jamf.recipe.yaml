@@ -1,20 +1,22 @@
 ---
-Description: ''
-Identifier: com.github.smithjw-actions.jamf.Microsoft_Teams
-ParentRecipe: com.github.smithjw-actions.pkg.Microsoft_Teams
+Description: |
+  Downloads the latest version and makes a pkg. Then, uploads the package to the
+  Jamf Pro Server
+Identifier: com.github.smithjw-actions.jamf.Microsoft_Office_Suite
+ParentRecipe: com.github.smithjw-actions.pkg.Microsoft_Office_Suite
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Microsoft Teams
-  SOFTWARE_TITLE: Microsoft_Teams
-  CATEGORY: Apps
+  NAME: Microsoft Office Suite
+  SOFTWARE_TITLE: Microsoft_Office_Suite
+  CATEGORY: General
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
   POLICY_RUN_RECON: 'false'
   POLICY_SCOPE_ALL_COMPUTERS: 'true'
-  POLICY_TEMPLATE: Policy_Template-Utilities.xml
+  POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
   SELF_SERVICE_DESCRIPTION: ' '

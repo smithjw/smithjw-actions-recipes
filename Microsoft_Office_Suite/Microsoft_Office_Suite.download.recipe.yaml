@@ -1,0 +1,35 @@
+---
+Description: Downloads the latest Microsoft Office Suite installer pkg using the
+  URLDownloaderPython processor.
+Identifier: com.github.smithjw-actions.download.Microsoft_Office_Suite
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft Office Suite
+  SOFTWARE_TITLE: Microsoft_Office_Suite
+  PRODUCT_ID: '525133'
+  DOWNLOAD_URL: https://go.microsoft.com/fwlink/?linkid=%PRODUCT_ID%
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: 'Version (\*|\d+(\.\d+){0,2}(\.\*)?)'
+      url: https://learn.microsoft.com/en-us/officeupdates/release-notes-office-for-mac
+      result_output_var_name: version
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
+      url: '%DOWNLOAD_URL%'
+      download_missing_file: false
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
