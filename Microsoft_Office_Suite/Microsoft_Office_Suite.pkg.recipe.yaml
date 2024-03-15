@@ -1,0 +1,44 @@
+---
+Description:
+  Downloads the latest version of the Microsoft Office Suite installer package and
+  renames the package.
+Identifier: com.github.smithjw-actions.pkg.Microsoft_Office_Suite
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Office_Suite
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft Office Suite
+  SOFTWARE_TITLE: Microsoft_Office_Suite
+  VERSION_TYPE: CFBundleShortVersionString
+
+Process:
+  # - Processor: FlatPkgUnpacker
+  #   Arguments:
+  #     destination_path: '%RECIPE_CACHE_DIR%/downloads/unpack'
+  #     flat_pkg_path: '%pathname%'
+
+  # - Processor: FileFinder
+  #   Arguments:
+  #     pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/*MicrosoftEdge*.pkg'
+
+  # - Processor: PkgPayloadUnpacker
+  #   Arguments:
+  #     destination_path: '%RECIPE_CACHE_DIR%/downloads/payload'
+  #     pkg_payload_path: '%found_filename%/Payload'
+
+  # - Processor: Versioner
+  #   Arguments:
+  #     input_plist_path: '%RECIPE_CACHE_DIR%/downloads/payload/Microsoft Edge.app/Contents/Info.plist'
+  #     plist_version_key: '%VERSION_TYPE%'
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/downloads/unpack'
+        - '%RECIPE_CACHE_DIR%/downloads/payload'
