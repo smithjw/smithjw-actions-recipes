@@ -1,0 +1,35 @@
+---
+Description: Downloads the latest version of Visual Studio Code using the
+  URLDownloaderPython processor.
+Identifier: com.github.smithjw-actions.download.Visual_Studio_Code
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Visual Studio Code
+  SOFTWARE_TITLE: Visual_Studio_Code
+  PRODUCT_ID: '2156837'
+  DOWNLOAD_URL: https://go.microsoft.com/fwlink/?linkid=%PRODUCT_ID%
+
+Process:
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.zip'
+      url: '%DOWNLOAD_URL%'
+      download_missing_file: false
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: Unarchiver
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/unpack'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      requirement: >-
+        identifier "com.microsoft.VSCode" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = UBF8T346G9
+      input_path: '%RECIPE_CACHE_DIR%/downloads/unpack/Visual Studio Code.app'

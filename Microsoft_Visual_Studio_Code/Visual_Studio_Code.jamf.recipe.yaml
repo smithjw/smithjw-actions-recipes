@@ -1,0 +1,43 @@
+---
+Identifier: com.github.smithjw-actions.jamf.Visual_Studio_Code
+ParentRecipe: com.github.smithjw-actions.pkg.Visual_Studio_Code
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Visual Studio Code
+  SOFTWARE_TITLE: Visual_Studio_Code
+  CATEGORY: Developer
+  POLICY_CATEGORY: Apps
+  POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
+  POLICY_NAME: '%NAME%'
+  POLICY_RUN_COMMAND: ' '
+  POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_TEMPLATE: Policy_Template-Self_Service.xml
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: '%CATEGORY%'
+  SELF_SERVICE_DESCRIPTION: |
+    Visual Studio Code is a source code editor which includes
+    support for debugging, embedded Git control, syntax
+    highlighting, intelligent code completion, snippets,
+    and code refactoring.
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  SELF_SERVICE_INSTALL_BUTTON: Install
+  SELF_SERVICE_REINSTALL_BUTTON: Install
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      icon: '%SELF_SERVICE_ICON%'
+      replace_policy: true
