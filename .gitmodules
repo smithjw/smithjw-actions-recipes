@@ -1,4 +1,0 @@
-[submodule ".submodules/autopkg"]
-	path = .submodules/autopkg
-	url = https://github.com/autopkg/autopkg
-	branch = dev
