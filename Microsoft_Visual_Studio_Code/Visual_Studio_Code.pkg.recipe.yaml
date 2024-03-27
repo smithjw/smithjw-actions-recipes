@@ -10,6 +10,10 @@ Input:
   SOFTWARE_TITLE: Visual_Studio_Code
 
 Process:
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/unpack/Visual Studio Code.app/Contents/Info.plist'
+
   - Processor: AppPkgCreator
     Arguments:
       app_path: '%RECIPE_CACHE_DIR%/downloads/unpack/Visual Studio Code.app'
