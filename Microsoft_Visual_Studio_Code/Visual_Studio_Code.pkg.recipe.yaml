@@ -1,0 +1,23 @@
+---
+Description: Downloads the latest version of Visual Studio Code and
+  renames the package.
+Identifier: com.github.smithjw-actions.pkg.Visual_Studio_Code
+ParentRecipe: com.github.smithjw-actions.download.Visual_Studio_Code
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Visual Studio Code
+  SOFTWARE_TITLE: Visual_Studio_Code
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/unpack/Visual Studio Code.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/downloads/unpack'
+        - '%RECIPE_CACHE_DIR%/downloads/payload'
