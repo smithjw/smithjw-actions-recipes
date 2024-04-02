@@ -1,0 +1,27 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.download.Global_Protect
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Global Protect
+  SOFTWARE_TITLE: Global_Protect
+  HOSTNAME:
+
+Process:
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
+      url: 'https://%HOSTNAME%/global-protect/getmsi.esp?platform=mac'
+      download_missing_file: false
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Palo Alto Networks (PXPZ95SK77)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

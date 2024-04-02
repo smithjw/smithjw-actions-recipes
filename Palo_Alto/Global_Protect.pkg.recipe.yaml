@@ -1,0 +1,42 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.pkg.Global_Protect
+ParentRecipe: com.github.smithjw-actions.download.Global_Protect
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Global Protect
+  SOFTWARE_TITLE: Global_Protect
+  VERSION_TYPE: CFBundleShortVersionString
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/unpack'
+      flat_pkg_path: '%pathname%'
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/*gp.pkg'
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/payload/GlobalProtect.app'
+      pkg_payload_path: '%found_filename%/Payload'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/payload/GlobalProtect.app/Contents/Info.plist'
+      plist_version_key: '%VERSION_TYPE%'
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/downloads/unpack'
+        - '%RECIPE_CACHE_DIR%/downloads/payload'
