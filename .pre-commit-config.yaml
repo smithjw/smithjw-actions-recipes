@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -19,7 +19,7 @@ repos:
       - id: forbid-autopkg-trust-info
 
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.34.0
+    rev: v1.35.1
     hooks:
       - id: yamllint
         args:
