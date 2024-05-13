@@ -5,7 +5,7 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: Privileges
-  SOFTWARE_TITLE: '%NAME%'
+  SOFTWARE_TITLE: Privileges
   INCLUDE_PRERELEASES: 'True'
 
 Process:
@@ -24,11 +24,15 @@ Process:
 
   - Processor: Unarchiver
     Arguments:
-      archive_path: '%pathname%'
-      destination_path: '%RECIPE_CACHE_DIR%/payload'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
       purge_destination: true
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      requirement: 'anchor apple generic and identifier "corp.sap.privileges" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "7R5ZEU67FQ")'
-      input_path: '%RECIPE_CACHE_DIR%/payload/%SOFTWARE_TITLE%.app'
+      input_path: '%RECIPE_CACHE_DIR%/unpack/Privileges.app'
+      requirement: >-
+        anchor apple generic and identifier "corp.sap.privileges" and
+        (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "7R5ZEU67FQ")
