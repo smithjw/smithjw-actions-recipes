@@ -22,11 +22,4 @@ repos:
     rev: v1.35.1
     hooks:
       - id: yamllint
-        args:
-          [
-            --format,
-            parsable,
-            -d,
-            '{extends: default, rules: {line-length: disable}}',
-            --strict,
-          ]
+        args: [--format, parsable, -c=.yamllint, --strict]

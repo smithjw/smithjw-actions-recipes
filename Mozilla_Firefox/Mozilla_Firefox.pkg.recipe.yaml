@@ -1,0 +1,15 @@
+Description: Downloads the latest version of Firefox and renames it with the version without repackaging.
+Identifier: com.github.smithjw-actions.pkg.Mozilla_Firefox
+ParentRecipe: com.github.smithjw-actions.downloads.Mozilla_Firefox
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Mozilla Firefox
+  SOFTWARE_TITLE: Mozilla_Firefox
+  BUNDLE_ID: 'org.mozilla.firefox'
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'

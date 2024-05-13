@@ -1,0 +1,33 @@
+Description: Downloads latest Mozilla Firefox package.
+Comment: ''
+Identifier: com.github.smithjw-actions.download.Mozilla_Firefox
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Mozilla Firefox
+  SOFTWARE_TITLE: Mozilla_Firefox
+  LATEST_RELEASE: LATEST_FIREFOX_VERSION
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '"%LATEST_RELEASE%": "([\d\.abesr]+)"'
+      result_output_var_name: version
+      url: https://product-details.mozilla.org/1.0/firefox_versions.json
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
+      url: 'https://releases.mozilla.org/pub/firefox/releases/%version%/mac/en-GB/Firefox%20%version%.pkg'
+      download_missing_file: false
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Mozilla Corporation (43AQ936H96)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
