@@ -33,10 +33,6 @@ Process:
       url: '%match%'
       download_missing_file: false
 
-  - Processor: AppDmgVersioner
-    Arguments:
-      dmg_path: '%RECIPE_CACHE_DIR%/downloads/Docker-arm64.dmg'
-
   - Processor: EndOfCheckPhase
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
 
