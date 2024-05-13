@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Firefox and renames it with the version without repackaging.
 Identifier: com.github.smithjw-actions.pkg.Mozilla_Firefox
-ParentRecipe: com.github.smithjw-actions.downloads.Mozilla_Firefox
+ParentRecipe: com.github.smithjw-actions.download.Mozilla_Firefox
 MinimumVersion: '2.3'
 
 Input:
