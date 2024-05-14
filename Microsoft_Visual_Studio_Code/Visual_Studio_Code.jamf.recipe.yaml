@@ -2,6 +2,7 @@
 Identifier: com.github.smithjw-actions.jamf.Visual_Studio_Code
 ParentRecipe: com.github.smithjw-actions.pkg.Visual_Studio_Code
 MinimumVersion: '2.3'
+Description: ''
 
 Input:
   NAME: Visual Studio Code
@@ -27,10 +28,6 @@ Input:
   SELF_SERVICE_REINSTALL_BUTTON: Install
 
 Process:
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-    Arguments:
-      category_name: '%CATEGORY%'
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: '%CATEGORY%'
