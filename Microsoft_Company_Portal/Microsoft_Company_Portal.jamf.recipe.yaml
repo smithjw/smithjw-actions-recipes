@@ -17,7 +17,7 @@ Input:
   POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
-  SELF_SERVICE_DESCRIPTION: |
+  SELF_SERVICE_DESCRIPTION: >-
     Company Portal is the app that lets you, as an employee of your company,
     securely access those resources.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'

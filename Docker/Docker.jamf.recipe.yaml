@@ -17,7 +17,7 @@ Input:
   POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
-  SELF_SERVICE_DESCRIPTION: |
+  SELF_SERVICE_DESCRIPTION: >-
     Docker containers wrap a piece of software in a complete filesystem that
     contains everything needed to run: code, runtime, system tools, system
     libraries - anything that can be installed on a server. This guarantees

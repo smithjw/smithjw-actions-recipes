@@ -19,7 +19,7 @@ Input:
   POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
-  SELF_SERVICE_DESCRIPTION: |
+  SELF_SERVICE_DESCRIPTION: >-
     Microsoft Edge is a cross-platform web browser created and developed by
     Microsoft.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
