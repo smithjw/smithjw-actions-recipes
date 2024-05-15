@@ -22,7 +22,7 @@ Input:
   POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: 'Engineering'
-  SELF_SERVICE_DESCRIPTION: |
+  SELF_SERVICE_DESCRIPTION: >-
     Amazon Corretto is a no-cost, multiplatform, production-ready distribution of the Open Java Development
     Kit (OpenJDK). Corretto comes with long-term support that will include performance enhancements and
     security fixes. Amazon runs Corretto internally on thousands of production services and Corretto is
