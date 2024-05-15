@@ -11,7 +11,6 @@ Input:
 Process:
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      # prefetch_filename: true
       filename: '%SOFTWARE_TITLE%.zip'
       url: '%DOWNLOAD_URL%'
       download_missing_file: false
