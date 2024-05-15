@@ -1,16 +1,16 @@
 ---
-Description: Downloads the current version of Amazon Coretto JDK and updates the package version
+Description: Downloads the current version of Amazon Corretto JDK and updates the package version
 Comment: |
   This recipe leverages Amazon's permanent links so that it can be overrided to fetch multiple
   versions, by default version 17
   Valid options for JDK_VERSION are 17, 21, & 22
-Identifier: com.github.smithjw-actions.jamf.Amazon_Coretto_JDK
-ParentRecipe: com.github.smithjw-actions.pkg.Amazon_Coretto_JDK
+Identifier: com.github.smithjw-actions.jamf.Amazon_Corretto_JDK
+ParentRecipe: com.github.smithjw-actions.pkg.Amazon_Corretto_JDK
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Amazon Coretto JDK
-  SOFTWARE_TITLE: Amazon_Coretto_JDK
+  NAME: Amazon Corretto JDK
+  SOFTWARE_TITLE: Amazon_Corretto_JDK
   JDK_VERSION: '17'
   CATEGORY: Apps
   POLICY_CATEGORY: Apps

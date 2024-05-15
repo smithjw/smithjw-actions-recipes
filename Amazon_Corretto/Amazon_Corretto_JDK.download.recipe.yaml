@@ -1,13 +1,13 @@
-Description: Downloads the current release version of Amazon Coretto JDK for macOS.
+Description: Downloads the current release version of Amazon Corretto JDK for macOS.
 Comment: |
   This recipe leverages Amazon's permanent links so that it can be overrided to fetch multiple versions
   Valid options for JDK_VERSION are 17, 21, & 22
-Identifier: com.github.smithjw-actions.download.Amazon_Coretto_JDK
+Identifier: com.github.smithjw-actions.download.Amazon_Corretto_JDK
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Amazon Coretto JDK
-  SOFTWARE_TITLE: Amazon_Coretto_JDK
+  NAME: Amazon Corretto JDK
+  SOFTWARE_TITLE: Amazon_Corretto_JDK
   JDK_VERSION: '17'
 
 Process:
