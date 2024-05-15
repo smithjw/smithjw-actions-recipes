@@ -1,0 +1,29 @@
+Description: Downloads the current release version of Amazon Coretto JDK for macOS.
+Comment: |
+  This recipe leverages Amazon's permanent links so that it can be overrided to fetch multiple versions
+  Valid options for JDK_VERSION are 17, 21, & 22
+Identifier: com.github.smithjw-actions.download.Amazon_Coretto_JDK
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Amazon Coretto JDK
+  SOFTWARE_TITLE: Amazon_Coretto_JDK
+  JDK_VERSION: '17'
+
+Process:
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-%JDK_VERSION%.pkg'
+      url: 'https://corretto.aws/downloads/latest/amazon-corretto-%JDK_VERSION%-aarch64-macos-jdk.pkg'
+      download_missing_file: false
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: AMZN Mobile LLC (94KV3E626L)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

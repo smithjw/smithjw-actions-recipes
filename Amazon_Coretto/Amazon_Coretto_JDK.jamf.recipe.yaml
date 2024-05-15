@@ -1,0 +1,46 @@
+---
+Description: Downloads the current version of Amazon Coretto JDK and updates the package version
+Comment: |
+  This recipe leverages Amazon's permanent links so that it can be overrided to fetch multiple
+  versions, by default version 17
+  Valid options for JDK_VERSION are 17, 21, & 22
+Identifier: com.github.smithjw-actions.jamf.Amazon_Coretto_JDK
+ParentRecipe: com.github.smithjw-actions.pkg.Amazon_Coretto_JDK
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Amazon Coretto JDK
+  SOFTWARE_TITLE: Amazon_Coretto_JDK
+  JDK_VERSION: '17'
+  CATEGORY: Apps
+  POLICY_CATEGORY: Apps
+  POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%-%JDK_VERSION%
+  POLICY_NAME: '%NAME% %JDK_VERSION%'
+  POLICY_RUN_COMMAND: ' '
+  POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_TEMPLATE: Policy_Template-Self_Service.xml
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: 'Engineering'
+  SELF_SERVICE_DESCRIPTION: |
+    Amazon Corretto is a no-cost, multiplatform, production-ready distribution of the Open Java Development
+    Kit (OpenJDK). Corretto comes with long-term support that will include performance enhancements and
+    security fixes. Amazon runs Corretto internally on thousands of production services and Corretto is
+    certified as compatible with the Java SE standard. With Corretto, you can develop and run Java
+    applications on popular operating systems, including Linux, Windows, and macOS.
+  SELF_SERVICE_DISPLAY_NAME: '%POLICY_NAME%'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  SELF_SERVICE_INSTALL_BUTTON: Install
+  SELF_SERVICE_REINSTALL_BUTTON: Install
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_template: '%POLICY_TEMPLATE%'
+      policy_name: '%POLICY_NAME%'
+      icon: '%SELF_SERVICE_ICON%'
+      replace_policy: true
