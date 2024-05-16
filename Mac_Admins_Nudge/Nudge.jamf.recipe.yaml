@@ -32,3 +32,12 @@ Process:
       policy_template: '%POLICY_TEMPLATE%'
       policy_name: '%POLICY_NAME%'
       replace_policy: true
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%'
+      versions_to_keep: 2
