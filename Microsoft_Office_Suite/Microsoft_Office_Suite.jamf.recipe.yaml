@@ -36,7 +36,6 @@ Process:
       policy_template: '%POLICY_TEMPLATE%'
       policy_name: '%POLICY_NAME%'
       icon: '%SELF_SERVICE_ICON%'
-      replace_policy: true
 
   - Processor: StopProcessingIf
     Arguments:
