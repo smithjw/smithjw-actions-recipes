@@ -7,6 +7,8 @@ Input:
   NAME: Docker
   ARCHITECTURE: arm64
   DOWNLOAD_TYPE: arm64
+  DOWNLOAD_MISSING_FILE:
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
 
 Process:
   - Processor: URLTextSearcher
@@ -33,10 +35,12 @@ Process:
       filename: 'Docker-x86_64.dmg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads'
       url: '%match%'
-      download_missing_file: false
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
 
   - Processor: EndOfCheckPhase
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:
