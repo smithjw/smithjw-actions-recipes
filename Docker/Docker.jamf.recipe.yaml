@@ -1,12 +1,14 @@
 ---
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.smithjw-actions.jamf.Docker
-ParentRecipe: com.github.smithjw-actions.pkg.Docker
+ParentRecipe: com.github.smithjw.pkg.Docker
 MinimumVersion: '2.3'
 
 Input:
   NAME: Docker
   SOFTWARE_TITLE: '%NAME%'
+  ARCHITECTURE: arm64
+  DOWNLOAD_TYPE: arm64
   CATEGORY: Utilities
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
@@ -38,7 +40,6 @@ Process:
       policy_template: '%POLICY_TEMPLATE%'
       policy_name: '%POLICY_NAME%'
       icon: '%SELF_SERVICE_ICON%'
-      replace_policy: true
 
   - Processor: StopProcessingIf
     Arguments:
