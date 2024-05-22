@@ -89,13 +89,17 @@ Process:
       file_content: |
         #!/bin/bash
 
-        arm64_package="Docker-arm64-%version%.pkg"
-        x86_64_package="Docker-x86_64-%version%.pkg"
+        # arm64_package="Docker-arm64-%version%.pkg"
+        arm64_dmg="Docker-arm64-%version%.dmg"
+        # x86_64_package="Docker-x86_64-%version%.pkg"
+        x86_64_dmg="Docker-x86_64-%version%.dmg"
 
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
           /usr/sbin/installer -pkg "$arm64_package" -target "$3"
+          hdiutil attach "$arm64_dmg" -nobrowse
         else
           /usr/sbin/installer -pkg "$x86_64_package" -target "$3"
+          hdiutil attach "$x86_64_dmg" -nobrowse
         fi
 
         exit 0
