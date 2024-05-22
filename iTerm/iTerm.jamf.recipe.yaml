@@ -27,6 +27,7 @@ Input:
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SELF_SERVICE_INSTALL_BUTTON: Install
   SELF_SERVICE_REINSTALL_BUTTON: Install
+  REPLACE_POLICY: 'true'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
@@ -38,6 +39,7 @@ Process:
       policy_template: '%POLICY_TEMPLATE%'
       policy_name: '%POLICY_NAME%'
       icon: '%SELF_SERVICE_ICON%'
+      replace_policy: '%REPLACE_POLICY%'
 
   - Processor: StopProcessingIf
     Arguments:
