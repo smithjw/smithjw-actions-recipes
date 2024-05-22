@@ -16,6 +16,7 @@ Input:
   POLICY_SCOPE_ALL_COMPUTERS: 'true'
   POLICY_TEMPLATE: Policy_Template-Utilities.xml
   REMOVE_OLD_PACKAGES: 'true'
+  REPLACE_POLICY: 'true'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
@@ -26,6 +27,7 @@ Process:
     Arguments:
       policy_template: '%POLICY_TEMPLATE%'
       policy_name: '%POLICY_NAME%'
+      replace_policy: '%REPLACE_POLICY%'
 
   - Processor: StopProcessingIf
     Arguments:
