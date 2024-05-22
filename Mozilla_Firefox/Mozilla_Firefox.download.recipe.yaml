@@ -7,6 +7,8 @@ Input:
   NAME: Mozilla Firefox
   SOFTWARE_TITLE: Mozilla_Firefox
   LATEST_RELEASE: LATEST_FIREFOX_VERSION
+  DOWNLOAD_MISSING_FILE:
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
 
 Process:
   - Processor: URLTextSearcher
@@ -19,10 +21,12 @@ Process:
     Arguments:
       filename: '%SOFTWARE_TITLE%.pkg'
       url: 'https://releases.mozilla.org/pub/firefox/releases/%version%/mac/en-GB/Firefox%20%version%.pkg'
-      download_missing_file: false
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
 
   - Processor: EndOfCheckPhase
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:
