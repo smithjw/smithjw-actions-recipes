@@ -20,7 +20,7 @@ Input:
   REMOVE_OLD_PACKAGES: 'true'
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
-  SELF_SERVICE_DESCRIPTION: >-
+  SELF_SERVICE_DESCRIPTION: |
     Docker containers wrap a piece of software in a complete filesystem that
     contains everything needed to run: code, runtime, system tools, system
     libraries - anything that can be installed on a server. This guarantees
@@ -30,11 +30,13 @@ Input:
   SELF_SERVICE_INSTALL_BUTTON: Install
   SELF_SERVICE_REINSTALL_BUTTON: Install
   REPLACE_POLICY: 'true'
+  PACKAGE_INFO: 'autopkg'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:

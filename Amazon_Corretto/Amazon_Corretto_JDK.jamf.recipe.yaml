@@ -1,9 +1,8 @@
 ---
-Description: Downloads the current version of Amazon Corretto JDK and updates the package version
 Comment: |
   This recipe leverages Amazon's permanent links so that it can be overrided to fetch multiple
-  versions, by default version 17
-  Valid options for JDK_VERSION are 17, 21, & 22
+  versions, by default version 17. Valid options for JDK_VERSION are 17, 21, & 22.
+Description: Downloads the current version of Amazon Corretto JDK and updates the package version
 Identifier: com.github.smithjw-actions.jamf.Amazon_Corretto_JDK
 ParentRecipe: com.github.smithjw-actions.pkg.Amazon_Corretto_JDK
 MinimumVersion: '2.3'
@@ -23,7 +22,7 @@ Input:
   REMOVE_OLD_PACKAGES: 'true'
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: 'Engineering'
-  SELF_SERVICE_DESCRIPTION: >-
+  SELF_SERVICE_DESCRIPTION: |
     Amazon Corretto is a no-cost, multiplatform, production-ready distribution of the Open Java Development
     Kit (OpenJDK). Corretto comes with long-term support that will include performance enhancements and
     security fixes. Amazon runs Corretto internally on thousands of production services and Corretto is
@@ -34,11 +33,13 @@ Input:
   SELF_SERVICE_INSTALL_BUTTON: Install
   SELF_SERVICE_REINSTALL_BUTTON: Install
   REPLACE_POLICY: 'true'
+  PACKAGE_INFO: 'autopkg'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
