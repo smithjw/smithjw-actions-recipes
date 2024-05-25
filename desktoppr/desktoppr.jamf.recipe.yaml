@@ -17,11 +17,13 @@ Input:
   POLICY_TEMPLATE: Policy_Template-Utilities.xml
   REMOVE_OLD_PACKAGES: 'true'
   REPLACE_POLICY: 'true'
+  PACKAGE_INFO: 'autopkg'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
