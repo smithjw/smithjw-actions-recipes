@@ -8,9 +8,13 @@ Input:
   NAME: Xcode Command Line Tools
   SOFTWARE_TITLE: Xcode_CLTools
   CATEGORY: Apps
+  PACKAGE_INFO: 'autopkg'
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
-  POLICY_GROUP_NAME: macOS Version - macOS 14 Installed
+  POLICY_GROUP_NAME: macOS Version
+  POLICY_GROUP_OS_MAX:
+  POLICY_GROUP_OS_MIN:
+  POLICY_GROUP_TEMPLATE: Smart_Group-OS_Requirements.xml
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
   POLICY_RUN_RECON: 'false'
@@ -18,15 +22,19 @@ Input:
   POLICY_TEMPLATE: Policy_Template-Utilities-Group.xml
   REMOVE_OLD_PACKAGES: 'true'
   REPLACE_POLICY: 'true'
-  PACKAGE_INFO: 'autopkg'
-  OS_REQUIREMENTS: '14.x'
 
 Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_name: '%POLICY_GROUP_NAME%'
+      computergroup_template: '%POLICY_GROUP_TEMPLATE%'
+      replace_group: 'true'
+      sleep: 2
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: '%CATEGORY%'
       pkg_info: '%PACKAGE_INFO%'
-      os_requirements: '%OS_REQUIREMENTS%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
