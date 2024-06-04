@@ -1,0 +1,31 @@
+Description: Downloads latest Jamf Connect package.
+Comment: ''
+Identifier: com.github.smithjw-actions.download.Jamf_Connect
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Jamf Connect
+  SOFTWARE_TITLE: Jamf_Connect
+  DOWNLOAD_URL: https://files.jamfconnect.com/JamfConnect.dmg
+  DOWNLOAD_MISSING_FILE:
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+
+Process:
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.dmg'
+      url: '%DOWNLOAD_URL%'
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: JAMF Software (483DWKW443)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%/JamfConnect.pkg'
