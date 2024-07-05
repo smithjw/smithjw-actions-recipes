@@ -1,0 +1,49 @@
+---
+Description: Downloads the latest version IntelliJ IDEA, and packages it.
+Identifier: com.github.smithjw-actions.pkg.IntelliJ_CE
+ParentRecipe: com.github.smithjw-actions.download.IntelliJ_CE
+MinimumVersion: '2.3'
+
+Input:
+  NAME: IntelliJ IDEA CE
+  SOFTWARE_TITLE: IntelliJ_CE
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%/*.app'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/Applications/IntelliJ IDEA CE.app'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/payload/Applications/IntelliJ IDEA CE.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleShortVersionString: version
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+
+  - Processor: PkgCreator
+    Arguments:
+      force_pkg_build: true
+      pkg_request:
+        chown:
+          - path: Applications
+            user: root
+            group: wheel
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
