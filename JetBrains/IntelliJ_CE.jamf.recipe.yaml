@@ -1,12 +1,12 @@
 ---
-Description: Downloads the latest version PyCharm, packages it, then uploads it to Jamf.
-Identifier: com.github.smithjw-actions.jamf.PyCharm_CE
-ParentRecipe: com.github.smithjw-actions.pkg.PyCharm_CE
+Description: Downloads the latest version IntelliJ IDEA, packages it, then uploads it to Jamf.
+Identifier: com.github.smithjw-actions.jamf.IntelliJ_CE
+ParentRecipe: com.github.smithjw-actions.pkg.IntelliJ_CE
 MinimumVersion: '2.3'
 
 Input:
-  NAME: PyCharm CE
-  SOFTWARE_TITLE: PyCharm_CE
+  NAME: IntelliJ IDEA CE
+  SOFTWARE_TITLE: IntelliJ_CE
   CATEGORY: Apps
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
@@ -19,8 +19,7 @@ Input:
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
   SELF_SERVICE_DESCRIPTION: |
-    The Python IDE for data science and web development
-    Make development more productive and enjoyable
+    The IDE that makes development a more productive and enjoyable experience
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SELF_SERVICE_INSTALL_BUTTON: Install
