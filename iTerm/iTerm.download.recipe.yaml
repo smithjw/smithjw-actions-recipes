@@ -16,6 +16,7 @@ Process:
       filename: '%SOFTWARE_TITLE%.zip'
       url: '%DOWNLOAD_URL%'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      User_Agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
 
   - Processor: EndOfCheckPhase
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
