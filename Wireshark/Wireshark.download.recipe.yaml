@@ -5,7 +5,7 @@ Comment: |
   ARCHITECTURE: arm64 or x64
   DOWNLOAD_TYPE: Apple Silicon or Intel
 Description: Downloads the latest version of Wireshark.
-Identifier: com.github.smithjw-actions.download.wireshark
+Identifier: com.github.smithjw-actions.download.Wireshark
 MinimumVersion: '2.3'
 
 Input:
@@ -13,6 +13,8 @@ Input:
   SOFTWARE_TITLE: '%NAME%'
   ARCHITECTURE: arm64
   DOWNLOAD_TYPE: Arm
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: URLTextSearcher
