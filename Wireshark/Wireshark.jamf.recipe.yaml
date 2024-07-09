@@ -1,11 +1,11 @@
 ---
-Description: ''
-Identifier: com.github.smithjw-actions.jamf.UTM
-ParentRecipe: com.github.smithjw-actions.pkg.UTM
+Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
+Identifier: com.github.smithjw-actions.jamf.wireshark
 MinimumVersion: '2.3'
+ParentRecipe: com.github.smithjw-actions.pkg.wireshark
 
 Input:
-  NAME: UTM
+  NAME: Wireshark
   SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Apps
   POLICY_CATEGORY: '%CATEGORY%'
@@ -20,7 +20,7 @@ Input:
   PACKAGE_INFO: 'autopkg'
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: 'Engineering'
-  SELF_SERVICE_DESCRIPTION: "Virtual machines for macOS utilising Apple's Hypervisor Framework"
+  SELF_SERVICE_DESCRIPTION: Wireshark is a network protocol analyzer.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SELF_SERVICE_INSTALL_BUTTON: Install
