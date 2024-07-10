@@ -11,19 +11,19 @@ Input:
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
       pkgdirs:
-        Applications: '0775'
+        payload/Applications: '0775'
         scripts: '0775'
 
   - Processor: Copier
     Arguments:
       source_path: '%pathname%/Wireshark.app'
-      destination_path: '%pkgroot%/Applications/Wireshark.app'
+      destination_path: '%pkgroot%/payload/Applications/Wireshark.app'
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_path: '%pkgroot%/scripts/postinstall'
       file_mode: '0755'
       file_content: >-
         #!/bin/bash
@@ -50,13 +50,15 @@ Process:
             path: Applications
             user: root
         id: '%bundleid%'
+        version: '%version%'
         options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'
         pkgname: '%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%'
-        scripts: scripts
+        scripts: '%pkgroot%/scripts'
+        pkgroot: '%pkgroot%/payload'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/pkgroot'
