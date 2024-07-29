@@ -67,12 +67,12 @@ Process:
         options: purge_ds_store
         pkgname: '%SOFTWARE_TITLE%-%version%'
         pkgdir: '%RECIPE_CACHE_DIR%'
-        scripts: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/scripts'
-        pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%/payload'
+        scripts: '%RECIPE_CACHE_DIR%/pkgroot/scripts'
+        pkgroot: '%RECIPE_CACHE_DIR%/pkgroot/payload'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%'
+        - '%RECIPE_CACHE_DIR%/pkgroot'
         - '%RECIPE_CACHE_DIR%/extractedfile'
