@@ -1,11 +1,11 @@
 ---
 Description: ''
-Identifier: com.github.smithjw-actions.download.Global_Protect
+Identifier: com.github.smithjw-actions.download.GlobalProtect
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Global Protect
-  SOFTWARE_TITLE: Global_Protect
+  NAME: GlobalProtect
+  SOFTWARE_TITLE: '%NAME%'
   HOSTNAME:
   DOWNLOAD_MISSING_FILE:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:

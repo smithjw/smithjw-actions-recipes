@@ -1,12 +1,12 @@
 ---
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Global_Protect
-ParentRecipe: com.github.smithjw-actions.pkg.Global_Protect
+Identifier: com.github.smithjw-actions.jamf.GlobalProtect
+ParentRecipe: com.github.smithjw-actions.pkg.GlobalProtect
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Global Protect
-  SOFTWARE_TITLE: Global_Protect
+  NAME: GlobalProtect
+  SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Apps
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
