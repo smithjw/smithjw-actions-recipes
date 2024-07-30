@@ -1,12 +1,12 @@
 ---
 Description: ''
-Identifier: com.github.smithjw-actions.pkg.Global_Protect
-ParentRecipe: com.github.smithjw-actions.download.Global_Protect
+Identifier: com.github.smithjw-actions.pkg.GlobalProtect
+ParentRecipe: com.github.smithjw-actions.download.GlobalProtect
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Global Protect
-  SOFTWARE_TITLE: Global_Protect
+  NAME: GlobalProtect
+  SOFTWARE_TITLE: '%NAME%'
   VERSION_TYPE: CFBundleShortVersionString
 
 Process:
