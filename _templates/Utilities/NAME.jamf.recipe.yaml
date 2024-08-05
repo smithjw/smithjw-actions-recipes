@@ -30,6 +30,8 @@ Process:
       policy_name: '%POLICY_NAME%'
       replace_policy: '%REPLACE_POLICY%'
 
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
   - Processor: StopProcessingIf
     Arguments:
       predicate: '%REMOVE_OLD_PACKAGES% == false'
