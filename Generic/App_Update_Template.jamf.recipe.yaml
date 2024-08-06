@@ -1,0 +1,41 @@
+Comment: |
+  This is a template recipe and cannot be used without a RecipeOverride.
+  UNTESTED_RECIPE_IDENTIFIER must be supplied
+Description: Creates a Jamf Update Policy for a given title
+Identifier: com.github.smithjw-actions.jamf.App_Update_Template
+MinimumVersion: '2.3'
+
+Input:
+  NAME: ''
+  SOFTWARE_TITLE: ''
+  APPLICATION_TITLE: null
+  AUTO_UPDATE_POLICY_CATEGORY: Apps - Auto-Update
+  AUTO_UPDATE_POLICY_FREQUENCY: Once every day
+  OVERRIDE_RECIPE_IDENTIFIER: null
+  POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
+  POLICY_NAME: null
+  POLICY_TEMPLATE: Policy_Template-Auto-Update.xml
+  REPLACE_GROUP: 'True'
+  REPLACE_POLICY: 'True'
+  SMART_GROUP_NAME: null
+  SMART_GROUP_TEMPLATE: Smart_Group-Auto-Update-App-Bundle.xml
+
+Process:
+  - Processor: com.github.grahampugh.recipes.preprocessors/LastRecipeRunChecker
+    Arguments:
+      recipeoverride_identifier: '%OVERRIDE_RECIPE_IDENTIFIER%'
+
+  - Processor: com.github.grahampugh.recipes.commonprocessors/VersionRegexGenerator
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_name: '%SMART_GROUP_NAME%'
+      computergroup_template: '%SMART_GROUP_TEMPLATE%'
+      replace_group: '%REPLACE_GROUP%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      icon: ''
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
+      replace_policy: '%REPLACE_POLICY%'
