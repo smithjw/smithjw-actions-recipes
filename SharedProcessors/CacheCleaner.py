@@ -69,7 +69,7 @@ class CacheCleaner(Processor):
         "pkg_uploaded": {"required": False, "description": ("pkg_uploaded.")},
         "file_retention_patterns": {
             "description": "Pattern(s) to identify all files we're retaining",
-            "default": ["*.plist", "*.info.json"],
+            "default": ["*.plist", "*.json"],
             "required": False,
         },
         "cache_cleaner_dry_run": {
