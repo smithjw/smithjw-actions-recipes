@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <computer_group>
-  <name>%SMART_GROUP_NAME_AUTO_UPDATE%</name>
+  <name>%SMART_GROUP_NAME%</name>
   <is_smart>true</is_smart>
   <criteria>
     <criterion>
