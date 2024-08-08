@@ -1,0 +1,42 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.download.Microsoft_Windows_App
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft Windows App
+  SOFTWARE_TITLE: Microsoft_Windows_App
+  DOWNLOAD_URL: https://api.appcenter.ms/v0.1/public/sparkle/apps/915c5f27-4ea8-469a-9186-d477a559138a
+  DOWNLOAD_MISSING_FILE:
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+
+Process:
+  - Processor: SparkleUpdateInfoProvider
+    Arguments:
+      urlencode_path_component: false
+      appcast_url: '%DOWNLOAD_URL%'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-%version%.zip'
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      requirement: |
+        identifier "com.microsoft.rdc.macos.beta" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = UBF8T346G9
+      input_path: '%RECIPE_CACHE_DIR%/unpack/Windows App.app'
