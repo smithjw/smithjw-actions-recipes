@@ -1,0 +1,23 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.pkg.Microsoft_Windows_App
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Windows_App
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft Windows App
+  SOFTWARE_TITLE: Microsoft_Windows_App
+  VERSION_TYPE: CFBundleShortVersionString
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/Windows App.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'
+        - '%RECIPE_CACHE_DIR%/payload'
