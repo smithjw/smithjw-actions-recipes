@@ -6,7 +6,7 @@ MinimumVersion: '2.3'
 Input:
   NAME: Microsoft Windows App
   SOFTWARE_TITLE: Microsoft_Windows_App
-  DOWNLOAD_URL: https://api.appcenter.ms/v0.1/public/sparkle/apps/915c5f27-4ea8-469a-9186-d477a559138a
+  DOWNLOAD_URL: https://api.appcenter.ms/v0.1/public/sparkle/apps/5e0c1442-89a5-1fca-2d3b-fa39ce7f2b06
   DOWNLOAD_MISSING_FILE:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
 
@@ -35,8 +35,8 @@ Process:
   - Processor: CodeSignatureVerifier
     Arguments:
       requirement: |
-        identifier "com.microsoft.rdc.macos.beta" and anchor apple generic and
+        identifier "com.microsoft.rdc.osx.beta" and anchor apple generic and
         certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
         certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
         certificate leaf[subject.OU] = UBF8T346G9
-      input_path: '%RECIPE_CACHE_DIR%/unpack/Windows App.app'
+      input_path: '%RECIPE_CACHE_DIR%/unpack/Windows App Preview.app'
