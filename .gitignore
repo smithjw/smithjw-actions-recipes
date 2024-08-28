@@ -1,5 +1,4 @@
 .envrc
-.DS_Store
 __pycache__
 processor.plist
 .env/
