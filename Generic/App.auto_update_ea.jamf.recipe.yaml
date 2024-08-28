@@ -15,13 +15,13 @@ Input:
   POLICY_FREQUENCY: Once every day
   POLICY_NAME: null
   POLICY_TEMPLATE: Policy_Template-Auto-Update.xml
+  REPLACE_EA: 'True'
   REPLACE_GROUP: 'True'
   REPLACE_POLICY: 'True'
   SMART_GROUP_NAME: null
   SMART_GROUP_TEMPLATE: Smart_Group-Auto-Update-App-Bundle.xml
   EXTENSION_ATTRIBUTE_NAME: null
   EXTENSION_ATTRIBUTE_SCRIPT: null
-  EXTENSION_ATTRIBUTE_REPLACE: null
 
 Process:
   - Processor: com.github.grahampugh.recipes.preprocessors/LastRecipeRunChecker
@@ -35,7 +35,7 @@ Process:
     Arguments:
       ea_name: '%EXTENSION_ATTRIBUTE_NAME%'
       ea_script_path: '%EXTENSION_ATTRIBUTE_SCRIPT%'
-      replace_ea: '%EXTENSION_ATTRIBUTE_REPLACE%'
+      replace_ea: '%REPLACE_EA%'
       sleep: 1
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
