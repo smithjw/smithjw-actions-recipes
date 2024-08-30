@@ -6,15 +6,18 @@ MinimumVersion: '2.3'
 Input:
   NAME: GlobalProtect
   SOFTWARE_TITLE: '%NAME%'
-  HOSTNAME:
-  DOWNLOAD_MISSING_FILE:
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+  VERSION_SEARCH: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
+  - Processor: GlobalProtectVersionURLProvider
+    Arguments:
+      version_search: '%VERSION_SEARCH%'
+
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%.pkg'
-      url: 'https://%HOSTNAME%/global-protect/getmsi.esp?platform=mac'
+      filename: '%SOFTWARE_TITLE%-%version%.pkg'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
 
   - Processor: EndOfCheckPhase
