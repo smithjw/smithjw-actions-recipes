@@ -16,6 +16,7 @@ Input:
   POLICY_SCOPE_ALL_COMPUTERS: 'true'
   POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   REMOVE_OLD_PACKAGES: 'true'
+  SCRIPT_PARAMETER_4_VALUE: OVERRIDE_THIS_VALUE
   SELF_SERVICE_AVAILABLE: 'false'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
   SELF_SERVICE_DESCRIPTION: ' '
@@ -31,6 +32,14 @@ Process:
     Arguments:
       pkg_category: '%CATEGORY%'
       pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfScriptUploader
+    Arguments:
+      script_path: 'configure_globalprotect.sh'
+      script_priority: 'Before'
+      skip_script_key_substitution: true
+      replace_script: true
+      script_parameter4: GlobalProtect Gateway
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
