@@ -1,0 +1,35 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.download.Jamf_Setup_Manager
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Jamf Setup Manager
+  SOFTWARE_TITLE: Jamf_Setup_Manager
+  INCLUDE_PRERELEASES: 'True'
+  DOWNLOAD_MISSING_FILE:
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: Jamf-Concepts/Setup-Manager
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%-%version%.pkg'
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: JAMF Software (483DWKW443)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
