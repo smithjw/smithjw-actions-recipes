@@ -16,12 +16,25 @@ Input:
   POLICY_RUN_COMMAND: ' '
   POLICY_RUN_RECON: 'false'
   POLICY_SCOPE_ALL_COMPUTERS: 'true'
-  POLICY_TEMPLATE: Policy_Template-Utilities.xml
+  POLICY_TEMPLATE: Policy_Template-Utilities-With-Script
   REMOVE_OLD_PACKAGES: 'true'
   REPLACE_POLICY: 'true'
   PACKAGE_INFO: 'autopkg'
+  SCRIPT_NAME: jamf_connect_launchagent.sh
+  SCRIPT_PARAMETER_4_VALUE: unused
+  SCRIPT_PARAMETER_5_VALUE: unused
+  SCRIPT_PARAMETER_6_VALUE: unused
+  SCRIPT_PRIORITY: After
 
 Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfScriptUploader
+    Arguments:
+      script_category: autopkg
+      script_path: 'jamf_connect_launchagent.sh'
+      script_priority: 'After'
+      skip_script_key_substitution: true
+      replace_script: true
+
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: '%CATEGORY%'

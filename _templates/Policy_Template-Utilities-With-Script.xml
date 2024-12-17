@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <policy>
-  <general>
-    <name>%POLICY_NAME%</name>
-    <enabled>true</enabled>
-    <frequency>Ongoing</frequency>
-    <trigger_other>%POLICY_CUSTOM_TRIGGER%</trigger_other>
-    <category>
-      <name>%POLICY_CATEGORY%</name>
-    </category>
-  </general>
-  <scope>
-    <all_computers>%POLICY_SCOPE_ALL_COMPUTERS%</all_computers>
-    <computer_groups />
-  </scope>
-  <package_configuration>
-    <packages>
-      <size>1</size>
-      <package>
-        <name>%pkg_name%</name>
-        <action>Install</action>
-      </package>
-    </packages>
-  </package_configuration>
-  <scripts>
-    <size>1</size>
-    <script>
-      <name>%script_name%</name>
-      <priority>%script_priority%</priority>
-      <parameter4>%SCRIPT_PARAMETER_4_VALUE%</parameter4>
-      <parameter5>%SCRIPT_PARAMETER_5_VALUE%</parameter5>
-      <parameter6>%SCRIPT_PARAMETER_6_VALUE%</parameter6>
-      <parameter7 />
-      <parameter8 />
-      <parameter9 />
-      <parameter10 />
-      <parameter11 />
-    </script>
-  </scripts>
-  <self_service />
-  <maintenance>
-    <recon>%POLICY_RUN_RECON%</recon>
-  </maintenance>
-  <files_processes>
-    <run_command>%POLICY_RUN_COMMAND%</run_command>
-  </files_processes>
+	<general>
+		<name>%POLICY_NAME%</name>
+		<enabled>true</enabled>
+		<frequency>Ongoing</frequency>
+		<trigger_other>%POLICY_CUSTOM_TRIGGER%</trigger_other>
+		<category>
+			<name>%POLICY_CATEGORY%</name>
+		</category>
+	</general>
+	<scope>
+		<all_computers>%POLICY_SCOPE_ALL_COMPUTERS%</all_computers>
+		<computer_groups/>
+	</scope>
+	<package_configuration>
+		<packages>
+			<size>1</size>
+			<package>
+				<name>%pkg_name%</name>
+				<action>Install</action>
+			</package>
+		</packages>
+	</package_configuration>
+	<scripts>
+		<size>1</size>
+		<script>
+			<name>%SCRIPT_NAME%</name>
+			<priority>%SCRIPT_PRIORITY%</priority>
+			<parameter4>%SCRIPT_PARAMETER_4_VALUE%</parameter4>
+			<parameter5>%SCRIPT_PARAMETER_5_VALUE%</parameter5>
+			<parameter6>%SCRIPT_PARAMETER_6_VALUE%</parameter6>
+			<parameter7/>
+			<parameter8/>
+			<parameter9/>
+			<parameter10/>
+			<parameter11/>
+		</script>
+	</scripts>
+	<self_service/>
+	<maintenance>
+		<recon>%POLICY_RUN_RECON%</recon>
+	</maintenance>
+	<files_processes>
+		<run_command>%POLICY_RUN_COMMAND%</run_command>
+	</files_processes>
 </policy>
