@@ -3,7 +3,7 @@ Description:
   signature. Specifiy an ARCH of "arm64" for Apple Silicon or "amd64" for Intel.
 Identifier: com.github.smithjw-actions.pkg.tart
 MinimumVersion: '2.4.1'
-ParentRecipe: /Users/james.smith/code/smithjw/smithjw-actions-recipes/Cirrus_Labs/tart.download.recipe.yaml # com.github.smithjw-actions.download.tart
+ParentRecipe: com.github.smithjw-actions.download.tart
 
 Input:
   NAME: tart
