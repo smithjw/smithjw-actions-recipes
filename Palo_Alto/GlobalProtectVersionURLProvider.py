@@ -19,8 +19,7 @@ from __future__ import absolute_import
 import xml.etree.ElementTree as ET
 from operator import itemgetter
 
-from autopkglib import ProcessorError, URLGetter
-from pkg_resources import parse_version
+from autopkglib import APLooseVersion, ProcessorError, URLGetter
 
 __all__ = ["GlobalProtectVersionURLProvider"]
 
@@ -53,7 +52,7 @@ class GlobalProtectVersionURLProvider(URLGetter):
         ns = {"ns": "http://s3.amazonaws.com/doc/2006-03-01/"}
         root = ET.fromstring(xml)
 
-        gp_versions = [
+        gp_version_array = [
             {
                 "version": key.split("/")[0],
                 "url": f"{feed_url}/{key}",
@@ -62,23 +61,47 @@ class GlobalProtectVersionURLProvider(URLGetter):
             if (key := content.find("ns:Key", ns).text).endswith(".pkg")
         ]
 
-        return gp_versions
+        # # Extract specific version from each dict within in the list
+        sorted_gp_version_array = sorted(
+            gp_version_array, key=lambda a: APLooseVersion(a["version"]), reverse=True
+        )
+
+        self.output(f"GP Versions Found: {sorted_gp_version_array}", verbose_level=4)
+        return sorted_gp_version_array
 
     def find_closest_version(self, gp_version_list, version_search):
         if not version_search:
+            self.output("Version not set, looking for latest version", verbose_level=3)
             gp_version = max(gp_version_list, key=itemgetter("version"))
             return gp_version
 
-        parsed_version_search = parse_version(version_search)
+        version_search = APLooseVersion(version_search)
 
         for gp_version in gp_version_list:
-            parsed_version = parse_version(gp_version["version"])
-
-            if parsed_version == parsed_version_search:
+            version = APLooseVersion(gp_version["version"])
+            if version == version_search:
                 return gp_version
 
-            if parsed_version > parsed_version_search:
-                return gp_version
+        # If exact match isn't found, find the highest version that matches
+        matching_versions = [
+            gp_version
+            for gp_version in gp_version_list
+            if gp_version["version"].startswith(version_search.vstring)
+        ]
+
+        if not matching_versions:
+            matching_versions = [
+                gp_version
+                for gp_version in gp_version_list
+                if gp_version["version"].startswith(
+                    version_search.vstring.split("-", 1)[0]
+                )
+            ]
+
+        if matching_versions:
+            return max(matching_versions, key=lambda a: APLooseVersion(a["version"]))
+
+        return max(gp_version_list, key=itemgetter("version"))
 
     def autopkg_output(self, name, value):
         self.env[name] = value
