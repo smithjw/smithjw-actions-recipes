@@ -27,13 +27,13 @@ Process:
     Arguments:
       input_path: '%RECIPE_CACHE_DIR%/%NAME%/FileZilla.app'
       requirement: identifier "org.filezilla-project.filezilla" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "5VPGKXL75N"
-      
+
   - Processor: PkgRootCreator
     Arguments:
       pkgdirs:
         Applications: '0755'
       pkgroot: '%RECIPE_CACHE_DIR%/payload'
-      
+
   - Processor: FileMover
     Arguments:
       source: '%RECIPE_CACHE_DIR%/%NAME%/FileZilla.app'

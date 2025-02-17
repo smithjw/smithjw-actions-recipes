@@ -7,19 +7,19 @@ MinimumVersion: '2.3'
 Input:
   NAME: Zeplin
   SOFTWARE_TITLE: Zeplin
-  
+
 Process:
   - Processor: PkgRootCreator
     Arguments:
       pkgdirs:
         Applications: '0755'
       pkgroot: '%RECIPE_CACHE_DIR%/payload'
-      
+
   - Processor: FileMover
     Arguments:
       source: '%RECIPE_CACHE_DIR%/%NAME%/Zeplin.app'
       target: '%pkgroot%/Applications/Zeplin.app'
-      
+
   - Processor: PlistReader
     Arguments:
       info_path: '%pkgroot%/Applications/Zeplin.app/Contents/Info.plist'
@@ -27,7 +27,7 @@ Process:
         CFBundleIdentifier: bundleid
         CFBundleName: app_name
         CFBundleShortVersionString: version
-        
+
   - Processor: PkgCreator
     Arguments:
       force_pkg_build: true
@@ -40,4 +40,3 @@ Process:
         options: purge_ds_store
         pkgname: '%SOFTWARE_TITLE%-%version%'
         version: '%version%'
-        

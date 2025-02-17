@@ -1,0 +1,39 @@
+---
+Description: "Downloads the latest version of Axure RP 9-Trial and creates a package."
+Identifier: com.github.smithjw-actions.pkg.Axure RP 9-Trial
+Input:
+  NAME: "AxureRP9-Trial"
+MinimumVersion: "2.3"
+ParentRecipe: com.github.smithjw-actions.download.Axure RP 9-Trial
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: "0775"
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%"
+  - Processor: Copier
+    Arguments:
+      destination_path: "%pkgroot%/Applications/Axure RP 9.app"
+      source_path: "%RECIPE_CACHE_DIR%/downloads/%NAME%.dmg/Axure RP 9.app"
+  - Processor: PlistReader
+    Arguments:
+      info_path: "%destination_path%"
+      plist_keys:
+        CFBundleIdentifier: "bundleid"
+        CFBundleVersion: "version"
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        chown:
+          - path: "Applications"
+            user: "root"
+            group: "admin"
+        id: "%bundleid%"
+        options: "purge_ds_store"
+        pkgdir: "%RECIPE_CACHE_DIR%"
+        pkgroot: "%pkgroot%"
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - "%pkgroot%"
