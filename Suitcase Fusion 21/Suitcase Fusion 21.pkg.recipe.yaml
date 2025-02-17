@@ -7,25 +7,25 @@ Input:
   NAME: Suitcase Fusion 21
   PKG_ID: com.extensis.SuitcaseFusion21
 
-
 Process:
-  - Arguments:
+  - Processor: PkgRootCreator
+    Arguments:
       pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
       pkgdirs:
-        Applications: "0775"
-    Processor: PkgRootCreator
+        Applications: '0775'
 
-  - Arguments:
+  - Processor: Copier
+    Arguments:
       source_path: '%pathname%/Suitcase Fusion.app'
       destination_path: '%pkgroot%/Applications/Suitcase Fusion.app'
       overwrite: true
-    Processor: Copier
 
-  - Arguments:
+  - Processor: Versioner
+    Arguments:
       input_plist_path: '%pkgroot%/Applications/Suitcase Fusion.app/Contents/Info.plist'
-    Processor: Versioner
 
-  - Arguments:
+  - Processor: PkgCreator
+    Arguments:
       pkg_request:
         pkgname: '%NAME%-%version%'
         pkgdir: '%RECIPE_CACHE_DIR%'
@@ -35,9 +35,8 @@ Process:
           - path: Applications
             user: root
             group: admin
-    Processor: PkgCreator
 
-  - Arguments:
+  - Processor: PathDeleter
+    Arguments:
       path_list:
         - '%pkgroot%'
-    Processor: PathDeleter

@@ -6,7 +6,7 @@ Input:
   NAME: CharlesProxy
   URL: https://www.charlesproxy.com/latest.do
   SOFTWARE_TITLE: CharlesProxy
-  
+
 Process:
   - Processor: URLTextSearcher
     Arguments:

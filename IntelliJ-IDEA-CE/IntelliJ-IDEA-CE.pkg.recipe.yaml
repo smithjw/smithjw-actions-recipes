@@ -41,4 +41,3 @@ Process:
         pkgname: '%SOFTWARE_TITLE%-%version%'
         pkgroot: '%RECIPE_CACHE_DIR%/payload'
         version: '%version%'
-

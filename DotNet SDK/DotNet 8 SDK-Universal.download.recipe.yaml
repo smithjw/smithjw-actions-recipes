@@ -28,7 +28,7 @@ Process:
       filename: '%NAME%-%ARM_PKG%.pkg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads/arm'
       url: '%DOWNLOAD_URL%'
-      ARM_PKG_PATH: "%download_dir%/%filename%"
+      ARM_PKG_PATH: '%download_dir%/%filename%'
 
   - Processor: URLTextSearcher
     Arguments:
@@ -47,22 +47,22 @@ Process:
       filename: '%NAME%-%INTEL_PKG%.pkg'
       download_dir: '%RECIPE_CACHE_DIR%/downloads/intel'
       url: '%DOWNLOAD_URL%'
-      INTEL_PKG_PATH: "%download_dir%/%filename%"
+      INTEL_PKG_PATH: '%download_dir%/%filename%'
 
   - Processor: EndOfCheckPhase
 
   - Processor: CodeSignatureVerifier
     Arguments:
       input_path: '%ARM_PKG_PATH%'
-      expected_authority_names: 
-      - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
-      - Developer ID Certification Authority
-      - Apple Root CA
+      expected_authority_names:
+        - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+        - Developer ID Certification Authority
+        - Apple Root CA
 
   - Processor: CodeSignatureVerifier
     Arguments:
       input_path: '%INTEL_PKG_PATH%'
-      expected_authority_names: 
-      - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
-      - Developer ID Certification Authority
-      - Apple Root CA
+      expected_authority_names:
+        - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+        - Developer ID Certification Authority
+        - Apple Root CA

@@ -2,6 +2,7 @@ Name: CraftManager
 Description: Downloads the latest version of CraftManager.
 Identifier: com.github.smithjw-actions.download.CraftManager
 MinimumVersion: '2.3'
+
 Input:
   NAME: CraftManager
   SPARKLE_FEED_URL: https://craft-assets.invisionapp.com/CraftManager/production/appcast.xml
