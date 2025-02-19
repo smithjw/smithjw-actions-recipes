@@ -1,0 +1,35 @@
+---
+Description: ''
+Identifier: com.github.smithjw-actions.download.Outset
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Outset
+  SOFTWARE_TITLE: '%NAME%'
+  INCLUDE_PRERELEASES: 'True'
+  DOWNLOAD_MISSING_FILE:
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      github_repo: macadmins/outset
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%.pkg'
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Mac Admins Open Source (T4SK8ZXCXG)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
