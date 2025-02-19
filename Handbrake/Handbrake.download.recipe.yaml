@@ -4,7 +4,7 @@ Identifier: com.github.smithjw-actions.download.Handbrake
 MinimumVersion: '2.3'
 Input:
   NAME: HandBrake
-  PRERELEASE: ""
+  PRERELEASE: ''
 
 Process:
   - Processor: GitHubReleasesInfoProvider

@@ -12,7 +12,7 @@ Process:
     Arguments:
       pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARETITLE%'
       pkgdirs:
-        Applications: "0755"
+        Applications: '0755'
 
   - Processor: Unarchiver
     Arguments:
