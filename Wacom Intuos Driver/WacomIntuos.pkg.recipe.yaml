@@ -1,0 +1,44 @@
+Name: Wacom Intuos Driver
+Description: Downloads the latest Wacom Intuos driver disk image and builds a package.
+Identifier: com.github.smithjw-actions.pkg.WacomIntuos
+ParentRecipe: com.github.smithjw-actions.download.WacomIntuos
+MinimumVersion: 2.3
+Input:
+  NAME: Wacom Intuos Driver
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      flat_pkg_path: '%pathname%/*.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/UNPACK'
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      pkg_payload_path: '%RECIPE_CACHE_DIR%/downloads/UNPACK/content.pkg/Payload'
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/PAYLOAD'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/PAYLOAD/Applications/Wacom Tablet.localized/Wacom Tablet Utility.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: com.github.autopkg.novaksam-recipes.Processors/FileChmodEditor
+    Arguments:
+      modifier: 755
+      pathname: '%RECIPE_CACHE_DIR%/downloads/PAYLOAD/Library/LaunchAgents'
+
+  - Processor: com.github.autopkg.novaksam-recipes.Processors/FileChmodEditor
+    Arguments:
+      modifier: 755
+      pathname: '%RECIPE_CACHE_DIR%/downloads/PAYLOAD/Library/LaunchDaemons'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/downloads/UNPACK'
+        - '%RECIPE_CACHE_DIR%/downloads/PAYLOAD'
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg'
+      source_pkg: '%RECIPE_CACHE_DIR%/downloads/%NAME%.dmg/*.pkg'

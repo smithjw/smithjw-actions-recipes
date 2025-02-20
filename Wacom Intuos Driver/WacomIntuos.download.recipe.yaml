@@ -1,0 +1,29 @@
+Name: Wacom Intuos Driver
+Description: Downloads the latest version of Wacom Intuos tablet drivers.
+Identifier: com.github.smithjw-actions.download.WacomIntuos
+MinimumVersion: 2.3
+Input:
+  DOWNLOAD_PATTERN: "(https://cdn.wacom.com/u/productsupport/drivers/mac/professional/WacomTablet_+[0-9].+[0-9].+[0-9]*-*[0-9].dmg)"
+  DOWNLOAD_URL: https://www.wacom.com/en-us/support/product-support/drivers
+  NAME: Wacom Intuos Driver
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '%DOWNLOAD_PATTERN%'
+      url: '%DOWNLOAD_URL%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      filename: '%NAME%.dmg'
+      url: '%match%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - Developer ID Installer: Wacom Technology Corp. (EG27766DY7)
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%/*.pkg'
+
+  - Processor: EndOfCheckPhase

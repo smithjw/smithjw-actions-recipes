@@ -1,0 +1,41 @@
+---
+Description: "Downloads the latest version of Suitcase Fusion 21 and makes a pkg of it"
+Identifier: com.github.smithjw-actions.pkg.Suitcase Fusion 21
+Input:
+  NAME: Suitcase Fusion 21
+  PKG_ID: com.extensis.SuitcaseFusion21
+MinimumVersion: "0.3.1"
+ParentRecipe: com.github.smithjw-actions.download.Suitcase Fusion 21
+Process:
+  - Arguments:
+      pkgroot: "%RECIPE_CACHE_DIR%/%NAME%"
+      pkgdirs:
+        Applications: "0775"
+    Processor: PkgRootCreator
+
+  - Arguments:
+      source_path: "%pathname%/Suitcase Fusion.app"
+      destination_path: "%pkgroot%/Applications/Suitcase Fusion.app"
+      overwrite: true
+    Processor: Copier
+
+  - Arguments:
+      input_plist_path: "%pkgroot%/Applications/Suitcase Fusion.app/Contents/Info.plist"
+    Processor: Versioner
+
+  - Arguments:
+      pkg_request:
+        pkgname: "%NAME%-%version%"
+        pkgdir: "%RECIPE_CACHE_DIR%"
+        id: "%PKG_ID%"
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+    Processor: PkgCreator
+
+  - Arguments:
+      path_list:
+        - "%pkgroot%"
+    Processor: PathDeleter
