@@ -1,0 +1,35 @@
+Name: CharlesProxy
+Description: Downloads the current release version of CharlesProxy and builds a package.
+Identifier: com.github.smithjw-actions.pkg.CharlesProxy
+ParentRecipe: com.github.smithjw-actions.download.CharlesProxy
+MinimumVersion: 2.3
+Input:
+  NAME: CharlesProxy
+
+Process:
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+      pkgdirs:
+        Applications: "0775"
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%/Charles.app'
+      destination_path: '%pkgroot%/Applications/Charles.app'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: '%NAME%-%version%'
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        id: com.xk72.Charles
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin

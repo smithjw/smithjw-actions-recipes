@@ -1,0 +1,88 @@
+Description: Packages both ARM and INTEL versions of the Microsoft DotNet 8 SDK. Working!!
+Identifier: com.github.markkenny.autopkg.pkg.dotnet8sdk-universal
+ParentRecipe: com.github.markkenny.autopkg.download.dotnet8sdk-universal
+
+MinimumVersion: "2.3"
+
+Input:
+  NAME: DotNet-8-SDK
+
+Process:
+- Processor: FlatPkgUnpacker
+  Arguments:
+    destination_path: '%RECIPE_CACHE_DIR%/unpacked'
+    flat_pkg_path: '%ARM_PKG_PATH%'
+    purge_destination: true
+
+- Processor: com.github.homebysix.FindAndReplace/FindAndReplace
+  Arguments:
+    find: ' '
+    input_string: 'file://localhost/%RECIPE_CACHE_DIR%/unpacked/Distribution'
+    replace: '%20'
+
+- Processor: URLTextSearcher
+  Arguments:
+    re_pattern: '<title>Microsoft \.NET SDK (\d+\.\d+\.\d+) \([^\)]+\)</title>'
+    result_output_var_name: version
+    url: '%output_string%'
+
+- Processor: PkgRootCreator
+  Arguments:
+    pkgdirs: {}
+    pkgroot: "%RECIPE_CACHE_DIR%/Universal/pkgroot"
+
+- Processor: PkgRootCreator
+  Arguments:
+    pkgdirs: {}
+    pkgroot: "%RECIPE_CACHE_DIR%/Universal/scripts"
+
+- Processor: Copier
+  Arguments:
+    overwrite: false
+    source_path: '%ARM_PKG_PATH%'
+    destination_path: "%RECIPE_CACHE_DIR%/Universal/scripts/%NAME%-ARM-%version%.pkg"
+
+- Processor: Copier
+  Arguments:
+    overwrite: false
+    source_path: '%INTEL_PKG_PATH%'
+    destination_path: "%RECIPE_CACHE_DIR%/Universal/scripts/%NAME%-INTEL-%version%.pkg"
+
+- Processor: FileCreator
+  Arguments:
+    file_content: |
+      #!/bin/bash
+      
+      # Determine working directory
+      installDir=$(dirname $0)
+      
+      # Identify installer package names
+      Intel_package="%NAME%-INTEL-%version%.pkg"
+      Apple_Silicon_package="%NAME%-ARM-%version%.pkg"
+      
+      # Determine if this Mac has an Intel or Apple Silicon processor
+      processor=$( /usr/bin/arch | grep -o "arm64")
+      if [[ -n "$processor" ]]; then
+      /usr/sbin/installer -pkg "$Apple_Silicon_package" -target "$3"
+      else
+      /usr/sbin/installer -pkg "$Intel_package" -target "$3"
+      fi
+      
+      exit 0"
+    file_mode: "0755"
+    file_path: "%RECIPE_CACHE_DIR%/Universal/scripts/preinstall"
+
+- Processor: PkgCreator
+  Arguments:
+    pkg_request:
+      id: com.omnicom-group.dotnet8sdk-universal
+      options: purge_ds_store
+      pkgname: "%NAME%-Universal-%version%"
+      scripts: "%RECIPE_CACHE_DIR%/Universal/scripts"
+      version: "%version%"
+
+- Processor: PathDeleter
+  Arguments:
+    path_list: 
+    - '%RECIPE_CACHE_DIR%/unpacked'
+    - '%RECIPE_CACHE_DIR%/Universal'

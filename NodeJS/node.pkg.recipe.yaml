@@ -1,0 +1,37 @@
+Name: Node.js
+Description: Downloads the latest version of Node.js and creates an installer package.
+Identifier: com.github.smithjw-actions.pkg.node
+ParentRecipe: com.github.smithjw-actions.download.node
+MinimumVersion: 2.3
+Input:
+  NAME: node
+  BUNDLE_ID: com.oracle.node
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+      pkgdirs:
+        Applications: "0755"
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/%NAME%/node-v%version%.pkg'
+      destination_path: '%pkgroot%/Applications/node-v%version%.pkg'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: '%NAME%-%version%'
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/%NAME%'  # Clean up temporary files

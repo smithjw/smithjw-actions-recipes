@@ -1,0 +1,16 @@
+---
+Description: "Downloads the current release version of IntelliJ IDEA Community Edition and creates a package."
+Comment: "For the ARCH_TYPE variable use \"mac\" for Intel, use \"macM1\" for Apple Silicon"
+Comment: "And for the SUPPORTED_ARCH variable use \"x86_64\" for Intel, use \"arm64\" for Apple Silicon. NOTE: BOTH ARCH_TYPE and SUPPORTED_ARCH MUST be set"
+Identifier: com.github.smithjw-actions.pkg.intellijideace
+ParentRecipe: com.github.smithjw-actions.download.intellijideace
+Input:
+  NAME: IntelliJ IDEA Community Edition
+  ARCH_TYPE: macM1
+  SUPPORTED_ARCH: arm64
+MinimumVersion: "2.3"
+ParentRecipe: com.github.bnpl.autopkg.download.intellijideace
+Process:
+  - Arguments:
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%SUPPORTED_ARCH%-%version%.pkg"
+    Processor: AppPkgCreator

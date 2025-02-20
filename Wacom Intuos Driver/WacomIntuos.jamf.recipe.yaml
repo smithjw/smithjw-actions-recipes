@@ -1,0 +1,56 @@
+Name: Wacom Intuos Driver
+Description: Downloads the latest Wacom Intuos driver and uploads it to Jamf.
+Identifier: com.github.smithjw-actions.jamf.WacomIntuosDriver
+MinimumVersion: 2.3
+Input:
+  CATEGORY: Utilities
+  EXTENSION_ATTRIBUTE_NAME: Wacom Intuos Driver
+  EXTENSION_ATTRIBUTE_SCRIPT: ExtensionAttribute-WacomIntuosDriver.sh
+  GROUP_NAME: '%NAME%-update-smart'
+  GROUP_TEMPLATE: JamfSmartGroupTemplate-ExtensionAttribute.xml
+  NAME: Wacom Intuos Driver
+  POLICY_CATEGORY: Testing
+  POLICY_NAME: 'Install Latest %NAME%'
+  POLICY_TEMPLATE: JamfPolicyTemplate.xml
+  POLICY_TRIGGER: Install_WacomIntuosDriver
+  SELF_SERVICE_DESCRIPTION: HandBrake is a tool for converting video from nearly any format to a selection of modern, widely supported codecs.
+  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
+  SELF_SERVICE_ICON: '%NAME%.png'
+  TESTING_GROUP_NAME: Testing
+  UPDATE_PREDICATE: pkg_uploaded == False
+  replace_ea: True
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%UPDATE_PREDICATE%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfExtensionAttributeUploader
+    Arguments:
+      ea_name: '%EXTENSION_ATTRIBUTE_NAME%'
+      ea_script_path: '%EXTENSION_ATTRIBUTE_SCRIPT%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_name: '%GROUP_NAME%'
+      computergroup_template: '%GROUP_TEMPLATE%'
+      replace_group: true
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
+    Arguments:
+      category_name: '%POLICY_CATEGORY%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      icon: '%SELF_SERVICE_ICON%'
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
+      replace_policy: true

@@ -1,0 +1,21 @@
+---
+Description: "Downloads the current release version of IntelliJ IDEA Community Edition."
+Comment: "For the ARCH_TYPE variable use \"mac\" for Intel, use \"macM1\" for Apple Silicon"
+Identifier: com.github.smithjw-actions.download.intellijideace
+Input:
+  NAME: IntelliJ IDEA Community Edition
+  ARCH_TYPE: macM1  
+  PROD_CODE: IIC
+  CSV_REQ: identifier "com.jetbrains.intellij.ce" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"
+MinimumVersion: "2.3"
+ParentRecipe: com.github.bnpl.autopkg.download.jetbrains
+Process:
+  - Arguments:
+      filename: "%NAME%.zip"
+      url: https://zpl.io/download-mac 
+    Processor: URLPythonDownloader
+    
+  - Arguments:
+      input_path: "%RECIPE_CACHE_DIR%/%NAME%/IntelliJ IDEA CE.app"
+      requirement: identifier "com.jetbrains.intellij.ce" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "2ZEFAR8TH3"
+    Processor: CodeSignatureVerifier

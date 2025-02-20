@@ -1,0 +1,46 @@
+Name: Principle
+Description: Downloads Principle and makes a pkg of it.
+Identifier: com.github.smithjw-actions.pkg.Principle
+MinimumVersion: 2.3
+Input:
+  NAME: Principle
+  DOWNLOAD_URL: https://principleformac.com/download/Principle.zip
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      url: '%DOWNLOAD_URL%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+      pkgdirs:
+        Applications: "0775"
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%pkgroot%/Applications/'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pkgroot%/Applications/Principle.app'
+      requirement: anchor apple generic and identifier "com.danielhooper.principle" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = JWLPBZ6FYH)
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%pkgroot%/Applications/Principle.app/Contents/Info.plist'
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: '%NAME%-%version%'
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        id: com.danielhooper.principle.pkg
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin

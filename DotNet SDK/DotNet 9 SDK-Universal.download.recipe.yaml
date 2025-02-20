@@ -1,0 +1,67 @@
+Description: Downloads both ARM and INTEL versions of the Microsoft DotNet 9 SDK. Working!!
+Identifier: com.github.markkenny.autopkg.download.dotnet9sdk-universal
+MinimumVersion: '2.3'
+
+Input:
+  NAME: DotNet 9 SDK
+  ARM_ARCH: arm64
+  INTEL_ARCH: x64
+  ARM_PKG: ARM
+  INTEL_PKG: INTEL
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://dotnet.microsoft.com/en-us/download/dotnet/9.0
+      result_output_var_name: SEARCH_URL
+      re_pattern: href=\"(/en-us/download/dotnet/thank-you/sdk-9.([0-9]+(\.[0-9]+)+)-macos-%ARM_ARCH%-installer)\"
+
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://dotnet.microsoft.com%SEARCH_URL%
+      result_output_var_name: DOWNLOAD_URL
+      re_pattern: href=\"(https://builds\.dotnet\.microsoft\.com/dotnet/Sdk/9.([A-Za-z0-9]+(\.[A-Za-z0-9]+)+)/dotnet-sdk-9.([A-Za-z0-9]+(\.[A-Za-z0-9]+)+)-osx-%ARM_ARCH%\.pkg)\"
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%-%ARM_PKG%.pkg'
+      download_dir: '%RECIPE_CACHE_DIR%/downloads/arm'
+      url: '%DOWNLOAD_URL%'
+      ARM_PKG_PATH: "%download_dir%/%filename%"
+
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://dotnet.microsoft.com/en-us/download/dotnet/9.0
+      result_output_var_name: SEARCH_URL
+      re_pattern: href=\"(/en-us/download/dotnet/thank-you/sdk-9.([0-9]+(\.[0-9]+)+)-macos-%INTEL_ARCH%-installer)\"
+
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://dotnet.microsoft.com%SEARCH_URL%
+      result_output_var_name: DOWNLOAD_URL
+      re_pattern: href=\"(https://builds\.dotnet\.microsoft\.com/dotnet/Sdk/9.([A-Za-z0-9]+(\.[A-Za-z0-9]+)+)/dotnet-sdk-9.([A-Za-z0-9]+(\.[A-Za-z0-9]+)+)-osx-%INTEL_ARCH%\.pkg)\"
+
+  - Processor: URLDownloader
+    Arguments:
+      filename: '%NAME%-%INTEL_PKG%.pkg'
+      download_dir: '%RECIPE_CACHE_DIR%/downloads/intel'
+      url: '%DOWNLOAD_URL%'
+      INTEL_PKG_PATH: "%download_dir%/%filename%"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%ARM_PKG_PATH%'
+      expected_authority_names: 
+      - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+      - Developer ID Certification Authority
+      - Apple Root CA
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%INTEL_PKG_PATH%'
+      expected_authority_names: 
+      - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+      - Developer ID Certification Authority
+      - Apple Root CA
