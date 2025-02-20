@@ -2,7 +2,7 @@ Name: HandBrake
 Description: Downloads the latest Handbrake disk image and creates a package.
 Identifier: com.github.smithjw-actions.pkg.HandBrake
 ParentRecipe: com.github.smithjw-actions.download.HandBrake
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   NAME: HandBrake
 

@@ -2,7 +2,7 @@ Name: Maccy
 Description: Downloads the latest version of Maccy and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.Maccy
 ParentRecipe: com.github.smithjw-actions.download.Maccy
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   NAME: Maccy
   SOFTWARETITLE: Maccy

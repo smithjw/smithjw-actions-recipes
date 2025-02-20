@@ -1,7 +1,7 @@
 Name: HandBrake
 Description: Uploads the latest HandBrake disk image to Jamf and creates a Smart Group and Policy.
 Identifier: com.github.smithjw-actions.jamf.HandBrake
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   CATEGORY: Digital Media
   GROUP_NAME: HandBrake-update-smart

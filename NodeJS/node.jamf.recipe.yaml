@@ -1,7 +1,7 @@
 Name: Node.js
 Description: Downloads the latest version of Node.js and uploads it to Jamf to create a Smart Group and Policy.
 Identifier: com.github.smithjw-actions.jamf.NodeJS
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   CATEGORY: Computer Science
   GROUP_NAME: NodeJS-update-smart
