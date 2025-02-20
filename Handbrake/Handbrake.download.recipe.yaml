@@ -1,7 +1,7 @@
 Name: HandBrake
 Description: Downloads the latest HandBrake disk image. Set PRERELEASE to a non-empty string to download prereleases, either via Input in an override or via the -k option
 Identifier: com.github.smithjw-actions.download.Handbrake
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   NAME: HandBrake
   PRERELEASE: ""

@@ -2,7 +2,7 @@ Name: FileZilla
 Description: Downloads the current version of FileZilla and creates a package.
 Identifier: com.github.smithjw-actions.pkg.FileZilla
 ParentRecipe: com.github.smithjw-actions.download.FileZilla
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   NAME: FileZilla
   BUNDLE_ID: org.filezilla-project.filezilla.pkg

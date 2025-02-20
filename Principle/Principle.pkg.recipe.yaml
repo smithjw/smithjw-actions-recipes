@@ -1,7 +1,7 @@
 Name: Principle
 Description: Downloads Principle and makes a pkg of it.
 Identifier: com.github.smithjw-actions.pkg.Principle
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   NAME: Principle
   DOWNLOAD_URL: https://principleformac.com/download/Principle.zip

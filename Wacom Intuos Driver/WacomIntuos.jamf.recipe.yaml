@@ -1,7 +1,7 @@
 Name: Wacom Intuos Driver
 Description: Downloads the latest Wacom Intuos driver and uploads it to Jamf.
 Identifier: com.github.smithjw-actions.jamf.WacomIntuosDriver
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   CATEGORY: Utilities
   EXTENSION_ATTRIBUTE_NAME: Wacom Intuos Driver
