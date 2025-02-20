@@ -1,0 +1,38 @@
+Name: Python 3
+Description: |
+  Downloads the latest or specified version of Python 3. Stable builds are checked first, then pre-release builds.
+  Options:
+    - To download the latest version of Python 3, use (this is REGEX): \d+
+    - To download a specific minor version, use: "3.10"
+    - You can download a pre-release build if the minor version does not yet have a stable release.
+  This recipe sets the env variable `version_major_minor` for use in child recipes.
+Identifier: com.github.smithjw-actions.download.python3
+MinimumVersion: "2.3"
+Input:
+  NAME: Python 3
+  MATCH_VERSION: \d+  # Regex for matching the desired version
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      url: https://www.python.org/downloads/macos/
+      re_pattern: (?P<url>https://www.python.org/ftp/python-(?P<version>%MATCH_VERSION%(\.[\d]+)*)/python-%version%-macos11.pkg) # Updated to match the expected URL format for Python 3
+
+  - Processor: com.github.mlbz521.SharedProcessors/VersionMajorMinor
+    Arguments:
+      version: "%version%"
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      url: %url%  # URL derived from the URLTextSearcher
+      filename: "python3-%version%.pkg"  # Downloaded filename structure for Python 3
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - "Developer ID Installer: Python Software Foundation (BMM5U3QVKW)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"
+      input_path: "%pathname%"
+
+  - Processor: EndOfCheckPhase
