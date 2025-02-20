@@ -2,7 +2,7 @@ Description: Packages both ARM and INTEL versions of the Microsoft DotNet 9 SDK.
 Identifier: com.github.smithjw-actions.pkg.dotnet9sdk-universal
 ParentRecipe: com.github.smithjw-actions.download.dotnet9sdk-universal
 
-MinimumVersion: "2.3"
+MinimumVersion: '2.3'
 
 Input:
   NAME: DotNet-9-SDK
