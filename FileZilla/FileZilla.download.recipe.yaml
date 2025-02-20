@@ -1,0 +1,28 @@
+Name: FileZilla
+Description: Downloads the current version of FileZilla. Specify the channel via %NAME%.
+Identifier: com.github.smithjw-actions.download.FileZilla
+MinimumVersion: 2.3
+Input:
+  NAME: FileZilla
+  RE_PATTERN: "<a href=\"(?P<url>http[s]?.*?(?P<filename>FileZilla_(?P<version>[\\d.]+)_macos-x86.*?\\.tar\\.bz2).*?)\""
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '%RE_PATTERN%'
+      url: https://filezilla-project.org/download.php?show_all=1
+      request_headers:
+        user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15
+
+  - Processor: URLDownloaderPython
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: Unarchiver
+    Arguments:
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/%NAME%/FileZilla.app'
+      requirement: identifier "org.filezilla-project.filezilla" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "5VPGKXL75N"

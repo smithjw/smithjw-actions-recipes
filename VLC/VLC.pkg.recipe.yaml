@@ -1,0 +1,42 @@
+Name: VLC
+Description: Downloads the latest VLC disk image and builds a package.
+Identifier: com.github.smithjw-actions.pkg.VLC
+ParentRecipe: com.github.smithjw-actions.download.VLC
+MinimumVersion: 2.3
+Input:
+  NAME: VLC
+
+Process:
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+      pkgdirs:
+        Applications: "0755"
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%/VLC.app'
+      destination_path: '%pkgroot%/Applications/VLC.app'
+
+  - Processor: PkgInfoCreator
+    Arguments:
+      template_path: PackageInfoTemplate
+      infofile: '%RECIPE_CACHE_DIR%/PackageInfo'
+      pkgtype: flat
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: '%NAME%-%version%'
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        id: org.videolan.vlc.pkg
+        resources: Resources
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin

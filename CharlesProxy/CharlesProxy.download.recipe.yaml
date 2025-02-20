@@ -1,0 +1,24 @@
+Name: CharlesProxy
+Description: Downloads the current release version of CharlesProxy.
+Identifier: com.github.smithjw-actions.download.CharlesProxy
+MinimumVersion: 2.3
+Input:
+  NAME: CharlesProxy
+  URL: https://www.charlesproxy.com/latest.do
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      url: '%URL%'
+      re_pattern: .*
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      url: https://www.charlesproxy.com/assets/release/%match%/charles-proxy-%match%.dmg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/Charles.app'
+      requirement: identifier "com.xk72.Charles" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "9A5PCU4FSD"

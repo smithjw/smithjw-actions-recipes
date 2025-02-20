@@ -1,0 +1,35 @@
+Name: HandBrake
+Description: Downloads the latest Handbrake disk image and creates a package.
+Identifier: com.github.smithjw-actions.pkg.HandBrake
+ParentRecipe: com.github.smithjw-actions.download.HandBrake
+MinimumVersion: 2.3
+Input:
+  NAME: HandBrake
+
+Process:
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+      pkgdirs:
+        Applications: "0755"
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%/HandBrake.app'
+      destination_path: '%pkgroot%/Applications/HandBrake.app'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: '%NAME%-%version%'
+        version: '%version%'
+        id: com.hicknhacksoftware.MacPass
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin
