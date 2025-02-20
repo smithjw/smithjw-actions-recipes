@@ -1,11 +1,11 @@
-Name: MySQL Workbench
-Description: Downloads the latest version of MySQL Workbench for macOS and creates an installer package.
-Identifier: com.github.smithjw-actions.pkg.MySQLWorkbench
-ParentRecipe: com.github.smithjw-actions.download.MySQLWorkbench-Universal
+Name: RStudio
+Description: Downloads the latest version of RStudio and creates an installer package.
+Identifier: com.github.smithjw-actions.pkg.RStudio
+ParentRecipe: com.github.smithjw-actions.download.RStudio
 MinimumVersion: 2.3
 Input:
-  NAME: MySQL Workbench
-  BUNDLE_ID: com.oracle.workbench.MySQLWorkbench
+  NAME: RStudio
+  BUNDLE_ID: org.rstudio.RStudio
 
 Process:
   - Processor: PkgRootCreator
@@ -16,8 +16,8 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: %RECIPE_CACHE_DIR%/%NAME%/MySQLWorkbench.app
-      destination_path: %pkgroot%/Applications/MySQLWorkbench.app
+      source_path: %RECIPE_CACHE_DIR%/%NAME%/RStudio.app
+      destination_path: %pkgroot%/Applications/RStudio.app
 
   - Processor: PkgCreator
     Arguments:
@@ -34,4 +34,4 @@ Process:
   - Processor: PathDeleter
     Arguments:
       path_list:
-        - %RECIPE_CACHE_DIR%/%NAME%  
+        - %RECIPE_CACHE_DIR%/%NAME%  # Clean up temporary files
