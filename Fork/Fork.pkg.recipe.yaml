@@ -1,0 +1,37 @@
+Name: Fork
+Description: Downloads the latest release version of Fork and creates an installer package.
+Identifier: com.github.smithjw-actions.pkg.Fork
+ParentRecipe: com.github.smithjw-actions.download.Fork
+MinimumVersion: 2.3
+Input:
+  NAME: Fork
+  BUNDLE_ID: com.DanPristupov.Fork
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: %RECIPE_CACHE_DIR%/%NAME%
+      pkgdirs:
+        Applications: "0755"
+
+  - Processor: Copier
+    Arguments:
+      source_path: %RECIPE_CACHE_DIR%/%NAME%/Fork.app
+      destination_path: %pkgroot%/Applications/Fork.app
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: %NAME%-%version%
+        pkgdir: %RECIPE_CACHE_DIR%
+        id: %BUNDLE_ID%
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - %RECIPE_CACHE_DIR%/%NAME%  
