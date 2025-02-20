@@ -1,0 +1,33 @@
+Name: AWS CLI
+Description: Creates an installer package for the latest version of the AWS Command Line Interface.
+Identifier: com.github.smithjw-actions.pkg.AWSCLI
+ParentRecipe: com.github.smithjw-actions.download.AWSCLI
+MinimumVersion: 2.3
+Input:
+  NAME: AWSCLI
+  BUNDLE_ID: com.amazon.awscli
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: %RECIPE_CACHE_DIR%/%NAME%
+      pkgdirs:
+        Applications: "0755"
+  - Processor: Copier
+    Arguments:
+      source_path: %RECIPE_CACHE_DIR%/%NAME%/AWSCLIV2.pkg  # Ensure this path is correct
+      destination_path: %pkgroot%/Applications/AWSCLIV2.pkg
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        pkgname: %NAME%-%version%
+        pkgdir: %RECIPE_CACHE_DIR%
+        id: %BUNDLE_ID%
+        options: purge_ds_store
+        chown:
+          - path: Applications
+            user: root
+            group: admin
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - %RECIPE_CACHE_DIR%/%NAME%  # Clean up temporary files
