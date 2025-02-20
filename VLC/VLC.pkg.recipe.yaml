@@ -2,7 +2,7 @@ Name: VLC
 Description: Downloads the latest VLC disk image and builds a package.
 Identifier: com.github.smithjw-actions.pkg.VLC
 ParentRecipe: com.github.smithjw-actions.download.VLC
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   NAME: VLC
 

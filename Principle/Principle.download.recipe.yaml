@@ -1,7 +1,7 @@
 Name: Principle
 Description: Downloads the latest version of Principle.
 Identifier: com.github.smithjw-actions.download.Principle
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   NAME: Principle
   SPARKLE_FEED_URL: https://principleformac.com/update2.xml

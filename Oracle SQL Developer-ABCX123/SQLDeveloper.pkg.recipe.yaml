@@ -1,11 +1,11 @@
-Name: Node.js
-Description: Downloads the latest version of Node.js and creates an installer package.
-Identifier: com.github.smithjw-actions.pkg.node
-ParentRecipe: com.github.smithjw-actions.download.node
+Name: SQL Developer
+Description: Downloads the latest version of SQL Developer and creates an installer package.
+Identifier: com.github.smithjw-actions.pkg.SQLDeveloper
+ParentRecipe: com.github.smithjw-actions.download.SQLDeveloper
 MinimumVersion: '2.3'
 Input:
-  NAME: node
-  BUNDLE_ID: com.oracle.node
+  NAME: SQLDeveloper
+  BUNDLE_ID: com.oracle.SQLDeveloper
 
 Process:
   - Processor: PkgRootCreator
@@ -16,8 +16,8 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/%NAME%/node-v%version%.pkg'
-      destination_path: '%pkgroot%/Applications/node-v%version%.pkg'
+      source_path: '%RECIPE_CACHE_DIR%/%NAME%/SQLDeveloper.app'
+      destination_path: '%pkgroot%/Applications/SQLDeveloper.app'
 
   - Processor: PkgCreator
     Arguments:

@@ -1,7 +1,7 @@
 Name: ColourContrastAnalyser
 Description: Downloads the latest version of Colour Contrast Analyser.
 Identifier: com.github.smithjw-actions.download.ColourContrastAnalyser
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
 Input:
   NAME: ColourContrastAnalyser
 
