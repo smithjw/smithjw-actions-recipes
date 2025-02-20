@@ -1,4 +1,4 @@
-Name: Node.js
+---
 Description: Downloads the latest version of Node.js.
 Identifier: com.github.smithjw-actions.download.node
 MinimumVersion: '2.3'
@@ -23,6 +23,6 @@ Process:
     Arguments:
       input_path: '%pathname%'
       expected_authority_names:
-        - Developer ID Installer: Node.js Foundation (HX7739G8FX)
-        - Developer ID Certification Authority
-        - Apple Root CA
+        - 'Developer ID Installer: Node.js Foundation (HX7739G8FX)'
+        - 'Developer ID Certification Authority'
+        - 'Apple Root CA'
