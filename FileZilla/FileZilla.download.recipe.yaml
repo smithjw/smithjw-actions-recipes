@@ -1,7 +1,8 @@
-Name: FileZilla
+---
 Description: Downloads the current version of FileZilla. Specify the channel via %NAME%.
 Identifier: com.github.smithjw-actions.download.FileZilla
 MinimumVersion: '2.3'
+
 Input:
   NAME: FileZilla
   RE_PATTERN: "<a href=\"(?P<url>http[s]?.*?(?P<filename>FileZilla_(?P<version>[\\d.]+)_macos-x86.*?\\.tar\\.bz2).*?)\""
@@ -14,7 +15,7 @@ Process:
       request_headers:
         user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
 
   - Processor: EndOfCheckPhase
 

@@ -1,10 +1,10 @@
-Description: Downloads the latest version of Colour Contrast Analyser and builds a package.
-Identifier: com.github.smithjw-actions.pkg.ColourContrastAnalyser
-ParentRecipe: com.github.smithjw-actions.download.ColourContrastAnalyser
-
+Name: CraftManager
+Description: Downloads the latest version of CraftManager and builds a package.
+Identifier: com.github.smithjw-actions.pkg.CraftManager
+ParentRecipe: com.github.smithjw-actions.download.CraftManager
 MinimumVersion: '2.3'
 Input:
-  NAME: ColourContrastAnalyser
+  NAME: CraftManager
 
 Process:
   - Processor: AppDmgVersioner
@@ -19,15 +19,15 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%pathname%/Colour Contrast Analyser.app'
-      destination_path: '%pkgroot%/Applications/Colour Contrast Analyser.app'
+      source_path: '%RECIPE_CACHE_DIR%/%NAME%/CraftManager.app'
+      destination_path: '%pkgroot%/Applications/CraftManager.app'
 
   - Processor: PkgCreator
     Arguments:
       pkg_request:
         pkgname: '%NAME%-%version%'
         pkgdir: '%RECIPE_CACHE_DIR%'
-        id: com.github.smithjw-actions.ColourContrastAnalyser
+        id: com.github.smithjw-actions.CraftManager
         options: purge_ds_store
         chown:
           - path: Applications

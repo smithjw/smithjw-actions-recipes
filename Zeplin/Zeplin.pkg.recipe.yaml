@@ -26,6 +26,7 @@ Process:
       plist_keys:
         CFBundleIdentifier: bundleid
         CFBundleName: app_name
+        CFBundleShortVersionString: version
         
   - Processor: PkgCreator
     Arguments:
@@ -39,3 +40,4 @@ Process:
         options: purge_ds_store
         pkgname: '%SOFTWARE_TITLE%-%version%'
         version: '%version%'
+        
