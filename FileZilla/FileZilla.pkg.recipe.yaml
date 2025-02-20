@@ -1,8 +1,8 @@
-Name: FileZilla
 Description: Downloads the current version of FileZilla and creates a package.
 Identifier: com.github.smithjw-actions.pkg.FileZilla
 ParentRecipe: com.github.smithjw-actions.download.FileZilla
 MinimumVersion: '2.3'
+
 Input:
   NAME: FileZilla
   BUNDLE_ID: org.filezilla-project.filezilla.pkg
@@ -15,7 +15,7 @@ Process:
       request_headers:
         user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
 
   - Processor: EndOfCheckPhase
 
@@ -27,6 +27,17 @@ Process:
     Arguments:
       input_path: '%RECIPE_CACHE_DIR%/%NAME%/FileZilla.app'
       requirement: identifier "org.filezilla-project.filezilla" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "5VPGKXL75N"
+      
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/%NAME%/FileZilla.app'
+      target: '%pkgroot%/Applications/FileZilla.app'
 
   - Processor: PkgCreator
     Arguments:

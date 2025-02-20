@@ -1,6 +1,6 @@
 Description: Packages both ARM and INTEL versions of the Microsoft DotNet 8 SDK. Working!!
-Identifier: com.github.markkenny.autopkg.pkg.dotnet8sdk-universal
-ParentRecipe: com.github.markkenny.autopkg.download.dotnet8sdk-universal
+Identifier: com.github.smithjw-actions.dotnet8sdk-universal
+ParentRecipe: com.github.smithjw-actions.download.dotnet8sdk-universal
 
 MinimumVersion: "2.3"
 
