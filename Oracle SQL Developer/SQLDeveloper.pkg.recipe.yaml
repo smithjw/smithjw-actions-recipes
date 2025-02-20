@@ -1,37 +1,41 @@
-Name: SQL Developer
 Description: Downloads the latest version of SQL Developer and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.SQLDeveloper
 ParentRecipe: com.github.smithjw-actions.download.SQLDeveloper
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
+
 Input:
   NAME: SQLDeveloper
   BUNDLE_ID: com.oracle.SQLDeveloper
-
+  SOFTWARE_TITLE: SQLDeveloper
+  
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
       pkgdirs:
-        Applications: "0755"
-
-  - Processor: Copier
+        Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      
+  - Processor: FileMover
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/%NAME%/SQLDeveloper.app'
-      destination_path: '%pkgroot%/Applications/SQLDeveloper.app'
-
+      source: '%RECIPE_CACHE_DIR%/%NAME%/SQLDeveloper.app'
+      target: '%pkgroot%/Applications/SQLDeveloper.app'
+      
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%pkgroot%/Applications/SQLDeveloper.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleIdentifier: bundleid
+        CFBundleVersion: version
+        
   - Processor: PkgCreator
     Arguments:
+      force_pkg_build: true
       pkg_request:
-        pkgname: '%NAME%-%version%'
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        id: '%BUNDLE_ID%'
-        options: purge_ds_store
         chown:
           - path: Applications
             user: root
-            group: admin
-
-  - Processor: PathDeleter
-    Arguments:
-      path_list:
-        - '%RECIPE_CACHE_DIR%/%NAME%'  # Clean up temporary files
+            group: wheel
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        version: '%version%'

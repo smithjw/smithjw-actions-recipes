@@ -1,16 +1,44 @@
 ---
-Description: "Downloads the current release version of IntelliJ IDEA Community Edition and creates a package."
-Comment: "For the ARCH_TYPE variable use \"mac\" for Intel, use \"macM1\" for Apple Silicon"
-Comment: "And for the SUPPORTED_ARCH variable use \"x86_64\" for Intel, use \"arm64\" for Apple Silicon. NOTE: BOTH ARCH_TYPE and SUPPORTED_ARCH MUST be set"
-Identifier: com.github.smithjw-actions.pkg.intellijideace
-ParentRecipe: com.github.smithjw-actions.download.intellijideace
+Description: Downloads the latest version IntelliJ IDEA, and packages it.
+Identifier: com.github.smithjw-actions.pkg.IntelliJ_CE
+ParentRecipe: com.github.smithjw-actions.download.IntelliJ_CE
+MinimumVersion: '2.3'
+
 Input:
-  NAME: IntelliJ IDEA Community Edition
-  ARCH_TYPE: macM1
-  SUPPORTED_ARCH: arm64
-MinimumVersion: "2.3"
-ParentRecipe: com.github.bnpl.autopkg.download.intellijideace
+  NAME: IntelliJ IDEA CE
+  SOFTWARE_TITLE: IntelliJ_CE
+
 Process:
-  - Arguments:
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%SUPPORTED_ARCH%-%version%.pkg"
-    Processor: AppPkgCreator
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%/*.app'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/Applications/IntelliJ IDEA CE.app'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/payload/Applications/IntelliJ IDEA CE.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleShortVersionString: version
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+
+  - Processor: PkgCreator
+    Arguments:
+      force_pkg_build: true
+      pkg_request:
+        chown:
+          - path: Applications
+            user: root
+            group: wheel
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload'
+        version: '%version%'
+

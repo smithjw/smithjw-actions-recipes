@@ -1,8 +1,8 @@
-Name: Wacom Intuos Driver
 Description: Downloads the latest Wacom Intuos driver disk image and builds a package.
 Identifier: com.github.smithjw-actions.pkg.WacomIntuos
 ParentRecipe: com.github.smithjw-actions.download.WacomIntuos
 MinimumVersion: '2.3'
+
 Input:
   NAME: Wacom Intuos Driver
 
@@ -24,12 +24,12 @@ Process:
 
   - Processor: com.github.autopkg.novaksam-recipes.Processors/FileChmodEditor
     Arguments:
-      modifier: 755
+      modifier: '755'
       pathname: '%RECIPE_CACHE_DIR%/downloads/PAYLOAD/Library/LaunchAgents'
 
   - Processor: com.github.autopkg.novaksam-recipes.Processors/FileChmodEditor
     Arguments:
-      modifier: 755
+      modifier: '755'
       pathname: '%RECIPE_CACHE_DIR%/downloads/PAYLOAD/Library/LaunchDaemons'
 
   - Processor: PathDeleter
