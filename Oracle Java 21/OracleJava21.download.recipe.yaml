@@ -1,0 +1,19 @@
+Description: |
+  Downloads the latest version of Oracle Java 21 JDK.
+Identifier: com.github.smithjw-actions.download.JavaJDK21
+Input:
+  NAME: Oracle Java 21 JDK
+  VENDOR: Oracle
+  SOFTWARETITLE: Java
+  SOFTWARETYPE: JDK
+MinimumVersion: 2.3
+Process:
+  - Arguments:
+      re_pattern: '(?P<url>https://download.oracle.com/otn/java/jdk/.*?/jdk-21.*?macOS-x64_bin.dmg)'
+      url: https://www.oracle.com/java/technologies/javase-jdk21-downloads.html
+    Processor: URLTextSearcher
+  - Arguments:
+      filename: %NAME%.dmg
+      request_headers:
+        Cookie: oraclelicense=accept-securebackup-cookie
+    Processor: URLDownloaderPython
