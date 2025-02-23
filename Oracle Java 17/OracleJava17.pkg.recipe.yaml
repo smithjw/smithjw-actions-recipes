@@ -1,0 +1,44 @@
+Description: |
+  Downloads and installs the latest version of Oracle Java 17 JDK.
+Identifier: com.github.smithjw-actions.pkg.JavaJDK17
+Input:
+  NAME: Oracle Java 17 JDK
+  VENDOR: Oracle
+  SOFTWARETITLE: Java
+  SOFTWARETYPE: JDK
+MinimumVersion: 2.3
+ParentRecipe: com.github.smithjw-actions.download.JavaJDK17
+Process:
+  - Arguments:
+      re_pattern: '(?P<url>https://download.oracle.com/otn/java/jdk/.*?/jdk-17.*?macOS-x64_bin.dmg)'
+      url: https://www.oracle.com/java/technologies/javase-jdk17-downloads.html
+    Processor: URLTextSearcher
+  - Arguments:
+      filename: %NAME%.dmg
+      request_headers:
+        Cookie: oraclelicense=accept-securebackup-cookie
+    Processor: URLDownloaderPython
+  - Arguments:
+      destination_path: %RECIPE_CACHE_DIR%/downloads/unpack
+      flat_pkg_path: %RECIPE_CACHE_DIR%/%NAME%.dmg
+    Processor: FlatPkgUnpacker
+  - Arguments:
+      pattern: %RECIPE_CACHE_DIR%/downloads/unpack/jdk*.pkg
+    Processor: FileFinder
+  - Arguments:
+      destination_path: %RECIPE_CACHE_DIR%/downloads/payload
+      pkg_payload_path: %found_filename%/Payload
+    Processor: PkgPayloadUnpacker
+  - Arguments:
+      input_plist_path: %RECIPE_CACHE_DIR%/downloads/payload/Contents/Info.plist
+      plist_version_key: CFBundleVersion
+    Processor: Versioner
+  - Arguments:
+      source_pkg: %RECIPE_CACHE_DIR%/downloads/unpack/*.pkg
+      pkg_path: %RECIPE_CACHE_DIR%/%VENDOR%_%SOFTWARETITLE%_%SOFTWARETYPE%_%version%.pkg
+    Processor: PkgCopier
+  - Arguments:
+      path_list:
+        - %RECIPE_CACHE_DIR%/downloads/unpack
+        - %RECIPE_CACHE_DIR%/downloads/payload
+    Processor: PathDeleter

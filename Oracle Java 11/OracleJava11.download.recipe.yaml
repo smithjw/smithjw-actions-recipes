@@ -1,0 +1,23 @@
+Description: |
+  Downloads the latest version of Oracle Java 11 JDK.
+Identifier: com.github.smithjw-actions.download.OracleJava11JDK
+Input:
+  NAME: Oracle Java 11 JDK
+  VENDOR: Oracle
+  SOFTWARETITLE: Java
+  SOFTWARETYPE: JDK
+MinimumVersion: 2.3
+Process:
+  - Arguments:
+      re_pattern: '(?P<url>https://download.oracle.com/otn/java/jdk/.*?/jdk-11.*?macOS-x64_bin.dmg)'
+      url: https://www.oracle.com/java/technologies/javase-jdk11-downloads.html
+    Processor: URLTextSearcher
+  - Arguments:
+      filename: %NAME%.dmg
+      request_headers:
+        Cookie: oraclelicense=accept-securebackup-cookie
+    Processor: URLDownloaderPython
+  - Arguments:
+      path_list:
+        - %RECIPE_CACHE_DIR%/downloads
+    Processor: PathDeleter
