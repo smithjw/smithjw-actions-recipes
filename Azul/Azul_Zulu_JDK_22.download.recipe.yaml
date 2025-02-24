@@ -1,0 +1,31 @@
+Description: |
+  Downloads the latest release version of Azul Zulu Java for given
+  Java version, architecture, bundle type (JDK/JRE), and file
+  extension.
+  Architectures: arm
+Identifier: com.github.smithjw-actions.download.AzulZuluJava_22
+MinimumVersion: '2.3'
+
+Input:
+  BUNDLE_TYPE: jdk
+  DOWNLOAD_FILE_EXTENSION: dmg
+  ARCHITECTURE: arm
+  JAVA_MAJOR_VERSION: '22'
+  NAME: AzulZuluJava
+  SOFTWARE_TITLE:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: AzulZuluJavaInfoProvider
+    Arguments:
+      arch: '%ARCHITECTURE%'
+      bundle_type: '%BUNDLE_TYPE%'
+      extension: '%DOWNLOAD_FILE_EXTENSION%'
+      java_major_version: '%JAVA_MAJOR_VERSION%'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      CHECK_FILESIZE_ONLY: true
+
+  - Processor: EndOfCheckPhase

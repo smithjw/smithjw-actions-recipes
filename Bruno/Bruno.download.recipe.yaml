@@ -1,4 +1,3 @@
----
 Description: |
   Downloads the most recent signed release pkg of Bruno from GitHub.
 
@@ -18,27 +17,24 @@ Input:
 Process:
   - Processor: GitHubReleasesInfoProvider
     Arguments:
-      asset_regex: '.*arm64_mac.dmg$'
+      asset_regex: .*arm64_mac.dmg$
       github_repo: usebruno/bruno
       include_prereleases: '%INCLUDE_PRERELEASES%'
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%.dmg'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
 
   - Processor: EndOfCheckPhase
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Bruno.app'
       deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Bruno.app'
+      requirement: identifier "com.usebruno.app" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = W7LPPWA48L
       strict_verification: true
-      requirement: >-
-        identifier "com.usebruno.app" and anchor apple generic and
-        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
-        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
-        certificate leaf[subject.OU] = W7LPPWA48L

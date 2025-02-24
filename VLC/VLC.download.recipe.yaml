@@ -1,25 +1,24 @@
----
 Description: Downloads the latest VLC universal.
 Identifier: com.github.smithjw-actions.download.VLC
 MinimumVersion: '2.3'
 
 Input:
-  NAME: VLC
-  AUTHPARAM:
-  SEARCH_URL: https://www.videolan.org/vlc/download-macosx.html
   ARCHITECTURE: universal
-  
+  SEARCH_URL: https://www.videolan.org/vlc/download-macosx.html
+  AUTHPARAM: null
+  NAME: VLC
+
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      url: '%SEARCH_URL%'
-      re_pattern: 'href="\/\/get\.videolan\.org\/vlc\/([\d\.]+)\/macosx\/vlc-[\d\.]+-%ARCHITECTURE%\.dmg"'
+      re_pattern: href="\/\/get\.videolan\.org\/vlc\/([\d\.]+)\/macosx\/vlc-[\d\.]+-%ARCHITECTURE%\.dmg"
       result_output_var_name: version
+      url: '%SEARCH_URL%'
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      url: 'https://get.videolan.org/vlc/%version%/macosx/vlc-%version%-%ARCHITECTURE%.dmg'
       filename: '%NAME%.dmg'
+      url: https://get.videolan.org/vlc/%version%/macosx/vlc-%version%-%ARCHITECTURE%.dmg
 
   - Processor: EndOfCheckPhase
 

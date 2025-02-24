@@ -1,5 +1,5 @@
-Description: Downloads latest Mozilla Firefox package.
 Comment: ''
+Description: Downloads latest Mozilla Firefox package.
 Identifier: com.github.smithjw-actions.download.Mozilla_Firefox
 MinimumVersion: '2.3'
 
@@ -7,8 +7,8 @@ Input:
   NAME: Mozilla Firefox
   SOFTWARE_TITLE: Mozilla_Firefox
   LATEST_RELEASE: LATEST_FIREFOX_VERSION
-  DOWNLOAD_MISSING_FILE:
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: URLTextSearcher
@@ -19,11 +19,12 @@ Process:
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%.pkg'
-      url: 'https://releases.mozilla.org/pub/firefox/releases/%version%/mac/en-GB/Firefox%20%version%.pkg'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.pkg'
+      url: https://releases.mozilla.org/pub/firefox/releases/%version%/mac/en-GB/Firefox%20%version%.pkg
 
   - Processor: EndOfCheckPhase
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'

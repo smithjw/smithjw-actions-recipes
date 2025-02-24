@@ -1,0 +1,68 @@
+Description: Downloads both ARM and INTEL versions of the Microsoft DotNet 8 SDK. Working!!
+Identifier: com.github.smithjw-actions.download.dotnet8sdk-universal
+MinimumVersion: '2.3'
+
+Input:
+  INTEL_PKG: INTEL
+  ARM_PKG: ARM
+  INTEL_ARCH: x64
+  ARM_ARCH: arm64
+  NAME: DotNet 8 SDK
+  SOFTWARE_TITLE:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: href="(/en-us/download/dotnet/thank-you/sdk-8\.([0-9]+(\.[0-9]+)+)-macos-%ARM_ARCH%-installer)"
+      result_output_var_name: SEARCH_URL
+      url: https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: href="(https://download\.visualstudio\.microsoft\.com/download/pr/([A-Za-z0-9]+(-[A-Za-z0-9]+)+)/[A-Za-z0-9]+/dotnet-sdk-8\.([0-9]+(\.[0-9]+)+)-osx-%ARM_ARCH%\.pkg)"
+      result_output_var_name: DOWNLOAD_URL
+      url: https://dotnet.microsoft.com%SEARCH_URL%
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      download_dir: '%RECIPE_CACHE_DIR%/downloads/arm'
+      filename: '%NAME%-%ARM_PKG%.pkg'
+      url: '%DOWNLOAD_URL%'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: href="(/en-us/download/dotnet/thank-you/sdk-8\.([0-9]+(\.[0-9]+)+)-macos-%INTEL_ARCH%-installer)"
+      result_output_var_name: SEARCH_URL
+      url: https://dotnet.microsoft.com/en-us/download/dotnet/8.0
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: href="(https://download\.visualstudio\.microsoft\.com/download/pr/([A-Za-z0-9]+(-[A-Za-z0-9]+)+)/[A-Za-z0-9]+/dotnet-sdk-8\.([0-9]+(\.[0-9]+)+)-osx-%INTEL_ARCH%\.pkg)"
+      result_output_var_name: DOWNLOAD_URL
+      url: https://dotnet.microsoft.com%SEARCH_URL%
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      download_dir: '%RECIPE_CACHE_DIR%/downloads/intel'
+      filename: '%NAME%-%INTEL_PKG%.pkg'
+      url: '%DOWNLOAD_URL%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/arm/%NAME%-%ARM_PKG%.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Microsoft Corporation (UBF8T346G9)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/intel/%NAME%-%INTEL_PKG%.pkg'

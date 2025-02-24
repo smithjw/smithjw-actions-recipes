@@ -1,4 +1,3 @@
----
 Description: Downloads the most recent signed release pkg of desktoppr from GitHub and renames the package.
 Identifier: com.github.smithjw-actions.pkg.desktoppr
 ParentRecipe: com.github.smithjw-actions.download.desktoppr

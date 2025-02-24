@@ -1,23 +1,23 @@
----
 Description: Downloads the current release version of CharlesProxy.
 Identifier: com.github.smithjw-actions.download.CharlesProxy
 MinimumVersion: '2.3'
+
 Input:
   NAME: CharlesProxy
-  URL: https://www.charlesproxy.com/latest.do
   SOFTWARE_TITLE: CharlesProxy
+  URL: https://www.charlesproxy.com/latest.do
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      url: '%URL%'
       re_pattern: .*
+      url: '%URL%'
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      url: https://www.charlesproxy.com/assets/release/%match%/charles-proxy-%match%.dmg
+      User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
       filename: '%SOFTWARE_TITLE%.dmg'
-      User_Agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+      url: https://www.charlesproxy.com/assets/release/%match%/charles-proxy-%match%.dmg
 
   - Processor: EndOfCheckPhase
 

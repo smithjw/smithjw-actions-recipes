@@ -1,0 +1,41 @@
+Description: Downloads the latest version of SQL Developer and creates an installer package.
+Identifier: com.github.smithjw-actions.pkg.SQLDeveloper
+ParentRecipe: com.github.smithjw-actions.download.SQLDeveloper
+MinimumVersion: '2.3'
+
+Input:
+  NAME: SQLDeveloper
+  SOFTWARE_TITLE: SQLDeveloper
+  BUNDLE_ID: com.oracle.SQLDeveloper
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/%NAME%/SQLDeveloper.app'
+      target: '%pkgroot%/Applications/SQLDeveloper.app'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%pkgroot%/Applications/SQLDeveloper.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleIdentifier: bundleid
+        CFBundleVersion: version
+
+  - Processor: PkgCreator
+    Arguments:
+      force_pkg_build: true
+      pkg_request:
+        chown:
+          - group: wheel
+            path: Applications
+            user: root
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        version: '%version%'

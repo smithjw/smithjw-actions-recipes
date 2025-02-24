@@ -1,4 +1,3 @@
----
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.Jamf_Setup_Manager
 ParentRecipe: com.github.smithjw-actions.download.Jamf_Setup_Manager

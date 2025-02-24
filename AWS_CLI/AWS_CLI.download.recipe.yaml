@@ -1,0 +1,25 @@
+Description: Downloads the latest version of the AWS Command Line Interface.
+Identifier: com.github.smithjw-actions.download.AWS_CLI
+MinimumVersion: '2.3'
+
+Input:
+  NAME: AWS CLI
+  SOFTWARE_TITLE: AWS_CLI
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: AWSCLIV2.pkg
+      url: https://awscli.amazonaws.com/AWSCLIV2.pkg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: AMZN Mobile LLC (94KV3E626L)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

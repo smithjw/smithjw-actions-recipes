@@ -1,15 +1,15 @@
 Description: Downloads the latest version of tart from Github. Specifiy an ARCH of "arm64" for Apple Silicon or "amd64" for Intel.
 Identifier: com.github.smithjw-actions.download.tart
-MinimumVersion: '2.4.1'
+MinimumVersion: 2.4.1
 
 Input:
   NAME: tart
+  SOFTWARE_TITLE: '%NAME%'
   ARCH: arm64
   GITHUB_REPO: cirruslabs/tart
-  SOFTWARE_TITLE: '%NAME%'
   INCLUDE_PRERELEASES: 'True'
-  DOWNLOAD_MISSING_FILE:
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: GitHubReleasesInfoProvider
@@ -20,10 +20,11 @@ Process:
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%.tar.gz'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.tar.gz'
 
   - Processor: EndOfCheckPhase
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
@@ -33,14 +34,3 @@ Process:
       archive_path: '%pathname%'
       destination_path: '%RECIPE_CACHE_DIR%/unpack'
       purge_destination: true
-
-  # - Processor: CodeSignatureVerifier
-  #   Arguments:
-  #     input_path: '%RECIPE_CACHE_DIR%/unpack/Tart.app'
-  #     deep_verification: true
-  #     strict_verification: true
-  #     requirement: >-
-  #       identifier tart and anchor apple generic and
-  #       certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
-  #       certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
-  #       certificate leaf[subject.OU] = "9M2P8L4D89"

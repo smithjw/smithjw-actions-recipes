@@ -1,27 +1,27 @@
-Name: RStudio
 Description: Downloads the latest RStudio installer package.
 Identifier: com.github.smithjw-actions.download.RStudio
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
+
 Input:
-  NAME: RStudio
-  SEARCH_URL: https://posit.co/download/rstudio-desktop/
-  SEARCH_PATTERN: (?P<dmg>RStudio-(?P<version>([0-9.]+){1,3}?.*).dmg)
   DOWNLOAD_MIRROR: https://download1.rstudio.org/electron/macos
+  SEARCH_PATTERN: (?P<dmg>RStudio-(?P<version>([0-9.]+){1,3}?.*).dmg)
+  SEARCH_URL: https://posit.co/download/rstudio-desktop/
+  NAME: RStudio
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      url: %SEARCH_URL%
-      re_pattern: %SEARCH_PATTERN%
+      re_pattern: '%SEARCH_PATTERN%'
+      url: '%SEARCH_URL%'
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      url: %DOWNLOAD_MIRROR%/%dmg%
-      filename: %NAME%.dmg
+      filename: '%NAME%.dmg'
+      url: '%DOWNLOAD_MIRROR%/%dmg%'
 
   - Processor: EndOfCheckPhase
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: %pathname%/RStudio.app
+      input_path: '%pathname%/RStudio.app'
       requirement: identifier "org.rstudio.RStudio" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = FYF2F5GFX4

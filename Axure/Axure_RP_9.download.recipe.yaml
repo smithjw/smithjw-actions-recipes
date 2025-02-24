@@ -1,0 +1,29 @@
+Description: Download recipe of the Axure RP 9 Trial.
+Identifier: com.github.smithjw-actions.download.Axure_RP_9
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Axure RP 9
+  SOFTWARE_TITLE: Axure_RP_9
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: https://axure\.cachefly\.net/versions/9.*/AxureRP-Setup-.*\.dmg
+      result_output_var_name: url
+      url: https://www.axure.com/release-history/rp9
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%NAME%.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%.dmg/Axure RP 9.app'
+      requirement: identifier "com.axure.AxureRP9" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = HUMW6UU796

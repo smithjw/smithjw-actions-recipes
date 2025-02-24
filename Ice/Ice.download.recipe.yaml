@@ -1,4 +1,3 @@
----
 Description: ''
 Identifier: com.github.smithjw-actions.download.Ice
 MinimumVersion: '2.3'
@@ -7,22 +6,23 @@ Input:
   NAME: Ice
   SOFTWARE_TITLE: '%NAME%'
   INCLUDE_PRERELEASES: 'True'
-  DOWNLOAD_MISSING_FILE:
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: GitHubReleasesInfoProvider
     Arguments:
-      github_repo: jordanbaird/Ice
       asset_regex: Ice.zip
+      github_repo: jordanbaird/Ice
       include_prereleases: '%INCLUDE_PRERELEASES%'
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%.pkg'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.pkg'
 
   - Processor: EndOfCheckPhase
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
@@ -35,11 +35,7 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/unpack/Ice.app'
       deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/unpack/Ice.app'
+      requirement: identifier "com.jordanbaird.Ice" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = K2ATHQPJDP
       strict_verification: true
-      requirement: >-
-        identifier "com.jordanbaird.Ice" and anchor apple generic and
-        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
-        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
-        certificate leaf[subject.OU] = K2ATHQPJDP

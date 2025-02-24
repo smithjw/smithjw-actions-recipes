@@ -1,17 +1,16 @@
----
 Description: Downloads the latest version of MacPass.
 Identifier: com.github.smithjw-actions.download.MacPass
 MinimumVersion: '2.3'
 
 Input:
-  NAME: MacPass
   SOFTWARETITLE: MacPass
+  NAME: MacPass
 
 Process:
   - Processor: GitHubReleasesInfoProvider
     Arguments:
-      github_repo: MacPass/MacPass
       asset_regex: (MacPass-[\d\.]+\.zip)
+      github_repo: MacPass/MacPass
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
 

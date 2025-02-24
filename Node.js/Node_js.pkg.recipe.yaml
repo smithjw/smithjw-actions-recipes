@@ -1,0 +1,20 @@
+Description: Downloads the latest version of Node.js and creates an installer package.
+Identifier: com.github.smithjw-actions.pkg.node
+ParentRecipe: com.github.smithjw-actions.download.node
+MinimumVersion: '2.3'
+
+Input:
+  NAME: node
+  SOFTWARE_TITLE: '%NAME%'
+  BUNDLE_ID: com.oracle.node
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/%NAME%'

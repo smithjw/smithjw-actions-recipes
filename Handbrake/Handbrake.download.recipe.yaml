@@ -1,20 +1,20 @@
----
 Description: Downloads the latest HandBrake disk image. Set PRERELEASE to a non-empty string to download prereleases, either via Input in an override or via the -k option
 Identifier: com.github.smithjw-actions.download.Handbrake
 MinimumVersion: '2.3'
+
 Input:
-  NAME: HandBrake
   PRERELEASE: ''
+  NAME: HandBrake
 
 Process:
   - Processor: GitHubReleasesInfoProvider
     Arguments:
+      asset_regex: HandBrake-\S.*?.dmg
       github_repo: HandBrake/HandBrake
       include_prereleases: '%PRERELEASE%'
       sort_by_highest_tag_names: true
-      asset_regex: HandBrake-\S.*?.dmg
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
       filename: '%NAME%.dmg'
 

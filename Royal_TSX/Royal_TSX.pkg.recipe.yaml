@@ -1,0 +1,37 @@
+Description: Downloads the latest version of Royal TSX and creates an installer package.
+Identifier: com.github.smithjw-actions.pkg.RoyalTSX
+ParentRecipe: com.github.smithjw-actions.download.RoyalTSX
+MinimumVersion: '2.3'
+
+Input:
+  BUNDLE_ID: com.lemonmojo.RoyalTSX.App
+  NAME: Royal TSX
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+
+  - Processor: Copier
+    Arguments:
+      destination_path: '%pkgroot%/Applications/Royal TSX.app'
+      source_path: '%RECIPE_CACHE_DIR%/%NAME%/Royal TSX.app'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: admin
+            path: Applications
+            user: root
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-%version%'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/%NAME%'

@@ -1,0 +1,58 @@
+Description: Downloads the latest version of MySQL Workbench for macOS. Downloads both the ARM and Intel builds.
+Identifier: com.github.smithjw-actions.download.MySQLWorkbench-Universal
+MinimumVersion: '2.3'
+
+Input:
+  INTEL_ARCHITECTURE: x86_64
+  ARM_ARCHITECTURE: arm64
+  USER_AGENT: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15
+  PKG_NAME: MySQL Workbench (Universal)
+  NAME: MySQL Workbench
+  SOFTWARE_TITLE:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: (?P<dmg>mysql-workbench-community-(?P<base_version>[\d\.]+)-macos-%ARM_ARCHITECTURE%\.dmg)
+      request_headers:
+        user-agent: '%USER_AGENT%'
+      url: https://dev.mysql.com/downloads/workbench
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      prefetch_filename: true
+      url: https://dev.mysql.com/get/Downloads/MySQLGUITools/%dmg%
+
+  - Processor: EndOfCheckPhase
+    Arguments:
+      arm_path: '%pathname%'
+      arm_version: '%base_version%'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: (?P<dmg>mysql-workbench-community-(?P<base_version>[\d\.]+)-macos-%INTEL_ARCHITECTURE%\.dmg)
+      url: https://dev.mysql.com/downloads/workbench
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      prefetch_filename: true
+      url: https://dev.mysql.com/get/Downloads/MySQLGUITools/%dmg%
+
+  - Processor: EndOfCheckPhase
+    Arguments:
+      intel_path: '%pathname%'
+      intel_version: '%base_version%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%arm_path%/MySQLWorkbench.app'
+      requirement: identifier "com.oracle.workbench.MySQLWorkbench" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = VB5E2TV963
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%intel_path%/MySQLWorkbench.app'
+      requirement: identifier "com.oracle.workbench.MySQLWorkbench" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = VB5E2TV963
+
+  - Processor: EndOfCheckPhase

@@ -13,30 +13,30 @@ Process:
 
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
       pkgdirs:
         Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
 
   - Processor: Copier
     Arguments:
-      source_path: '%pathname%/VLC.app'
       destination_path: '%pkgroot%/Applications/VLC.app'
+      source_path: '%pathname%/VLC.app'
 
   - Processor: PkgInfoCreator
     Arguments:
-      template_path: PackageInfoTemplate
       infofile: '%RECIPE_CACHE_DIR%/PackageInfo'
       pkgtype: flat
+      template_path: PackageInfoTemplate
 
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: '%NAME%-%version%'
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        id: org.videolan.vlc.pkg
-        resources: Resources
-        options: purge_ds_store
         chown:
-          - path: Applications
+          - group: admin
+            path: Applications
             user: root
-            group: admin
+        id: org.videolan.vlc.pkg
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-%version%'
+        resources: Resources
