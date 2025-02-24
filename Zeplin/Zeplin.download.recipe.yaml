@@ -1,5 +1,4 @@
----
-Description: 'Downloads the latest version of Zeplin.'
+Description: Downloads the latest version of Zeplin.
 Identifier: com.github.smithjw-actions.download.Zeplin
 MinimumVersion: '2.3'
 
@@ -9,9 +8,9 @@ Input:
 Process:
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
+      disable_ssl_validation: true
       filename: '%NAME%.zip'
       url: https://zpl.io/download-mac
-      disable_ssl_validation: true
 
   - Processor: EndOfCheckPhase
 

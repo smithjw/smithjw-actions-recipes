@@ -1,0 +1,35 @@
+Description: Downloads the latest version of Colour Contrast Analyser and builds a package.
+Identifier: com.github.smithjw-actions.pkg.ColourContrastAnalyser
+ParentRecipe: com.github.smithjw-actions.download.ColourContrastAnalyser
+MinimumVersion: '2.3'
+
+Input:
+  NAME: ColourContrastAnalyser
+
+Process:
+  - Processor: AppDmgVersioner
+    Arguments:
+      dmg_path: '%pathname%'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0775'
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+
+  - Processor: Copier
+    Arguments:
+      destination_path: '%pkgroot%/Applications/Colour Contrast Analyser.app'
+      source_path: '%pathname%/Colour Contrast Analyser.app'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: admin
+            path: Applications
+            user: root
+        id: com.github.smithjw-actions.ColourContrastAnalyser
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-%version%'

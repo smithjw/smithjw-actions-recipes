@@ -1,4 +1,3 @@
----
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.UTM
 ParentRecipe: com.github.smithjw-actions.download.UTM
@@ -17,25 +16,25 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/UTM.app'
       destination_path: '%RECIPE_CACHE_DIR%/payload/Applications/UTM.app'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/UTM.app'
 
   - Processor: PlistReader
     Arguments:
       info_path: '%RECIPE_CACHE_DIR%/payload/Applications/UTM.app/Contents/Info.plist'
       plist_keys:
-        CFBundleShortVersionString: version
         CFBundleIdentifier: bundleid
         CFBundleName: app_name
+        CFBundleShortVersionString: version
 
   - Processor: PkgCreator
     Arguments:
       force_pkg_build: true
       pkg_request:
         chown:
-          - path: Applications
+          - group: wheel
+            path: Applications
             user: root
-            group: wheel
         id: '%bundleid%'
         options: purge_ds_store
         pkgname: '%NAME%-%version%'

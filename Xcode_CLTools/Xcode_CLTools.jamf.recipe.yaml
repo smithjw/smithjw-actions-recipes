@@ -1,5 +1,5 @@
-Description: Processes the Xcode Command Line Tools package manually downloaded from the Apple Developer Portal and uploads to Jamf
 Comment: The group specified in POLICY_GROUP_NAME must already exist on the Jamf Server
+Description: Processes the Xcode Command Line Tools package manually downloaded from the Apple Developer Portal and uploads to Jamf
 Identifier: com.github.smithjw-actions.jamf.Xcode_CLTools
 ParentRecipe: com.github.smithjw-actions.pkg.Xcode_CLTools
 MinimumVersion: '2.3'
@@ -8,13 +8,13 @@ Input:
   NAME: Xcode Command Line Tools
   SOFTWARE_TITLE: Xcode_CLTools
   CATEGORY: Apps
-  PACKAGE_INFO: 'autopkg'
+  PACKAGE_INFO: autopkg
   PACKAGE_NAME_MATCH: '%SOFTWARE_TITLE%'
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_GROUP_NAME: macOS Version
-  POLICY_GROUP_OS_MAX:
-  POLICY_GROUP_OS_MIN:
+  POLICY_GROUP_OS_MAX: null
+  POLICY_GROUP_OS_MIN: null
   POLICY_GROUP_TEMPLATE: Smart_Group-OS_Requirements.xml
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
@@ -39,8 +39,8 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      policy_template: '%POLICY_TEMPLATE%'
       policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
       replace_policy: '%REPLACE_POLICY%'
 
   - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult

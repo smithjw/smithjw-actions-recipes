@@ -1,6 +1,6 @@
-Description: Processes the Xcode Command Line Tools DMG manually downloaded from the Apple Developer Portal
 Comment: |
   You must manually download the Command Line Tools DMG from the Apple Developer Portal first, then pass it into the recipe with the --pkg option
+Description: Processes the Xcode Command Line Tools DMG manually downloaded from the Apple Developer Portal
 Identifier: com.github.smithjw-actions.download.Xcode_CLTools
 MinimumVersion: '2.3'
 
@@ -10,6 +10,7 @@ Input:
 
 Process:
   - Processor: PackageRequired
+
   - Processor: EndOfCheckPhase
     Arguments:
       pkg_path: '%PKG%/*.pkg'

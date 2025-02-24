@@ -1,13 +1,13 @@
-Name: Principle
 Description: Downloads Principle and makes a pkg of it.
 Identifier: com.github.smithjw-actions.pkg.Principle
 MinimumVersion: '2.3'
+
 Input:
-  NAME: Principle
   DOWNLOAD_URL: https://principleformac.com/download/Principle.zip
+  NAME: Principle
 
 Process:
-  - Processor: URLDownloaderPython
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
       url: '%DOWNLOAD_URL%'
 
@@ -15,9 +15,9 @@ Process:
 
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
       pkgdirs:
         Applications: '0775'
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
 
   - Processor: Unarchiver
     Arguments:
@@ -33,14 +33,15 @@ Process:
   - Processor: Versioner
     Arguments:
       input_plist_path: '%pkgroot%/Applications/Principle.app/Contents/Info.plist'
+
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: '%NAME%-%version%'
-        pkgdir: '%RECIPE_CACHE_DIR%'
+        chown:
+          - group: admin
+            path: Applications
+            user: root
         id: com.danielhooper.principle.pkg
         options: purge_ds_store
-        chown:
-          - path: Applications
-            user: root
-            group: admin
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-%version%'

@@ -1,7 +1,4 @@
----
-Description:
-  Downloads the latest version of the Microsoft Edge installer package and
-  renames the package.
+Description: Downloads the latest version of the Microsoft Edge installer package and renames the package.
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Edge
 ParentRecipe: com.github.smithjw-actions.download.Microsoft_Edge
 MinimumVersion: '2.3'

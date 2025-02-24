@@ -1,7 +1,7 @@
-Description: Downloads the current release version of Amazon Corretto JDK for macOS.
 Comment: |
   This recipe leverages Amazon's permanent links so that it can be overrided to fetch multiple versions
   Valid options for JDK_VERSION are 17, 21, & 22
+Description: Downloads the current release version of Amazon Corretto JDK for macOS.
 Identifier: com.github.smithjw-actions.download.Amazon_Corretto_JDK
 MinimumVersion: '2.3'
 
@@ -9,17 +9,18 @@ Input:
   NAME: Amazon Corretto JDK
   SOFTWARE_TITLE: Amazon_Corretto_JDK
   JDK_VERSION: '17'
-  DOWNLOAD_MISSING_FILE:
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%-%JDK_VERSION%.pkg'
-      url: 'https://corretto.aws/downloads/latest/amazon-corretto-%JDK_VERSION%-aarch64-macos-jdk.pkg'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%JDK_VERSION%.pkg'
+      url: https://corretto.aws/downloads/latest/amazon-corretto-%JDK_VERSION%-aarch64-macos-jdk.pkg
 
   - Processor: EndOfCheckPhase
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'

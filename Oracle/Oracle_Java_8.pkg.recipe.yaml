@@ -1,0 +1,46 @@
+Description: |
+  Downloads the latest Oracle Java 8 JRE CPU release and copies out the flat installer pkg
+  within the installer app wrapper, appending the version number to the filename.
+  (Note the version of the actual pkg id for the com.oracle.jre pkg component is still
+  always '1.0'.)
+  Read more about CPU and PSU releases here:
+      http://www.oracle.com/technetwork/java/javase/downloads/cpu-psu-explained-2331472.html
+  To use this recipe, you must accept the Oracle Binary Code License Agreement for Java SE.
+  http://www.oracle.com/technetwork/java/javase/terms/license/index.html"
+Identifier: com.github.smithjw-actions.pkg.OracleJava8
+ParentRecipe: com.github.smithjw-actions.download.OracleJava8
+MinimumVersion: '2.3'
+
+Input:
+  PKG_ID: com.oracle.jre
+  NAME: OracleJava8
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      flat_pkg_path: '%pathname%/Java 8 Update*.app/Contents/Resources/JavaAppletPlugin.pkg'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Library: '0755'
+        Library/Internet Plug-Ins: '0755'
+        Library/Internet Plug-Ins/JavaAppletPlugin.plugin: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/unpack/root'
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/unpack/root/Library/Internet Plug-Ins/JavaAppletPlugin.plugin'
+      pkg_payload_path: '%RECIPE_CACHE_DIR%/unpack/javaappletplugin.pkg/Payload'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/unpack/root/Library/Internet Plug-Ins/JavaAppletPlugin.plugin/Contents/Enabled.plist'
+      plist_keys:
+        CFBundleVersion: version
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg'
+      source_pkg: '%pathname%/Java 8 Update*.app/Contents/Resources/JavaAppletPlugin.pkg'

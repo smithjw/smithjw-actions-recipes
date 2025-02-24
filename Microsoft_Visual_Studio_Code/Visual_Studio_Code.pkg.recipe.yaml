@@ -1,6 +1,4 @@
----
-Description: Downloads the latest version of Visual Studio Code and
-  renames the package.
+Description: Downloads the latest version of Visual Studio Code and renames the package.
 Identifier: com.github.smithjw-actions.pkg.Visual_Studio_Code
 ParentRecipe: com.github.smithjw-actions.download.Visual_Studio_Code
 MinimumVersion: '2.3'
@@ -37,9 +35,9 @@ Process:
       force_pkg_build: true
       pkg_request:
         chown:
-          - path: Applications
+          - group: wheel
+            path: Applications
             user: root
-            group: wheel
         id: '%bundleid%'
         options: purge_ds_store
         pkgname: '%SOFTWARE_TITLE%-%version%'

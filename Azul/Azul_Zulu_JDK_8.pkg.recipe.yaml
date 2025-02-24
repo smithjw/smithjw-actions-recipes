@@ -1,0 +1,30 @@
+Description: |
+  Downloads the latest release dmg version of Azul Zulu Java for
+  given Java version, architecture, and bundle type (JDK/JRE),
+  and copies the package.
+  Architectures: arm
+  Bundle Types: jre, jdk, jre_fx, jdk_fx
+Identifier: com.github.smithjw-actions.pkg.Azul_Zulu_JDK_8
+ParentRecipe: com.github.smithjw-actions.download.Azul_Zulu_JDK_8
+MinimumVersion: '2.3'
+
+Input:
+  BUNDLE_TYPE: jdk
+  DOWNLOAD_FILE_EXTENSION: dmg
+  ARCHITECTURE: x86
+  JAVA_MAJOR_VERSION: '8'
+  NAME: AzulZuluJava
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%NAME%_%JAVA_MAJOR_VERSION%_%openjdk_build_number%_%BUNDLE_TYPE%_%ARCHITECTURE%-%version%.pkg'
+      source_pkg: '%pathname%/*.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Azul Systems, Inc. (TDTHCUPYFR)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pkg_path%'

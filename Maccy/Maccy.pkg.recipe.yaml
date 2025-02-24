@@ -1,18 +1,18 @@
-Name: Maccy
 Description: Downloads the latest version of Maccy and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.Maccy
 ParentRecipe: com.github.smithjw-actions.download.Maccy
 MinimumVersion: '2.3'
+
 Input:
-  NAME: Maccy
   SOFTWARETITLE: Maccy
+  NAME: Maccy
 
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARETITLE%'
       pkgdirs:
         Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARETITLE%'
 
   - Processor: Unarchiver
     Arguments:
@@ -28,15 +28,15 @@ Process:
 
   - Processor: PkgCreator
     Arguments:
-      pkgname: '%SOFTWARETITLE%_%version%'
       pkg_request:
-        version: '%version%'
+        chown:
+          - group: wheel
+            path: Applications
+            user: root
         id: org.p0deje.Maccy
         options: purge_ds_store
-        chown:
-          - path: Applications
-            user: root
-            group: wheel
+        version: '%version%'
+      pkgname: '%SOFTWARETITLE%_%version%'
 
   - Processor: PathDeleter
     Arguments:

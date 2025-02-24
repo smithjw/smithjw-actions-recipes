@@ -21,17 +21,18 @@ Process:
     Arguments:
       re_pattern: ((https:\/\/)([a-zA-Z0-9.\/])+(Wireshark[%]20([\d\.]+)[%]20%DOWNLOAD_TYPE%[%]2064.dmg))
       request_headers:
-        User-Agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
       result_output_var_name: url
       url: https://www.wireshark.org/download.html
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg'
+      User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      User_Agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
+      filename: '%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg'
 
   - Processor: EndOfCheckPhase
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
@@ -42,11 +43,7 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%pathname%/Wireshark*.app'
       deep_verification: true
+      input_path: '%pathname%/Wireshark*.app'
+      requirement: identifier "org.wireshark.Wireshark" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "7Z6EMTD2C6"
       strict_verification: true
-      requirement: >-
-        identifier "org.wireshark.Wireshark" and anchor apple generic and
-        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
-        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
-        certificate leaf[subject.OU] = "7Z6EMTD2C6"

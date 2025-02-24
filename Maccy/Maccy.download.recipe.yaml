@@ -1,17 +1,17 @@
-Name: Maccy
 Description: Downloads the latest version of Maccy.
 Identifier: com.github.smithjw-actions.download.Maccy
 MinimumVersion: '2.3'
+
 Input:
-  NAME: Maccy
   SOFTWARETITLE: Maccy
+  NAME: Maccy
 
 Process:
   - Processor: SparkleUpdateInfoProvider
     Arguments:
       appcast_url: https://raw.githubusercontent.com/p0deje/Maccy/master/appcast.xml
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
       filename: '%SOFTWARETITLE%-%version%.zip'
 

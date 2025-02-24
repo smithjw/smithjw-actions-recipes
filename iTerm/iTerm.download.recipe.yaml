@@ -1,4 +1,3 @@
----
 Description: Downloads the latest version of iTerm
 Identifier: com.github.smithjw-actions.download.iTerm
 MinimumVersion: '2.3'
@@ -7,18 +6,19 @@ Input:
   NAME: iTerm
   SOFTWARE_TITLE: '%NAME%'
   DOWNLOAD_URL: https://iterm2.com/downloads/stable/latest
-  DOWNLOAD_MISSING_FILE:
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
+      User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.zip'
       url: '%DOWNLOAD_URL%'
-      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      User_Agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
 
   - Processor: EndOfCheckPhase
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
@@ -30,12 +30,7 @@ Process:
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/unpack/iTerm.app'
       deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/unpack/iTerm.app'
+      requirement: anchor apple generic and identifier "com.googlecode.iterm2" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = H7V7XYVQ7D)
       strict_verification: true
-      requirement: >-
-        anchor apple generic and identifier "com.googlecode.iterm2" and
-        (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or
-        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
-        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
-        certificate leaf[subject.OU] = H7V7XYVQ7D)

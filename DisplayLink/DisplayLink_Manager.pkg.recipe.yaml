@@ -10,10 +10,10 @@ Input:
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
       pkgdirs:
         payload: '0775'
         scripts: '0775'
+      pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
 
   - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
     Arguments:
@@ -22,32 +22,30 @@ Process:
 
   - Processor: com.github.mlbz521.SharedProcessors/XPathParser
     Arguments:
-      xml_file: '%extracted_file%'
-      xpath: './/pkg-ref[@id="com.displaylink.displaylinkmanagerapp"]/bundle-version/bundle[@path="DisplayLink Manager.app"]'
       attribute_one: CFBundleShortVersionString
       return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: .//pkg-ref[@id="com.displaylink.displaylinkmanagerapp"]/bundle-version/bundle[@path="DisplayLink Manager.app"]
 
   - Processor: com.github.mlbz521.SharedProcessors/XPathParser
     Arguments:
-      xml_file: '%extracted_file%'
-      xpath: './/os-version[@min]'
       attribute_one: min
       return_variable_attribute_one: minimum_os_version
+      xml_file: '%extracted_file%'
+      xpath: .//os-version[@min]
 
   - Processor: PkgCopier
     Arguments:
-      source_pkg: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.pkg'
       pkg_path: '%RECIPE_CACHE_DIR%/pkgroot/scripts/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.pkg'
 
   - Processor: PkgCopier
     Arguments:
-      source_pkg: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%_Extension.dmg/%found_basename%'
       pkg_path: '%RECIPE_CACHE_DIR%/pkgroot/scripts/%SOFTWARE_TITLE%_Extension-%version%.pkg'
+      source_pkg: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%_Extension.dmg/%found_basename%'
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/pkgroot/scripts/preinstall'
-      file_mode: '0755'
       file_content: |
         #!/bin/bash
 
@@ -58,17 +56,19 @@ Process:
         /usr/sbin/installer -pkg "$DISPLAYLINK_EXTENTION_PKG" -target "$3"
 
         exit 0
+      file_mode: '0755'
+      file_path: '%RECIPE_CACHE_DIR%/pkgroot/scripts/preinstall'
 
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        id: 'com.displaylink.displaylinkmanagerapp'
-        version: '%version%'
+        id: com.displaylink.displaylinkmanagerapp
         options: purge_ds_store
-        pkgname: '%SOFTWARE_TITLE%-%version%'
         pkgdir: '%RECIPE_CACHE_DIR%'
-        scripts: '%RECIPE_CACHE_DIR%/pkgroot/scripts'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
         pkgroot: '%RECIPE_CACHE_DIR%/pkgroot/payload'
+        scripts: '%RECIPE_CACHE_DIR%/pkgroot/scripts'
+        version: '%version%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:

@@ -7,7 +7,7 @@ Input:
   NAME: DisplayLink Manager
   SOFTWARE_TITLE: DisplayLink_Manager
   CATEGORY: Apps
-  PACKAGE_INFO: 'autopkg'
+  PACKAGE_INFO: autopkg
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_NAME: '%NAME%'
@@ -33,9 +33,9 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      policy_template: '%POLICY_TEMPLATE%'
-      policy_name: '%POLICY_NAME%'
       icon: '%SELF_SERVICE_ICON%'
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
       replace_policy: '%REPLACE_POLICY%'
 
   - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult

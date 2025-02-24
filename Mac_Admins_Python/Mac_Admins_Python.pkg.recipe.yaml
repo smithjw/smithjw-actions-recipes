@@ -1,4 +1,3 @@
----
 Description: Downloads the most recent signed release pkg of Mac Admins Python from GitHub and renames the package.
 Identifier: com.github.smithjw-actions.pkg.Mac_Admins_Python
 ParentRecipe: com.github.smithjw-actions.download.Mac_Admins_Python

@@ -1,5 +1,5 @@
-Description: Downloads latest Jamf Connect DMG and extracts the pkg.
 Comment: ''
+Description: Downloads latest Jamf Connect DMG and extracts the pkg.
 Identifier: com.github.smithjw-actions.pkg.Jamf_Connect
 ParentRecipe: com.github.smithjw-actions.download.Jamf_Connect
 MinimumVersion: '2.3'
@@ -16,15 +16,15 @@ Process:
 
   - Processor: com.github.mlbz521.SharedProcessors/XPathParser
     Arguments:
-      xml_file: '%extracted_file%'
-      xpath: ./pkg-ref[@id="com.jamf.connect"]
       attribute_one: version
       return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: ./pkg-ref[@id="com.jamf.connect"]
 
   - Processor: PkgCopier
     Arguments:
-      source_pkg: '%pathname%/JamfConnect.pkg'
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%/JamfConnect.pkg'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:

@@ -1,4 +1,3 @@
----
 Description: |
   Downloads the most recent DMG of Jamf Connect and
   uploads it to your Jamf Pro instance.
@@ -19,7 +18,7 @@ Input:
   POLICY_TEMPLATE: Policy_Template-Utilities-With-Script
   REMOVE_OLD_PACKAGES: 'true'
   REPLACE_POLICY: 'true'
-  PACKAGE_INFO: 'autopkg'
+  PACKAGE_INFO: autopkg
   SCRIPT_NAME: jamf_connect_launchagent.sh
   SCRIPT_PARAMETER_4_VALUE: unused
   SCRIPT_PARAMETER_5_VALUE: unused
@@ -29,11 +28,11 @@ Input:
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfScriptUploader
     Arguments:
-      script_category: autopkg
-      script_path: 'jamf_connect_launchagent.sh'
-      script_priority: 'After'
-      skip_script_key_substitution: true
       replace_script: true
+      script_category: autopkg
+      script_path: jamf_connect_launchagent.sh
+      script_priority: After
+      skip_script_key_substitution: true
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
@@ -42,8 +41,8 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      policy_template: '%POLICY_TEMPLATE%'
       policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
       replace_policy: '%REPLACE_POLICY%'
 
   - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult

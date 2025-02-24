@@ -1,4 +1,3 @@
----
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.Outset
 ParentRecipe: com.github.smithjw-actions.download.Outset

@@ -1,4 +1,3 @@
----
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.Privileges
 ParentRecipe: com.github.smithjw-actions.download.Privileges
@@ -32,9 +31,9 @@ Process:
       force_pkg_build: true
       pkg_request:
         chown:
-          - path: Applications
+          - group: wheel
+            path: Applications
             user: root
-            group: wheel
         id: '%bundleid%'
         options: purge_ds_store
         pkgname: '%SOFTWARE_TITLE%-%version%'

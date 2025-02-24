@@ -1,4 +1,3 @@
----
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.Ice
 ParentRecipe: com.github.smithjw-actions.pkg.Ice
@@ -17,14 +16,14 @@ Input:
   POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   REMOVE_OLD_PACKAGES: 'true'
   SELF_SERVICE_AVAILABLE: 'true'
-  SELF_SERVICE_CATEGORY: 'Utilities'
+  SELF_SERVICE_CATEGORY: Utilities
   SELF_SERVICE_DESCRIPTION: Ice is a powerful menu bar management tool. While its primary function is hiding and showing menu bar items, it aims to cover a wide variety of additional features to make it one of the most versatile menu bar tools available.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SELF_SERVICE_INSTALL_BUTTON: Install
   SELF_SERVICE_REINSTALL_BUTTON: Install
   REPLACE_POLICY: 'true'
-  PACKAGE_INFO: 'autopkg'
+  PACKAGE_INFO: autopkg
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
@@ -34,9 +33,9 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      policy_template: '%POLICY_TEMPLATE%'
-      policy_name: '%POLICY_NAME%'
       icon: '%SELF_SERVICE_ICON%'
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
       replace_policy: '%REPLACE_POLICY%'
 
   - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult

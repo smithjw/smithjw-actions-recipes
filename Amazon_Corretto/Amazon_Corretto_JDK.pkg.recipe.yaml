@@ -1,8 +1,7 @@
----
-Description: Downloads the current version of Amazon Corretto JDK and updates the package version
 Comment: |
   This recipe leverages Amazon's permanent links so that it can be overrided to fetch multiple versions
   Valid options for JDK_VERSION are 17, 21, & 22
+Description: Downloads the current version of Amazon Corretto JDK and updates the package version
 Identifier: com.github.smithjw-actions.pkg.Amazon_Corretto_JDK
 ParentRecipe: com.github.smithjw-actions.download.Amazon_Corretto_JDK
 MinimumVersion: '2.3'
