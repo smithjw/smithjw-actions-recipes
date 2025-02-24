@@ -1,4 +1,3 @@
----
 Description: |
   Downloads the most recent signed release pkg of desktoppr from GitHub.
 
@@ -12,8 +11,8 @@ Input:
   NAME: desktoppr
   SOFTWARE_TITLE: '%NAME%'
   INCLUDE_PRERELEASES: 'True'
-  DOWNLOAD_MISSING_FILE:
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: GitHubReleasesInfoProvider
@@ -23,10 +22,11 @@ Process:
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%.pkg'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.pkg'
 
   - Processor: EndOfCheckPhase
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'

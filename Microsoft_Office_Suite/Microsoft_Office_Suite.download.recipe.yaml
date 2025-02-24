@@ -1,6 +1,4 @@
----
-Description: Downloads the latest Microsoft Office Suite installer pkg using the
-  URLDownloaderPython processor.
+Description: Downloads the latest Microsoft Office Suite installer pkg using the URLDownloaderPython processor.
 Identifier: com.github.smithjw-actions.download.Microsoft_Office_Suite
 MinimumVersion: '2.3'
 
@@ -9,23 +7,24 @@ Input:
   SOFTWARE_TITLE: Microsoft_Office_Suite
   PRODUCT_ID: '525133'
   DOWNLOAD_URL: https://go.microsoft.com/fwlink/?linkid=%PRODUCT_ID%
-  DOWNLOAD_MISSING_FILE:
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: 'Version (\*|\d+(\.\d+){0,2}(\.\*)?)'
-      url: https://learn.microsoft.com/en-us/officeupdates/release-notes-office-for-mac
+      re_pattern: Version (\*|\d+(\.\d+){0,2}(\.\*)?)
       result_output_var_name: version
+      url: https://learn.microsoft.com/en-us/officeupdates/release-notes-office-for-mac
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.pkg'
       url: '%DOWNLOAD_URL%'
-      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
 
   - Processor: EndOfCheckPhase
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'

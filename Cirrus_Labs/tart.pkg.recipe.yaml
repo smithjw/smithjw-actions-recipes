@@ -1,9 +1,7 @@
-Description:
-  Downloads the latest version of tart from Github; pulls apart the package and checks the binary's code
-  signature. Specifiy an ARCH of "arm64" for Apple Silicon or "amd64" for Intel.
+Description: Downloads the latest version of tart from Github; pulls apart the package and checks the binary's code signature. Specifiy an ARCH of "arm64" for Apple Silicon or "amd64" for Intel.
 Identifier: com.github.smithjw-actions.pkg.tart
-MinimumVersion: '2.4.1'
 ParentRecipe: com.github.smithjw-actions.download.tart
+MinimumVersion: 2.4.1
 
 Input:
   NAME: tart
@@ -15,13 +13,13 @@ Input:
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
       pkgdirs:
         payload: '0775'
         payload/Library: '0755'
         payload/Library/Application Support: '0755'
         payload/Library/Application Support/Tart: '0755'
         scripts: '0775'
+      pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
 
   - Processor: Copier
     Arguments:
@@ -31,8 +29,6 @@ Process:
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/pkgroot/scripts/postinstall'
-      file_mode: '0755'
       file_content: |
         #!/bin/bash
 
@@ -43,19 +39,21 @@ Process:
 
         # Create new executable
         echo "#!/bin/sh" > /usr/local/bin/tart
-        echo "exec '/Library/Application Support/Tart/tart.app/Contents/MacOS/tart' \"\$@\"" >> /usr/local/bin/tart
+        echo "exec '/Library/Application Support/Tart/tart.app/Contents/MacOS/tart' \\"\\$@\\"" >> /usr/local/bin/tart
 
         # Set permissions
         chmod +x /usr/local/bin/tart
+      file_mode: '0755'
+      file_path: '%RECIPE_CACHE_DIR%/pkgroot/scripts/postinstall'
 
   - Processor: PkgCreator
     Arguments:
       force_pkg_build: true
       pkg_request:
         chown:
-          - path: Library
+          - group: wheel
+            path: Library
             user: root
-            group: wheel
         id: com.github.cirruslabs.tart-app
         options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'

@@ -1,8 +1,7 @@
----
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.smithjw-actions.jamf.Wireshark
-MinimumVersion: '2.3'
 ParentRecipe: com.github.smithjw-actions.pkg.Wireshark
+MinimumVersion: '2.3'
 
 Input:
   NAME: Wireshark
@@ -17,9 +16,9 @@ Input:
   POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   REMOVE_OLD_PACKAGES: 'true'
   REPLACE_POLICY: 'true'
-  PACKAGE_INFO: 'autopkg'
+  PACKAGE_INFO: autopkg
   SELF_SERVICE_AVAILABLE: 'true'
-  SELF_SERVICE_CATEGORY: 'Engineering'
+  SELF_SERVICE_CATEGORY: Engineering
   SELF_SERVICE_DESCRIPTION: Wireshark is a network protocol analyzer.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
@@ -34,9 +33,9 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      policy_template: '%POLICY_TEMPLATE%'
-      policy_name: '%POLICY_NAME%'
       icon: '%SELF_SERVICE_ICON%'
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
       replace_policy: '%REPLACE_POLICY%'
 
   - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult

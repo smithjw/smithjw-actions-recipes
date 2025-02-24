@@ -1,4 +1,3 @@
----
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.GlobalProtect
 ParentRecipe: com.github.smithjw-actions.download.GlobalProtect

@@ -4,16 +4,16 @@ ParentRecipe: com.github.smithjw-actions.download.FileZilla
 MinimumVersion: '2.3'
 
 Input:
-  NAME: FileZilla
   BUNDLE_ID: org.filezilla-project.filezilla.pkg
+  NAME: FileZilla
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: "<a href=\"(?P<url>http[s]?.*?(?P<filename>FileZilla_(?P<version>[\\d.]+)_macos-x86.*?\\.tar\\.bz2).*?)\""
-      url: https://filezilla-project.org/download.php?show_all=1
+      re_pattern: <a href="(?P<url>http[s]?.*?(?P<filename>FileZilla_(?P<version>[\d.]+)_macos-x86.*?\.tar\.bz2).*?)"
       request_headers:
         user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15
+      url: https://filezilla-project.org/download.php?show_all=1
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
 
@@ -42,11 +42,11 @@ Process:
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: '%NAME%-%version%'
-        pkgdir: '%RECIPE_CACHE_DIR%'
+        chown:
+          - group: admin
+            path: Applications
+            user: root
         id: '%BUNDLE_ID%'
         options: purge_ds_store
-        chown:
-          - path: Applications
-            user: root
-            group: admin
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-%version%'

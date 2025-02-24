@@ -1,4 +1,3 @@
----
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Teams
 ParentRecipe: com.github.smithjw-actions.download.Microsoft_Teams

@@ -1,4 +1,3 @@
----
 Description: Downloads the current release version of JetBrains product.
 Identifier: com.github.smithjw-actions.download.JetBrains
 MinimumVersion: '2.3'
@@ -7,22 +6,23 @@ Input:
   NAME: JetBrains Product Download
   SOFTWARE_TITLE: '%NAME%'
   PRODUCT_CODE: A valid product code can be obtained from https://data.services.jetbrains.com/products
-  DOWNLOAD_MISSING_FILE:
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
       re_pattern: '"macM1":{"link":"(https://download.jetbrains.com/.*?.dmg)"'
-      url: https://data.services.jetbrains.com/products/releases?code=%PRODUCT_CODE%&latest=true&type=release
       result_output_var_name: url
+      url: https://data.services.jetbrains.com/products/releases?code=%PRODUCT_CODE%&latest=true&type=release
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%SOFTWARE_TITLE%.dmg'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
 
   - Processor: EndOfCheckPhase
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'

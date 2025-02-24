@@ -1,37 +1,37 @@
-Name: Snowflake ODBC
 Description: Downloads the latest version of Snowflake ODBC and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.snowflakeODBC
 ParentRecipe: com.github.smithjw-actions.download.snowflakeODBC
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
+
 Input:
-  NAME: snowflakeODBC
   BUNDLE_ID: com.snowflake.odbc.driver
+  NAME: snowflakeODBC
 
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: %RECIPE_CACHE_DIR%/%NAME%
       pkgdirs:
-        Applications: "0755"
+        Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
 
   - Processor: Copier
     Arguments:
-      source_path: %RECIPE_CACHE_DIR%/%NAME%/snowflakeODBC.pkg
-      destination_path: %pkgroot%/Applications/snowflakeODBC.pkg
+      destination_path: '%pkgroot%/Applications/snowflakeODBC.pkg'
+      source_path: '%RECIPE_CACHE_DIR%/%NAME%/snowflakeODBC.pkg'
 
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: %NAME%-%version%
-        pkgdir: %RECIPE_CACHE_DIR%
-        id: %BUNDLE_ID%
-        options: purge_ds_store
         chown:
-          - path: Applications
+          - group: admin
+            path: Applications
             user: root
-            group: admin
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-%version%'
 
   - Processor: PathDeleter
     Arguments:
       path_list:
-        - %RECIPE_CACHE_DIR%/%NAME%  # Clean up temporary files
+        - '%RECIPE_CACHE_DIR%/%NAME%'

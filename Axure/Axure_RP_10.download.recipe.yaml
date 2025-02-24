@@ -1,0 +1,28 @@
+Description: Download recipe of Axure RP 10
+Identifier: com.github.smithjw-actions.download.Axure_RP_10
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Axure RP 10
+  ARCHITECTURE: -arm64
+  SOFTWARE_TITLE: Axure_RP_10
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: https://axure.cachefly.net/versions/10-0/AxureRP-Setup%ARCHITECTURE%-[\d+]+\.dmg
+      url: https://www.axure.com/release-history/rp10
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      filename: '%NAME%.dmg'
+      url: '%match%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%NAME%.dmg/Axure RP 10.app'
+      requirement: identifier "com.axure.AxureRP10" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = HUMW6UU796

@@ -1,8 +1,8 @@
-Name: CraftManager
 Description: Downloads the latest version of CraftManager and builds a package.
 Identifier: com.github.smithjw-actions.pkg.CraftManager
 ParentRecipe: com.github.smithjw-actions.download.CraftManager
 MinimumVersion: '2.3'
+
 Input:
   NAME: CraftManager
 
@@ -13,23 +13,23 @@ Process:
 
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
       pkgdirs:
         Applications: '0775'
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/%NAME%/CraftManager.app'
       destination_path: '%pkgroot%/Applications/CraftManager.app'
+      source_path: '%RECIPE_CACHE_DIR%/%NAME%/CraftManager.app'
 
   - Processor: PkgCreator
     Arguments:
       pkg_request:
-        pkgname: '%NAME%-%version%'
-        pkgdir: '%RECIPE_CACHE_DIR%'
+        chown:
+          - group: admin
+            path: Applications
+            user: root
         id: com.github.smithjw-actions.CraftManager
         options: purge_ds_store
-        chown:
-          - path: Applications
-            user: root
-            group: admin
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-%version%'

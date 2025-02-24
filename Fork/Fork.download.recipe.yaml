@@ -1,34 +1,34 @@
-Name: Fork
 Description: Downloads the latest release version of Fork.
 Identifier: io.github.smithjw-actions.download.Fork
-MinimumVersion: 2.3
+MinimumVersion: '2.3'
+
 Input:
   NAME: Fork
   USER_AGENT: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15
-  ARCHITECTURE: x86_64  # Default architecture; could modify later for arm64 if needed
+  ARCHITECTURE: x86_64
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      url: https://fork.dev/download
-      re_pattern: '(?P<dmg>Fork-.*?-%ARCHITECTURE%\.dmg)'
+      re_pattern: (?P<dmg>Fork-.*?-%ARCHITECTURE%\.dmg)
       request_headers:
-        user-agent: "%USER_AGENT%"
-  
-  - Processor: URLDownloaderPython
+        user-agent: '%USER_AGENT%'
+      url: https://fork.dev/download
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: %NAME%-%ARCHITECTURE%.dmg
+      filename: '%NAME%-%ARCHITECTURE%.dmg'
       url: https://download.fork.dev/%dmg%
 
   - Processor: EndOfCheckPhase
 
   - Processor: Unarchiver
     Arguments:
-      archive_path: %RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%.dmg
-      destination_path: %RECIPE_CACHE_DIR%/%NAME%
-      purge_destination: true  # Clean previous versions
+      archive_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/%NAME%'
+      purge_destination: true
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: %RECIPE_CACHE_DIR%/%NAME%/Fork.app
-      requirement: identifier "com.loudnate.Fork" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "ABCDEF123456"  # Update based on actual signing certificate
+      input_path: '%RECIPE_CACHE_DIR%/%NAME%/Fork.app'
+      requirement: identifier "com.loudnate.Fork" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "ABCDEF123456"

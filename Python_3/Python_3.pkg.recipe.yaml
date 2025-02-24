@@ -1,0 +1,37 @@
+Description: Downloads the latest version of Python 3 and creates an installer package.
+Identifier: com.github.smithjw-actions.pkg.Python3
+ParentRecipe: com.github.smithjw-actions.download.python3
+MinimumVersion: '2.3'
+
+Input:
+  BUNDLE_ID: org.python.python3
+  NAME: Python 3
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        Applications: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+
+  - Processor: Copier
+    Arguments:
+      destination_path: '%pkgroot%/Applications/python-%version%.pkg'
+      source_path: '%RECIPE_CACHE_DIR%/%NAME%/python-%version%.pkg'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: admin
+            path: Applications
+            user: root
+        id: '%BUNDLE_ID%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%NAME%-%version%'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/%NAME%'

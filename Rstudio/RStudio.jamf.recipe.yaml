@@ -1,4 +1,6 @@
-Identifier: com.github.smithjw.jamf.RStudio
+---
+Description: ''
+Identifier: com.github.smithjw-actions.jamf.RStudio
 ParentRecipe: com.github.rtrouton.pkg.RStudio
 MinimumVersion: '2.3'
 
@@ -11,14 +13,14 @@ Input:
   TESTING_GROUP_NAME: Testing
   POLICY_CATEGORY: Testing
   POLICY_TEMPLATE: Policy-install-latest.xml
-  POLICY_NAME: 'Install Latest %NAME%'
+  POLICY_NAME: Install Latest %NAME%
   POLICY_RUN_COMMAND: ' '
-  SELF_SERVICE_DISPLAY_NAME: 'Install Latest %NAME%'
-  SELF_SERVICE_DESCRIPTION: 'RStudio IDE is a powerful and productive user interface for R.'
+  SELF_SERVICE_DISPLAY_NAME: Install Latest %NAME%
+  SELF_SERVICE_DESCRIPTION: RStudio IDE is a powerful and productive user interface for R.
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  INSTALL_BUTTON_TEXT: 'Install'
-  REINSTALL_BUTTON_TEXT: 'Install'
-  UPDATE_PREDICATE: 'pkg_uploaded == False'
+  INSTALL_BUTTON_TEXT: Install
+  REINSTALL_BUTTON_TEXT: Install
+  UPDATE_PREDICATE: pkg_uploaded == False
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
@@ -35,11 +37,11 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
     Arguments:
-      computergroup_template: '%GROUP_TEMPLATE%'
       computergroup_name: '%GROUP_NAME%'
+      computergroup_template: '%GROUP_TEMPLATE%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      policy_template: '%POLICY_TEMPLATE%'
-      policy_name: '%POLICY_NAME%'
       icon: '%SELF_SERVICE_ICON%'
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
