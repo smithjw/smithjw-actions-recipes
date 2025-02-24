@@ -1,23 +1,23 @@
-description: "Download recipe for Oracle's Java 8. Finds and downloads the latest Oracle Java 8 JRE CPU release. Read more about CPU and PSU releases here: http://www.oracle.com/technetwork/java/javase/downloads/cpu-psu-explained-2331472.html To use this recipe, you must accept the Oracle Binary Code License Agreement for Java SE. http://www.oracle.com/technetwork/java/javase/terms/license/index.html"
-identifier: com.github.smithjw-actions.download.OracleJava8
-minimum_version: 2.3
-input:
+Description: "Downloads the latest Oracle Java 8 JRE CPU release."
+Identifier: com.github.smithjw-actions.download.OracleJava8
+Input:
   NAME: OracleJava8
-process:
-  - processor: URLTextSearcher
-    arguments:
-      re_pattern: "(?P<url>https://download.oracle.com/otn-pub/java/jdk/[^/]+/jre-8.+?x64.dmg)"  # Adjust this regex as needed
-      url: https://www.oracle.com/java/technologies/javase/javase-jre8-downloads.html  # Verify this URL periodically for accessibility
-  - processor: URLDownloaderPython
-    arguments:
+MinimumVersion: "2.3"
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: "(?P<url>https://download.oracle.com/otn-pub/java/jdk/[^/]+/jre-8.+?x64.dmg)"
+      url: https://www.oracle.com/java/technologies/javase/javase-jre8-downloads.html 
+  - Processor: URLDownloaderPython
+    Arguments:
       filename: %NAME%.dmg
       request_headers:
         Cookie: oraclelicense=accept-securebackup-cookie
-  - processor: EndOfCheckPhase
-  - processor: CodeSignatureVerifier
-    arguments:
-      input_path: %pathname%/Java 8 Update*/Contents/Resources/JavaAppletPlugin.pkg  # Verify this path regularly
-      expected_authority_names: 
+  - Processor: EndOfCheckPhase
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: %pathname%/Java 8 Update*.app/Contents/Resources/JavaAppletPlugin.pkg
+      expected_authority_names:
         - Developer ID Installer: Oracle America, Inc. (VB5E2TV963)
         - Developer ID Certification Authority
-        - Apple Root CA  
+        - Apple Root CA
