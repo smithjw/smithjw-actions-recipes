@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "https://github.com/smithjw/smithjw-actions-recipes/blob/main/smithjw-autopkg-recipe.schema.json",
-    "$comment": "v0.2",
+    "$comment": "v0.3",
     "title": "autopkg schema for YAML recipes",
     "description": "A schema for validating autopkg recipes written in YAML. Less opiniated than jgstew's one.",
     "$ref": "#/definitions/AutoPkgRecipe",
@@ -39,7 +39,6 @@
                 }
             },
             "required": [
-                "Description",
                 "Identifier",
                 "Input",
                 "MinimumVersion"
@@ -52,10 +51,16 @@
             "properties": {
                 "NAME": {
                     "type": "string"
+                },
+                "SOFTWARE_TITLE": {
+                    "type": "string",
+                    "comment": "No Spaces Allowed",
+                    "pattern": "^[^\\s]*$"
                 }
             },
             "required": [
-                "NAME"
+                "NAME",
+                "SOFTWARE_TITLE"
             ],
             "title": "Input"
         },
