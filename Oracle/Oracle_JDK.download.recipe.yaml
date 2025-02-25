@@ -1,0 +1,29 @@
+Description: Versions 21 and 23 only
+Identifier: com.github.smithjw-actions.download.Oracle_JDK
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Oracle JDK
+  SOFTWARE_TITLE: Oracle_JDK
+  JDK_VERSION: '23'
+
+Process:
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+      url: 'https://download.oracle.com/java/%JDK_VERSION%/latest/jdk-%JDK_VERSION%_macos-aarch64_bin.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Oracle America, Inc. (VB5E2TV963)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%/*.pkg'

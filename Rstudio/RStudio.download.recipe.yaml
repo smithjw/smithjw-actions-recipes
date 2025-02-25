@@ -3,10 +3,13 @@ Identifier: com.github.smithjw-actions.download.RStudio
 MinimumVersion: '2.3'
 
 Input:
+  NAME: RStudio
+  SOFTWARE_TITLE: RStudio
   DOWNLOAD_MIRROR: https://download1.rstudio.org/electron/macos
   SEARCH_PATTERN: (?P<dmg>RStudio-(?P<version>([0-9.]+){1,3}?.*).dmg)
   SEARCH_URL: https://posit.co/download/rstudio-desktop/
-  NAME: RStudio
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: URLTextSearcher
@@ -16,10 +19,15 @@ Process:
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%NAME%.dmg'
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
       url: '%DOWNLOAD_MIRROR%/%dmg%'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:

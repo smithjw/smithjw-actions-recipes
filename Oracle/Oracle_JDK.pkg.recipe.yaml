@@ -1,0 +1,33 @@
+Description: Valid for versions 21 and 23 only
+Identifier: com.github.smithjw-actions.pkg.Oracle_JDK
+ParentRecipe: com.github.smithjw-actions.download.Oracle_JDK
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Oracle JDK
+  SOFTWARE_TITLE: Oracle_JDK
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      flat_pkg_path: '%pathname%/*.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/unpack/jdk*.pkg'
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      pkg_payload_path: '%found_filename%/Payload'
+      destination_path: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/payload/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%/*.pkg'

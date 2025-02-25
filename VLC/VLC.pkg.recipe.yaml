@@ -5,38 +5,14 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: VLC
+  SOFTWARE_TITLE: '%NAME%'
 
 Process:
   - Processor: AppDmgVersioner
     Arguments:
       dmg_path: '%pathname%'
 
-  - Processor: PkgRootCreator
+  - Processor: AppPkgCreator
     Arguments:
-      pkgdirs:
-        Applications: '0755'
-      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
-
-  - Processor: Copier
-    Arguments:
-      destination_path: '%pkgroot%/Applications/VLC.app'
-      source_path: '%pathname%/VLC.app'
-
-  - Processor: PkgInfoCreator
-    Arguments:
-      infofile: '%RECIPE_CACHE_DIR%/PackageInfo'
-      pkgtype: flat
-      template_path: PackageInfoTemplate
-
-  - Processor: PkgCreator
-    Arguments:
-      pkg_request:
-        chown:
-          - group: admin
-            path: Applications
-            user: root
-        id: org.videolan.vlc.pkg
-        options: purge_ds_store
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%NAME%-%version%'
-        resources: Resources
+      app_path: '%pathname%/VLC.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

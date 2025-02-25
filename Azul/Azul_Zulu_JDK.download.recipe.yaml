@@ -1,0 +1,58 @@
+Comment: Valid versions are 23, 21, 17, & 11
+Description: Downloads the latest release version of Azul Zulu Java for given Java version
+Identifier: com.github.smithjw-actions.download.Azul_Zulu_JDK
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Azul Zulu JDK
+  SOFTWARE_TITLE: Azul_Zulu_JDK
+  JDK_VERSION: '23'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: AzulZuluJavaInfoProvider
+    Arguments:
+      arch: arm
+      bundle_type: jdk
+      extension: dmg
+      java_major_version: '%JDK_VERSION%'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%JDK_VERSION%-macos-arm64.dmg'
+
+  - Processor: AzulZuluJavaInfoProvider
+    Arguments:
+      arch: x86
+      bundle_type: jdk
+      extension: dmg
+      java_major_version: '%JDK_VERSION%'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%JDK_VERSION%-macos-x86_64.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Azul Systems, Inc. (TDTHCUPYFR)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-macos-arm64.dmg/*.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Azul Systems, Inc. (TDTHCUPYFR)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-macos-x86_64.dmg/*.pkg'
