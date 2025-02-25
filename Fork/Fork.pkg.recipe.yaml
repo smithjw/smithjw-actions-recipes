@@ -4,34 +4,14 @@ ParentRecipe: com.github.smithjw-actions.download.Fork
 MinimumVersion: '2.3'
 
 Input:
-  BUNDLE_ID: com.DanPristupov.Fork
   NAME: Fork
+  SOFTWARE_TITLE: '%NAME%'
 
 Process:
-  - Processor: PkgRootCreator
-    Arguments:
-      pkgdirs:
-        Applications: '0755'
-      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+  - Processor: AppPkgCreator
 
-  - Processor: Copier
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      destination_path: '%pkgroot%/Applications/Fork.app'
-      source_path: '%RECIPE_CACHE_DIR%/%NAME%/Fork.app'
-
-  - Processor: PkgCreator
-    Arguments:
-      pkg_request:
-        chown:
-          - group: admin
-            path: Applications
-            user: root
-        id: '%BUNDLE_ID%'
-        options: purge_ds_store
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%NAME%-%version%'
-
-  - Processor: PathDeleter
-    Arguments:
+      fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/%NAME%'
+        - '%RECIPE_CACHE_DIR%/unpack'

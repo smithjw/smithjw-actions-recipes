@@ -1,34 +1,30 @@
 Description: Downloads the latest release version of Fork.
-Identifier: io.github.smithjw-actions.download.Fork
+Identifier: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner3..github.smithjw-actions.download.Fork
 MinimumVersion: '2.3'
 
 Input:
   NAME: Fork
-  USER_AGENT: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15
-  ARCHITECTURE: x86_64
+  SOFTWARE_TITLE: '%NAME%'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: (?P<dmg>Fork-.*?-%ARCHITECTURE%\.dmg)
-      request_headers:
-        user-agent: '%USER_AGENT%'
-      url: https://fork.dev/download
+      re_pattern: (?P<url>https://.*?Fork-(?P<version>[0-9]+\.[0-9]+\.[0-9]+)\.dmg)
+      url: https://fork.dev
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%NAME%-%ARCHITECTURE%.dmg'
-      url: https://download.fork.dev/%dmg%
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
 
   - Processor: EndOfCheckPhase
 
-  - Processor: Unarchiver
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
-      archive_path: '%RECIPE_CACHE_DIR%/%NAME%-%ARCHITECTURE%.dmg'
-      destination_path: '%RECIPE_CACHE_DIR%/%NAME%'
-      purge_destination: true
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/%NAME%/Fork.app'
-      requirement: identifier "com.loudnate.Fork" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "ABCDEF123456"
+      input_path: '%pathname%/Fork.app'
+      requirement: anchor apple generic and identifier "com.DanPristupov.Fork" and (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = Q6M7LEEA66)

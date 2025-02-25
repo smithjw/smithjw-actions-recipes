@@ -1,34 +1,30 @@
 Description: Downloads the latest version of Stream Deck.
-Identifier: com.github.smithjw-actions.download.StreamDeck
+Identifier: com.github.smithjw-actions.download.Stream_Deck
 MinimumVersion: '2.3'
 
 Input:
-  NAME: StreamDeck
+  NAME: Stream Deck
+  SOFTWARE_TITLE: Stream_Deck
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%NAME%.pkg'
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.pkg'
       url: https://gc-updates.elgato.com/mac/sd-update/final/download-website.php
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:
       expected_authority_names:
-        - Developer ID Installer: Corsair Memory, Inc. (Y93VXCB8Q5)
+        - 'Developer ID Installer: Corsair Memory, Inc. (Y93VXCB8Q5)'
         - Developer ID Certification Authority
         - Apple Root CA
       input_path: '%pathname%'
-
-  - Processor: EndOfCheckPhase
-
-  - Processor: FlatPkgUnpacker
-    Arguments:
-      destination_path: '%RECIPE_CACHE_DIR%/installer_unpack'
-      flat_pkg_path: '%pathname%'
-      purge_destination: true
-
-  - Processor: PkgPayloadUnpacker
-    Arguments:
-      destination_path: '%RECIPE_CACHE_DIR%/installer_payload/'
-      pkg_payload_path: '%RECIPE_CACHE_DIR%/installer_unpack/Stream_Deck.pkg/Payload'
-      purge_destination: false

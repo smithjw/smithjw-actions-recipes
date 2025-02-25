@@ -1,0 +1,55 @@
+Identifier: com.github.smithjw-actions.pkg.Azul_Zulu_JDK
+ParentRecipe: com.github.smithjw-actions.download.Azul_Zulu_JDK_8
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Azul Zulu JDK
+  SOFTWARE_TITLE: Azul_Zulu_JDK
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-macos-arm64.dmg/*.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.pkg'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%JDK_VERSION%-macos-x86_64.dmg/*.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /usr/sbin/installer -pkg Azul_Zulu_JDK-arm64.pkg -target /
+        else
+          /usr/sbin/installer -pkg Azul_Zulu_JDK-x86_64.pkg -target /
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: com.azulsystems.zulu.%JDK_VERSION%
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
