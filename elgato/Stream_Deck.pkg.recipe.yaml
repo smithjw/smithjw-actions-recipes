@@ -1,36 +1,32 @@
 Description: Downloads the latest version of Stream Deck and creates a package.
-Identifier: com.github.smithjw-actions.pkg.StreamDeck
-ParentRecipe: com.github.smithjw-actions.download.StreamDeck
+Identifier: com.github.smithjw-actions.pkg.Stream_Deck
+ParentRecipe: com.github.smithjw-actions.download.Stream_Deck
 MinimumVersion: '2.3'
 
 Input:
-  BUNDLE_ID: org.elgato.StreamDeck.package
-  NAME: StreamDeck
+  NAME: Stream Deck
+  SOFTWARE_TITLE: Stream_Deck
 
 Process:
-  - Processor: AppDmgVersioner
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
     Arguments:
-      dmg_path: '%RECIPE_CACHE_DIR%/installer_payload/Stream_Deck.pkg'
+      archive_path: '%pathname%'
+      file_to_extract: Distribution
 
-  - Processor: PkgRootCreator
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
     Arguments:
-      pkgdirs:
-        Applications: '0775'
-      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+      attribute_one: version
+      return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: .//pkg-ref[@id="com.elgato.StreamDeck"][@version]
 
-  - Processor: Copier
+  - Processor: PkgCopier
     Arguments:
-      destination_path: '%pkgroot%/Applications/StreamDeck.app'
-      source_path: '%RECIPE_CACHE_DIR%/installer_payload/Stream_Deck.pkg/Applications/StreamDeck.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
 
-  - Processor: PkgCreator
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      pkg_request:
-        chown:
-          - group: admin
-            path: Applications
-            user: root
-        id: '%BUNDLE_ID%'
-        options: purge_ds_store
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%NAME%-%version%'
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'

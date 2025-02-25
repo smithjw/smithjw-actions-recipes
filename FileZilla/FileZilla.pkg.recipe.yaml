@@ -4,49 +4,16 @@ ParentRecipe: com.github.smithjw-actions.download.FileZilla
 MinimumVersion: '2.3'
 
 Input:
-  BUNDLE_ID: org.filezilla-project.filezilla.pkg
   NAME: FileZilla
+  SOFTWARE_TITLE: '%NAME%'
 
 Process:
-  - Processor: URLTextSearcher
+  - Processor: AppPkgCreator
     Arguments:
-      re_pattern: <a href="(?P<url>http[s]?.*?(?P<filename>FileZilla_(?P<version>[\d.]+)_macos-x86.*?\.tar\.bz2).*?)"
-      request_headers:
-        user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1 Safari/605.1.15
-      url: https://filezilla-project.org/download.php?show_all=1
+      app_path: '%RECIPE_CACHE_DIR%/unpack/FileZilla.app'
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
-
-  - Processor: EndOfCheckPhase
-
-  - Processor: Unarchiver
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      purge_destination: true
-
-  - Processor: CodeSignatureVerifier
-    Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/%NAME%/FileZilla.app'
-      requirement: identifier "org.filezilla-project.filezilla" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "5VPGKXL75N"
-
-  - Processor: PkgRootCreator
-    Arguments:
-      pkgdirs:
-        Applications: '0755'
-      pkgroot: '%RECIPE_CACHE_DIR%/payload'
-
-  - Processor: FileMover
-    Arguments:
-      source: '%RECIPE_CACHE_DIR%/%NAME%/FileZilla.app'
-      target: '%pkgroot%/Applications/FileZilla.app'
-
-  - Processor: PkgCreator
-    Arguments:
-      pkg_request:
-        chown:
-          - group: admin
-            path: Applications
-            user: root
-        id: '%BUNDLE_ID%'
-        options: purge_ds_store
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%NAME%-%version%'
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

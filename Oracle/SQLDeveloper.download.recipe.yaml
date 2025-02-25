@@ -1,0 +1,39 @@
+Description: Downloads the latest SQL Developer.
+Identifier: com.github.smithjw-actions.download.SQL_Developer
+MinimumVersion: '2.3'
+
+Input:
+  NAME: SQLDeveloper
+  SOFTWARE_TITLE: '%NAME%'
+  SEARCH_URL: https://www.oracle.com/database/sqldeveloper/technologies/download/
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: (?P<downloadurl>download\.oracle\.com\/otn_software\/java\/sqldeveloper\/sqldeveloper-(?P<version>.*?)-macos-aarch64\.app\.zip)
+      url: '%SEARCH_URL%'
+
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+      url: 'https://%downloadurl%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/unpack/*.app'
+      requirement: identifier "com.oracle.SQLDeveloper" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = VB5E2TV963

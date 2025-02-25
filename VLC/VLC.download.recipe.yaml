@@ -3,24 +3,30 @@ Identifier: com.github.smithjw-actions.download.VLC
 MinimumVersion: '2.3'
 
 Input:
-  ARCHITECTURE: universal
-  SEARCH_URL: https://www.videolan.org/vlc/download-macosx.html
-  AUTHPARAM: null
   NAME: VLC
+  SOFTWARE_TITLE: '%NAME%'
+  DOWNLOAD_PATTERN: get.videolan.org/vlc/[0-9]+\.[0-9]+\.[0-9]+/macosx/vlc-[0-9]+\.[0-9]+\.[0-9]+-universal.dmg
+  SEARCH_URL: https://www.videolan.org/vlc/download-macosx.html
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: href="\/\/get\.videolan\.org\/vlc\/([\d\.]+)\/macosx\/vlc-[\d\.]+-%ARCHITECTURE%\.dmg"
-      result_output_var_name: version
+      re_pattern: '%DOWNLOAD_PATTERN%'
       url: '%SEARCH_URL%'
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%NAME%.dmg'
-      url: https://get.videolan.org/vlc/%version%/macosx/vlc-%version%-%ARCHITECTURE%.dmg
+      url: 'https://%match%'
 
   - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:

@@ -6,33 +6,27 @@ MinimumVersion: '2.3'
 Input:
   NAME: AWS CLI
   SOFTWARE_TITLE: AWS_CLI
-  BUNDLE_ID: com.amazon.awscli
 
 Process:
-  - Processor: PkgRootCreator
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
     Arguments:
-      pkgdirs:
-        Applications: '0755'
-      pkgroot: '%RECIPE_CACHE_DIR%/%NAME%'
+      archive_path: '%pathname%'
+      file_to_extract: Distribution
 
-  - Processor: Copier
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
     Arguments:
-      destination_path: '%pkgroot%/Applications/AWSCLIV2.pkg'
-      source_path: '%RECIPE_CACHE_DIR%/%NAME%/AWSCLIV2.pkg'
+      attribute_one: version
+      return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: .//pkg-ref[@id="com.amazon.aws.cli2"][@version]
 
-  - Processor: PkgCreator
+  - Processor: PkgCopier
     Arguments:
-      pkg_request:
-        chown:
-          - group: admin
-            path: Applications
-            user: root
-        id: '%BUNDLE_ID%'
-        options: purge_ds_store
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%NAME%-%version%'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
 
-  - Processor: PathDeleter
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
+      fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/%NAME%'
+        - '%RECIPE_CACHE_DIR%/extractedfile'

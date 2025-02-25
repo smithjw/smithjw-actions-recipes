@@ -4,41 +4,16 @@ ParentRecipe: com.github.smithjw-actions.download.Maccy
 MinimumVersion: '2.3'
 
 Input:
-  SOFTWARETITLE: Maccy
   NAME: Maccy
+  SOFTWARE_TITLE: '%NAME%'
 
 Process:
-  - Processor: PkgRootCreator
+  - Processor: AppPkgCreator
     Arguments:
-      pkgdirs:
-        Applications: '0755'
-      pkgroot: '%RECIPE_CACHE_DIR%/%SOFTWARETITLE%'
+      app_path: '%RECIPE_CACHE_DIR%/unpack/Maccy.app'
 
-  - Processor: Unarchiver
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      archive_format: zip
-      archive_path: '%pathname%'
-      destination_path: '%pkgroot%/Applications'
-      purge_destination: true
-
-  - Processor: Versioner
-    Arguments:
-      input_plist_path: '%pkgroot%/Applications/%SOFTWARETITLE%.app/Contents/Info.plist'
-      plist_version_key: CFBundleShortVersionString
-
-  - Processor: PkgCreator
-    Arguments:
-      pkg_request:
-        chown:
-          - group: wheel
-            path: Applications
-            user: root
-        id: org.p0deje.Maccy
-        options: purge_ds_store
-        version: '%version%'
-      pkgname: '%SOFTWARETITLE%_%version%'
-
-  - Processor: PathDeleter
-    Arguments:
+      fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/%SOFTWARETITLE%'
+        - '%RECIPE_CACHE_DIR%/unpack'

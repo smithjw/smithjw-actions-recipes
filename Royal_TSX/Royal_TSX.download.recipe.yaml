@@ -1,9 +1,12 @@
 Description: Downloads the latest version of Royal TSX.
-Identifier: com.github.smithjw-actions.download.RoyalTSX
+Identifier: com.github.smithjw-actions.download.Royal_TSX
 MinimumVersion: '2.3'
 
 Input:
   NAME: Royal TSX
+  SOFTWARE_TITLE: Royal_TSX
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: SparkleUpdateInfoProvider
@@ -12,9 +15,14 @@ Process:
 
   - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      filename: '%NAME%-%version%.dmg'
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
 
   - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:

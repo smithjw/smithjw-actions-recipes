@@ -1,47 +1,50 @@
-Description: Uploads the latest HandBrake disk image to Jamf and creates a Smart Group and Policy.
+Description: ''
 Identifier: com.github.smithjw-actions.jamf.HandBrake
+ParentRecipe: com.github.smithjw-actions.pkg.HandBrake
 MinimumVersion: '2.3'
 
 Input:
-  UPDATE_PREDICATE: pkg_uploaded == False
-  TESTING_GROUP_NAME: Testing
-  SELF_SERVICE_ICON: '%NAME%.png'
-  SELF_SERVICE_DISPLAY_NAME: Install Latest %NAME%
-  SELF_SERVICE_DESCRIPTION: HandBrake is a tool for converting video from nearly any format to a selection of modern, widely supported codecs.
-  POLICY_TEMPLATE: JamfPolicyTemplate.xml
-  POLICY_NAME: Install Latest %NAME%
-  POLICY_CATEGORY: Testing
   NAME: HandBrake
-  GROUP_TEMPLATE: JamfSmartGroupTemplate.xml
-  GROUP_NAME: HandBrake-update-smart
-  CATEGORY: Digital Media
+  SOFTWARE_TITLE: '%NAME%'
+  CATEGORY: Apps
+  POLICY_CATEGORY: Apps
+  POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
+  POLICY_NAME: '%NAME%'
+  POLICY_RUN_COMMAND: ' '
+  POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_TEMPLATE: Policy_Template-Self_Service.xml
+  REMOVE_OLD_PACKAGES: 'true'
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: Design
+  SELF_SERVICE_DESCRIPTION: ''
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  SELF_SERVICE_INSTALL_BUTTON: Install
+  SELF_SERVICE_REINSTALL_BUTTON: Install
+  REPLACE_POLICY: 'true'
+  PACKAGE_INFO: autopkg
 
 Process:
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-    Arguments:
-      category_name: '%CATEGORY%'
-
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
-    Arguments:
-      category_name: '%POLICY_CATEGORY%'
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: '%CATEGORY%'
-
-  - Processor: StopProcessingIf
-    Arguments:
-      predicate: '%UPDATE_PREDICATE%'
-
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
-    Arguments:
-      computergroup_name: '%GROUP_NAME%'
-      computergroup_template: '%GROUP_TEMPLATE%'
-      replace_group: true
+      pkg_info: '%PACKAGE_INFO%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
       icon: '%SELF_SERVICE_ICON%'
       policy_name: '%POLICY_NAME%'
       policy_template: '%POLICY_TEMPLATE%'
-      replace_policy: true
+      replace_policy: '%REPLACE_POLICY%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%-'
+      versions_to_keep: 2
