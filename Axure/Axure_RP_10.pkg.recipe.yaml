@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Axure RP 10 and creates a package.
 Identifier: com.github.smithjw-actions.pkg.Axure_RP_10
-ParentRecipe: /Users/james.smith/code/smithjw/smithjw-actions-recipes/Axure/Axure_RP_10.download.recipe.yaml #com.github.smithjw-actions.download.Axure_RP_10
+ParentRecipe: com.github.smithjw-actions.download.Axure_RP_10
 MinimumVersion: '2.3'
 
 Input:

@@ -1,6 +1,6 @@
 Description: Downloads the latest version of SQL Developer and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.SQLDeveloper
-ParentRecipe: /Users/james.smith/code/smithjw/smithjw-actions-recipes/Oracle/SQLDeveloper.download.recipe.yaml #com.github.smithjw-actions.download.SQLDeveloper
+ParentRecipe: com.github.smithjw-actions.download.SQLDeveloper
 MinimumVersion: '2.3'
 
 Input:

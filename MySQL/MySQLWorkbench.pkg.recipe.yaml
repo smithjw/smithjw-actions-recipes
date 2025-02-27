@@ -1,6 +1,6 @@
 Description: Downloads the latest version of MySQL Workbench for macOS and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.MySQLWorkbench
-ParentRecipe: /Users/james.smith/code/smithjw/smithjw-actions-recipes/MySQL/MySQLWorkbench.download.recipe.yaml # com.github.smithjw-actions.download.MySQLWorkbench
+ParentRecipe: com.github.smithjw-actions.download.MySQLWorkbench
 MinimumVersion: '2.3'
 
 Input:
