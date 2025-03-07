@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policy>
+	<general>
+		<name>%policy_name%</name>
+		<enabled>true</enabled>
+		<frequency>Ongoing</frequency>
+		<trigger_other>%POLICY_CUSTOM_TRIGGER%</trigger_other>
+		<category>
+			<name>%POLICY_CATEGORY%</name>
+		</category>
+	</general>
+	<scope>
+		<all_computers>false</all_computers>
+		<computer_groups>
+			<computer_group>
+				<name>%computergroup_name%</name>
+			</computer_group>
+		</computer_groups>
+	</scope>
+	<package_configuration>
+		<packages>
+			<size>1</size>
+			<package>
+				<name>%pkg_name%</name>
+				<action>Install</action>
+			</package>
+		</packages>
+	</package_configuration>
+	<scripts>
+		<size>0</size>
+	</scripts>
+	<self_service/>
+	<maintenance>
+		<recon>%POLICY_RUN_RECON%</recon>
+	</maintenance>
+	<files_processes>
+		<run_command>%POLICY_RUN_COMMAND%</run_command>
+	</files_processes>
+</policy>

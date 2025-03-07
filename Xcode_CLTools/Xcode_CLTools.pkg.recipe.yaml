@@ -1,6 +1,6 @@
 Description: Processes the Xcode Command Line Tools package manually downloaded from the Apple Developer Portal
 Identifier: com.github.smithjw-actions.pkg.Xcode_CLTools
-ParentRecipe: /Users/james.smith/code/smithjw/smithjw-actions-recipes/Xcode_CLTools/Xcode_CLTools.download.recipe.yaml #com.github.smithjw-actions.download.Xcode_CLTools
+ParentRecipe: com.github.smithjw-actions.download.Xcode_CLTools
 MinimumVersion: '2.3'
 
 Input:
