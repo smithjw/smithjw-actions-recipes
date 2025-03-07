@@ -12,8 +12,6 @@ Process:
   - Processor: PackageRequired
 
   - Processor: EndOfCheckPhase
-    Arguments:
-      pkg_path: '%PKG%/*.pkg'
 
   - Processor: CodeSignatureVerifier
     Arguments:
@@ -21,4 +19,4 @@ Process:
         - Software Update
         - Apple Software Update Certification Authority
         - Apple Root CA
-      input_path: '%pkg_path%'
+      input_path: '%PKG%/*.pkg'
