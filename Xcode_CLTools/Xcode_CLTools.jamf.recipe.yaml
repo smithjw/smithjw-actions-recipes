@@ -12,21 +12,22 @@ Input:
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_GROUP_NAME: macOS Version
-  POLICY_GROUP_OS_MAX: null
-  POLICY_GROUP_OS_MIN: null
   POLICY_GROUP_TEMPLATE: Smart_Group-OS_Requirements.xml
-  POLICY_NAME: '%NAME%'
+  POLICY_NAME_PREFIX: '%NAME%'
+  POLICY_NAME_SUFFIX: null
   POLICY_RUN_COMMAND: ' '
   POLICY_RUN_RECON: 'false'
   POLICY_SCOPE_ALL_COMPUTERS: 'true'
-  POLICY_TEMPLATE: Policy_Template-Utilities-Group.xml
+  POLICY_TEMPLATE: Policy_Template-Utilities-OS_Requirements.xml
   REMOVE_OLD_PACKAGES: 'true'
   REPLACE_POLICY: 'true'
+  SMART_GROUP_NAME_PREFIX: '%NAME%'
+  SMART_GROUP_NAME_SUFFIX: null
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
     Arguments:
-      computergroup_name: '%POLICY_GROUP_NAME%'
+      computergroup_name: '%SMART_GROUP_NAME_PREFIX% - %min_os_version%-%max_os_version%-%SMART_GROUP_NAME_SUFFIX%'
       computergroup_template: '%POLICY_GROUP_TEMPLATE%'
       replace_group: 'true'
       sleep: 2
@@ -38,7 +39,7 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      policy_name: '%POLICY_NAME%'
+      policy_name: '%POLICY_NAME_PREFIX% (Xcode %xcode_version%)%POLICY_NAME_SUFFIX%'
       policy_template: '%POLICY_TEMPLATE%'
       replace_policy: '%REPLACE_POLICY%'
 
