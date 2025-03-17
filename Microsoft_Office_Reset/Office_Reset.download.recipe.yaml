@@ -1,0 +1,48 @@
+Description: Downloads the current version of the individual Office-Reset package of your choice.
+Comment: |
+  By default, this recipe is set to download the reset package for the complete Microsoft Office suite. Valid options for SOFTWARE_TITLE are as follows:
+    - Office_Factory
+    - Word
+    - Excel
+    - PowerPoint
+    - Outlook
+    - OneNote
+    - OneDrive
+    - Teams
+    - License
+    - AutoUpdate
+Identifier: com.github.smithjw-actions.download.Office_Reset
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Office Reset
+  SOFTWARE_TITLE: Office_Reset
+  SEARCH_TITLE: Office_Factory
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: (?P<url>\/download\/Microsoft_%SEARCH_TITLE%_Reset_(?P<version>.*?)\.pkg)
+      url: https://office-reset.com/macadmins/
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+      url: 'https://office-reset.com/%url%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Paul Bowden (QGS93ZLCU7)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
