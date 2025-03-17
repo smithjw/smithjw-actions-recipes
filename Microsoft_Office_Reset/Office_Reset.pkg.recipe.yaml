@@ -1,0 +1,27 @@
+Description: Downloads the current version of the individual Office-Reset package of your choice and renames the package.
+Comment: |
+  By default, this recipe is set to download the reset package for the complete Microsoft Office suite. Valid options for SOFTWARE_TITLE are as follows:
+    - Office_Factory
+    - Word
+    - Excel
+    - PowerPoint
+    - Outlook
+    - OneNote
+    - OneDrive
+    - Teams
+    - License
+    - AutoUpdate
+Identifier: com.github.smithjw-actions.pkg.Office_Reset
+ParentRecipe: com.github.smithjw-actions.download.Office_Reset
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Office Reset
+  SOFTWARE_TITLE: Office_Reset
+  SEARCH_TITLE: Office_Factory
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%_%SEARCH_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
