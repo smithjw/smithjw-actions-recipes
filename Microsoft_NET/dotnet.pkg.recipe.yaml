@@ -6,6 +6,7 @@ MinimumVersion: '2.3'
 Input:
   NAME: Microsoft .NET
   SOFTWARE_TITLE: microsoft_dotnet
+  SDK_VERSION: '9'
 
 Process:
   - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
@@ -30,12 +31,12 @@ Process:
   - Processor: Copier
     Arguments:
       source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%SDK_VERSION%-arm64.pkg'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-%SDK_VERSION%-arm64.pkg'
 
   - Processor: Copier
     Arguments:
       source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%SDK_VERSION%-x86_64.pkg'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-%SDK_VERSION%-x86_64.pkg'
 
   - Processor: FileCreator
     Arguments:
@@ -44,9 +45,9 @@ Process:
       file_content: |
         #!/bin/bash
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/sbin/installer -pkg microsoft_dotnet-arm64.pkg -target /
+          /usr/sbin/installer -pkg %SOFTWARE_TITLE%-%SDK_VERSION%-arm64.pkg -target /
         else
-          /usr/sbin/installer -pkg microsoft_dotnet-x86_64.pkg -target /
+          /usr/sbin/installer -pkg %SOFTWARE_TITLE%-%SDK_VERSION%-x86_64.pkg -target /
         fi
         exit 0
 
