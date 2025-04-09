@@ -11,8 +11,7 @@ Process:
     Arguments:
       filename: "%NAME%-%version%.dmg"
   - Processor: EndOfCheckPhase
- 
+
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
-
