@@ -19,7 +19,7 @@ Input:
   SELF_SERVICE_AVAILABLE: "true"
   SELF_SERVICE_CATEGORY: "%CATEGORY%"
   SELF_SERVICE_DESCRIPTION: |
-    MacTeX provides a full TeX distribution for macOS, 
+    MacTeX provides a full TeX distribution for macOS,
     including LaTeX, TeX Live, and additional utilities.
   SELF_SERVICE_DISPLAY_NAME: "%NAME%"
   SELF_SERVICE_ICON: "%SOFTWARE_TITLE%.png"
