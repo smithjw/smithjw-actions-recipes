@@ -1,0 +1,26 @@
+---
+Description: "Downloads the latest version of MacTeX."
+Identifier: "com.github.smithjw-actions.download.MacTeX"
+MinimumVersion: "2.3"
+
+Input:
+  NAME: "MacTeX"
+  DOWNLOADPAGE_URL: "http://www.tug.org/mactex/mactex-download.html"
+
+Process:
+  - Processor: "URLTextSearcher"
+    Arguments:
+      url: "%DOWNLOADPAGE_URL%"
+      re_pattern: "(https[^\"]+MacTeX.pkg)"
+
+  - Processor: "URLDownloader"
+    Arguments:
+      url: "%match%"
+
+  - Processor: "EndOfCheckPhase"
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  
