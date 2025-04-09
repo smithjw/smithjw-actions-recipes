@@ -1,0 +1,31 @@
+---
+Description: "Creates a package from the downloaded MacTeX.pkg."
+Identifier: "com.github.smithjw-actions.pkg.MacTeX"
+MinimumVersion: '2.3'
+ParentRecipe: "com.github.smithjw-actions.download.MacTeX"
+
+Input:
+  NAME: "MacTeX"
+
+Process:
+  - Processor: "FlatPkgUnpacker"
+    Arguments:
+      flat_pkg_path: "%pathname%"
+      destination_path: "%RECIPE_CACHE_DIR%/expand"
+
+  - Processor: "FileFinder"
+    Arguments:
+      find_method: "glob"
+      pattern: "%RECIPE_CACHE_DIR%/expand/Distribution"
+      result_output_var_name: "distribution_file"
+
+  - Processor: "URLTextSearcher"
+    Arguments:
+      url: "file://%RECIPE_CACHE_DIR%/expand/Distribution"
+      re_pattern: 'version="(?P<version>\d+\.\d+)"'
+      result_output_var_name: "version"
+
+  - Processor: "PkgCopier"
+    Arguments:
+      source_pkg: "%pathname%"
+      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
