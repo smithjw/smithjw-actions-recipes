@@ -1,24 +1,32 @@
----
-Description: "Downloads the latest version of MacTeX."
-Identifier: "com.github.smithjw-actions.download.MacTeX"
-MinimumVersion: "2.3"
+Description: Downloads the latest version of MacTeX.
+Identifier: com.github.smithjw-actions.download.MacTeX
+MinimumVersion: '2.3'
 
 Input:
-  NAME: "MacTeX"
-  DOWNLOADPAGE_URL: "http://www.tug.org/mactex/mactex-download.html"
+  NAME: MacTeX
+  SOFTWARE_TITLE: '%NAME%'
+  DOWNLOAD_URL: https://mirror.ctan.org/systems/mac/mactex/MacTeX.pkg
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
-  - Processor: "URLTextSearcher"
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
     Arguments:
-      url: "%DOWNLOADPAGE_URL%"
-      re_pattern: "(https[^\"]+MacTeX.pkg)"
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.pkg'
+      url: '%DOWNLOAD_URL%'
+      CHECK_FILESIZE_ONLY: true
 
-  - Processor: "URLDownloader"
-    Arguments:
-      url: "%match%"
-
-  - Processor: "EndOfCheckPhase"
+  - Processor: EndOfCheckPhase
 
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Richard Koch (RBGCY5RJWM)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'

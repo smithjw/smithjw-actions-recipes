@@ -1,31 +1,32 @@
----
-Description: "Creates a package from the downloaded MacTeX.pkg."
-Identifier: "com.github.smithjw-actions.pkg.MacTeX"
+Description: Creates a package from the downloaded MacTeX.pkg.
+Identifier: com.github.smithjw-actions.pkg.MacTeX
 MinimumVersion: '2.3'
-ParentRecipe: "com.github.smithjw-actions.download.MacTeX"
+ParentRecipe: com.github.smithjw-actions.download.MacTeX
 
 Input:
-  NAME: "MacTeX"
+  NAME: MacTeX
+  SOFTWARE_TITLE: '%NAME%'
 
 Process:
-  - Processor: "FlatPkgUnpacker"
+  - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
     Arguments:
-      flat_pkg_path: "%pathname%"
-      destination_path: "%RECIPE_CACHE_DIR%/expand"
+      archive_path: '%pathname%'
+      file_to_extract: Distribution
 
-  - Processor: "FileFinder"
+  - Processor: com.github.mlbz521.SharedProcessors/XPathParser
     Arguments:
-      find_method: "glob"
-      pattern: "%RECIPE_CACHE_DIR%/expand/Distribution"
-      result_output_var_name: "distribution_file"
+      attribute_one: version
+      return_variable_attribute_one: version
+      xml_file: '%extracted_file%'
+      xpath: .//pkg-ref[@id][@version][.='#GUI-Applications-Start.pkg']
 
-  - Processor: "URLTextSearcher"
+  - Processor: PkgCopier
     Arguments:
-      url: "file://%RECIPE_CACHE_DIR%/expand/Distribution"
-      re_pattern: 'version="(?P<version>\d+\.\d+)"'
-      result_output_var_name: "version"
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
 
-  - Processor: "PkgCopier"
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
-      source_pkg: "%pathname%"
-      pkg_path: "%RECIPE_CACHE_DIR%/%NAME%-%version%.pkg"
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extractedfile'
