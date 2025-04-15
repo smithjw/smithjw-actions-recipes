@@ -1,0 +1,169 @@
+<div class="right-block">
+  <div class="version-details">
+    <div class="version-dropdown disable-select-box" style="color: rgba(0, 0, 0, 0.38);">
+
+      <div class="filter-form needs-validation block" data-drupal-selector="filter-form">
+
+
+
+
+
+        <form action="/download/tools/teradata-studio" method="post" id="filter-form" accept-charset="UTF-8"
+          class="form">
+
+          <div
+            class="js-form-item form-item form-type-select js-form-type-select form-item-os js-form-item-os form-group">
+
+
+
+
+
+            <select style="display: none" data-drupal-selector="edit-os" id="edit-os" name="os" size="1"
+              class="form-select form-control">
+              <option value="1532">Windows x86-64 (64-bit)</option>
+              <option value="1541">Mac OS X</option>
+              <option value="10872">macOS</option>
+              <option value="10873">OS X</option>
+              <option value="1545">Linux x86-64 (64-bit)</option>
+            </select>
+
+
+
+
+
+          </div>
+          <div class="dropdown" id="os-dropdown"><a class="btn btn-secondary dropdown-toggle" type="button"
+              id="osdropdown1" aria-expanded="false" style="color: rgba(0, 0, 0, 0.38); pointer-events: none;">
+              <div class="os_tid">1532</div>
+              <div class="term-name" style="color: rgb(92, 91, 95);">Windows x86-64 (64-bit)</div>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+              <li class="listructure" data-once="os-select-click">
+                <div class="os">1532</div>
+                <div class="term-name">Windows x86-64 (64-bit)</div>
+              </li>
+              <li class="listructure" data-once="os-select-click">
+                <div class="os">1541</div>
+                <div class="term-name">Mac OS X</div>
+              </li>
+              <li class="listructure" data-once="os-select-click">
+                <div class="os">10872</div>
+                <div class="term-name">macOS</div>
+              </li>
+              <li class="listructure" data-once="os-select-click">
+                <div class="os">10873</div>
+                <div class="term-name">OS X</div>
+              </li>
+              <li class="listructure" data-once="os-select-click">
+                <div class="os">1545</div>
+                <div class="term-name">Linux x86-64 (64-bit)</div>
+              </li>
+            </ul><span class="form-label" style="color: rgb(92, 91, 95);">OS version</span>
+          </div>
+          <div
+            class="js-form-item form-item form-type-select js-form-type-select form-item-version js-form-item-version form-group">
+
+
+
+
+
+            <select style="display: none" data-drupal-selector="edit-version" id="edit-version" name="version" size="1"
+              class="form-select form-control">
+              <option value="20.00.00.06">20.00.00.06</option>
+              <option value="17.20.00.04">17.20.00.04</option>
+              <option value="17.10.00.04">17.10.00.04</option>
+              <option value="17.00.12.00">17.00.12.00</option>
+            </select>
+
+
+
+
+
+          </div>
+          <div class="dropdown" id="versions-dropdown"><a class="btn btn-secondary dropdown-toggle" type="button"
+              id="versiondropdown1" aria-expanded="false" style="color: rgba(0, 0, 0, 0.38); pointer-events: none;">
+              <div>20.00.00.06</div><span style="color: rgb(92, 91, 95);">01 Apr 2025</span>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+              <li data-once="version-select-click">
+                <div class="version">20.00.00.06</div>
+                <div class="date">01 Apr 2025</div>
+              </li>
+              <li data-once="version-select-click">
+                <div class="version">17.20.00.04</div>
+                <div class="date">10 Aug 2023</div>
+              </li>
+              <li data-once="version-select-click">
+                <div class="version">17.10.00.04</div>
+                <div class="date">09 Nov 2023</div>
+              </li>
+              <li data-once="version-select-click">
+                <div class="version">17.00.12.00</div>
+                <div class="date">07 Jan 2021</div>
+              </li>
+            </ul><span class="form-label" style="color: rgb(92, 91, 95);">Release version</span>
+          </div>
+          <input autocomplete="off" data-drupal-selector="form-htedl3nb1wlnpplropukbo3q-zbjjgr7fdnsajmemky"
+            type="hidden" name="form_build_id" value="form-HTedL3NB1WlNPplroPuKbo3Q_ZBjjGr7FdnSaJmEmkY"
+            class="form-control">
+
+          <input data-drupal-selector="edit-filter-form" type="hidden" name="form_id" value="filter_form"
+            class="form-control">
+
+        </form>
+
+
+      </div>
+
+      <div class="downloads-page-ajax-message form-group" style="display: none;">
+        Please wait...
+      </div>
+    </div>
+    <div class="release-details">
+      <h4 class="desktop-body-bold specs-wrapper">
+        Specifications
+        <span class="button-container">
+          <button class="expand-collapse-btn">
+            <svg class="expand-collapse-icon" width="41" height="40" viewBox="0 0 41 40" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_674_64702)">
+                <path
+                  d="M15.91 16.5898L20.5 21.1698L25.09 16.5898L26.5 17.9998L20.5 23.9998L14.5 17.9998L15.91 16.5898Z"
+                  fill="#00233C"></path>
+              </g>
+              <defs>
+                <clipPath id="clip0_674_64702">
+                  <rect width="40" height="40" fill="white" transform="translate(0.5)"></rect>
+                </clipPath>
+              </defs>
+            </svg>
+          </button>
+        </span>
+      </h4>
+      <div class="release-details-content" style="display: block;">
+        <ul>
+          <li>
+            <div id="version">20.00.00.06</div>
+            <span>Version</span>
+          </li>
+          <li>
+            <div id="release-date">01 Apr 2025</div>
+            <span>Released</span>
+          </li>
+          <li>
+            <div id="ttu">Not applicable</div>
+            <span>TTU</span>
+          </li>
+          <li>
+            <div id="os">Windows x86-64 (64-bit), Mac OS X, macOS, OS X</div>
+            <span>OS</span>
+          </li>
+          <li>
+            <div id="teradata">20.0, 17.20, 17.10, 17.05, 17.00</div>
+            <span>Teradata</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
