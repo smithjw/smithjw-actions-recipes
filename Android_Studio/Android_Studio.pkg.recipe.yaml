@@ -8,6 +8,60 @@ Input:
   SOFTWARE_TITLE: Android_Studio
 
 Process:
-  - Processor: AppPkgCreator
+  - Processor: PkgRootCreator
     Arguments:
-      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%ARCHITECTURE%-%version%.pkg'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.dmg'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64.dmg'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Android Studio.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+        CFBundleShortVersionString: version
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-arm64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
+        else
+          /usr/bin/hdiutil attach "%SOFTWARE_TITLE%-x86_64.dmg" -mountpoint "/Volumes/%SOFTWARE_TITLE%" -nobrowse
+        fi
+
+        /bin/cp -R "/Volumes/%SOFTWARE_TITLE%/Android Studio.app" "/Applications/Android Studio.app"
+        /usr/bin/hdiutil detach "/Volumes/%SOFTWARE_TITLE%"
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
