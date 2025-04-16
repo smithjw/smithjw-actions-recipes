@@ -1,0 +1,30 @@
+Description: Downloads latest Tableau Desktop disk image.
+Identifier: com.github.smithjw-actions.download.Tableau_Desktop
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Tableau Desktop
+  SOFTWARE_TITLE: Tableau_Desktop
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+  DOWNLOAD_MISSING_FILE: null
+
+Process:
+  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
+      url: https://www.tableau.com/downloads/desktop/mac
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Tableau Software, LLC (QJ4XPRK37C)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%/Tableau Desktop.pkg'
