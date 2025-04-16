@@ -1,6 +1,6 @@
 Description: Downloads latest Tableau Desktop disk image and makes a pkg.
 Identifier: com.github.smithjw-actions.pkg.Tableau_Desktop
-ParentRecipe: /Users/james.smith/code/smithjw/smithjw-actions-recipes/Tableau/Tableau_Desktop.download.recipe.yaml #com.github.smithjw-actions.download.Tableau_Desktop
+ParentRecipe: com.github.smithjw-actions.download.Tableau_Desktop
 MinimumVersion: '2.3'
 
 Input:
