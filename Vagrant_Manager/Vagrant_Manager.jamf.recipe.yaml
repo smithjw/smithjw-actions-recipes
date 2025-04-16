@@ -1,13 +1,12 @@
----
 Description: Downloads the latest version Vagrant Manager, packages it, then uploads it to Jamf.
 Identifier: com.github.smithjw-actions.jamf.VagrantManager
-MinimumVersion: '2.3.0'
-
+ParentRecipe: com.github.smithjw-actions.pkg.VagrantManager
+MinimumVersion: '2.3'
 
 Input:
-  DOWNLOAD_MISSING_FILE: null
-  NAME: 'Vagrant Manager'
+  NAME: Vagrant Manager
   SOFTWARE_TITLE: '%NAME%'
+  DOWNLOAD_MISSING_FILE: null
   CATEGORY: Apps
   PACKAGE_INFO: autopkg
   POLICY_CATEGORY: '%CATEGORY%'
@@ -15,57 +14,47 @@ Input:
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
   POLICY_RUN_RECON: 'false'
-  POLICY_TEMPLATE: "Policy_Template-Self_Service.xml"
+  POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   REMOVE_OLD_PACKAGES: 'true'
   REPLACE_CATEGORY: 'true'
   REPLACE_POLICY: 'true'
   GROUP_NAME: '%NAME%'
-  GROUP_TEMPLATE: "JamfSmartGroupTemplate.xml"
+  GROUP_TEMPLATE: JamfSmartGroupTemplate.xml
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
-  SELF_SERVICE_DESCRIPTION: 'Create and configure lightweight, reproducible, and portable development environments.'
+  SELF_SERVICE_DESCRIPTION: Create and configure lightweight, reproducible, and portable development environments.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%NAME%.png'
   SELF_SERVICE_INSTALL_BUTTON: Install
   SELF_SERVICE_REINSTALL_BUTTON: Install
   UPDATE_PREDICATE: pkg_uploaded == False
 
-
-ParentRecipe: "com.github.smithjw-actions.pkg.VagrantManager"
-ParentRecipeTrustInfo:
-
 Process:
-  # 🟢 1. Ensure Category Exists Before Upload
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfCategoryUploader
     Arguments:
       category_name: '%CATEGORY%'
       replace_category: '%REPLACE_CATEGORY%'
 
-  # 🟢 2. Ensure Computer Group Exists **Before Policy Upload**
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
     Arguments:
       computergroup_name: '%GROUP_NAME%'
       computergroup_template: '%GROUP_TEMPLATE%'
       replace_group: '%REPLACE_GROUP%'
 
-  # 🟢 3. Upload Package
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
     Arguments:
       pkg_category: '%CATEGORY%'
       pkg_info: '%PACKAGE_INFO%'
 
-  # 🟢 4. Upload Policy **After Group Exists**
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      policy_template: '%POLICY_TEMPLATE%'
-      policy_name: '%POLICY_NAME%'
       icon: '%SELF_SERVICE_ICON%'
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
       replace_policy: '%REPLACE_POLICY%'
 
-  # 🟢 5. Log Last Recipe Run Result
   - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
 
-  # 🟢 6. Remove Old Packages (Only If Necessary)
   - Processor: StopProcessingIf
     Arguments:
       predicate: '%REMOVE_OLD_PACKAGES% == false'
@@ -75,7 +64,8 @@ Process:
       pkg_name_match: '%SOFTWARE_TITLE%-'
       versions_to_keep: 2
 
-  # 🟢 7. Final Stop Processing Check
   - Processor: StopProcessingIf
     Arguments:
       predicate: pkg_uploaded == False
+
+ParentRecipeTrustInfo: null
