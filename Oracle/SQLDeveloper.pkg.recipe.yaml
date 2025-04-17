@@ -8,14 +8,21 @@ Input:
   SOFTWARE_TITLE: SQLDeveloper
 
 Process:
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/unpack/arm64/SQLDeveloper.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleVersion: version
+        CFBundleIdentifier: bundleid
+
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/unpack/arm64/*.app'
+      app_path: '%RECIPE_CACHE_DIR%/unpack/arm64/SQLDeveloper.app'
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64-%version%.pkg'
 
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/*.app'
+      app_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/SQLDeveloper.app'
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-x86_64-%version%.pkg'
 
   - Processor: PkgRootCreator
