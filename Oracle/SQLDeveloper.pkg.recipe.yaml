@@ -1,21 +1,67 @@
 Description: Downloads the latest version of SQL Developer and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.SQLDeveloper
-ParentRecipe: com.github.smithjw-actions.download.SQLDeveloper
+ParentRecipe: /Users/james.smith/code/smithjw/smithjw-actions-recipes/Oracle/SQLDeveloper.download.recipe.yaml #com.github.smithjw-actions.download.SQLDeveloper
 MinimumVersion: '2.3'
 
 Input:
   NAME: SQLDeveloper
   SOFTWARE_TITLE: SQLDeveloper
-  BUNDLE_ID: com.oracle.SQLDeveloper
 
 Process:
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/unpack/*.app'
-      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      app_path: '%RECIPE_CACHE_DIR%/unpack/arm64/*.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64-%version%.pkg'
+
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/*.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-x86_64-%version%.pkg'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64-%version%.pkg'
+      target: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64-%version%.pkg'
+
+  - Processor: FileMover
+    Arguments:
+      source: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-x86_64-%version%.pkg'
+      target: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-x86_64-%version%.pkg'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /usr/sbin/installer -pkg %SOFTWARE_TITLE%-arm64-%version%.pkg -target /
+        else
+          /usr/sbin/installer -pkg %SOFTWARE_TITLE%-x86_64-%version%.pkg -target /
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
         - '%RECIPE_CACHE_DIR%/unpack'
