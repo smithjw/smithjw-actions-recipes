@@ -17,198 +17,201 @@
 
 from __future__ import absolute_import
 
-import os.path
-import re
-import subprocess
-import tempfile
-import time
+from html.parser import HTMLParser
 
-import xattr
-from autopkglib import Processor, ProcessorError
-
-try:
-    from autopkglib import BUNDLE_ID
-except ImportError:
-    BUNDLE_ID = "com.github.autopkg"
-
+import requests
+from autopkglib import ProcessorError, URLGetter
 
 __all__ = ["TeradataProductURLFinder"]
 
 
-class TeradataProductURLFinder(Processor):
-    """Downloads a URL to the specified download_dir using curl."""
+class TerradataVersionInfo(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.versions = []
+        self.current_data = None
+
+    def handle_starttag(self, tag, attrs):
+        # Check for div tags with class "version" or "date"
+        if tag == "div":
+            for attr, value in attrs:
+                if attr == "class" and value == "version":
+                    self.current_data = "version"
+                elif attr == "class" and value == "date":
+                    self.current_data = "date"
+
+    def handle_data(self, data):
+        # Capture the version or date data
+        if self.current_data == "version":
+            self.versions.append({"version": data.strip()})
+            self.current_data = None
+        elif self.current_data == "date":
+            if self.versions:
+                self.versions[-1]["date"] = data.strip()
+            self.current_data = None
+
+
+class FilteredDownloadLinkExtractor(HTMLParser):
+    def __init__(self, product, arch):
+        super().__init__()
+        self.product = product
+        self.arch = arch
+        self.current_span_text = None
+        self.filtered_link = []
+
+    def handle_starttag(self, tag, attrs):
+        # Check if the tag is an anchor tag
+        if tag == "a":
+            # Convert attributes to a dictionary for easier access
+            attrs_dict = dict(attrs)
+            # Store the href attribute if it exists
+            self.current_link = attrs_dict.get("href", None)
+        elif tag == "span":
+            # Prepare to capture the text inside the <span> tag
+            self.current_span_text = ""
+
+    def handle_data(self, data):
+        # Capture the text inside the <span> tag
+        if self.current_span_text is not None:
+            self.current_span_text += data
+
+    def handle_endtag(self, tag):
+        if tag == "span" and self.current_span_text:
+            # Check if the span text matches the name and architecture
+            if (
+                self.product == self.current_span_text.split("__")[0]
+                and self.arch in self.current_span_text.split("mac_")[-1]
+            ):
+                # Store the current link if it matches
+                self.filtered_link = self.current_link
+            # Reset the span text and current link
+            self.current_span_text = None
+            self.current_link = None
+
+
+class TeradataProductURLFinder(URLGetter):
+    """Downloads Teradata Studio from Teradata's website."""
 
     description = __doc__
     input_variables = {
         "teradata_username": {
-            "description": "Teradata Forum username.",
             "required": True,
+            "description": ("Username Teradata Account"),
         },
         "teradata_password": {
-            "description": "Teradata Forum password.",
             "required": True,
-        },
-        "re_pattern": {
-            "description": "Regular expression (Python) to match against page.",
-            "required": True,
-        },
-        "re_flags": {
-            "description": (
-                "Optional array of strings of Python regular "
-                "expression flags. E.g. IGNORECASE."
-            ),
-            "required": False,
-        },
-        "url": {
-            "required": True,
-            "description": "The URL to search.",
-        },
-        "request_headers": {
-            "required": False,
-            "description": (
-                "Optional dictionary of headers to include with the download request."
-            ),
+            "description": ("Password Teradata Account"),
         },
     }
     output_variables = {
         "url": {
-            "description": "URL to download",
-        }
+            "description": "URL to the requested Teradata product",
+        },
+        "version": {
+            "description": "Version",
+        },
     }
 
-    def get_url_and_search(self, url, re_pattern, cookiePath, headers=None, flags=None):
-        """Get data from url and search for re_pattern"""
-        # pylint: disable=no-self-use
-        flag_accumulator = 0
-        if flags:
-            for flag in flags:
-                if flag in re.__dict__:
-                    flag_accumulator += re.__dict__[flag]
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.session = requests.Session()
+        self.app_info = {
+            "teradata_studio": {
+                "nid": 183396,
+                "os": 10872,
+                "url": "https://downloads.teradata.com/download/tools/teradata-studio",
+                "name": "TeradataStudio",
+                "valid_archs": ["aarch64", "x86"],
+            }
+        }
 
-        re_pattern = re.compile(re_pattern, flags=flag_accumulator)
+    def get_product_version(self, app):
+        """Returns the product version."""
+        url = self.app_info[app]["url"]
+        downloads_page = self.session.get(url)
 
-        try:
-            cmd = [
-                self.env["CURL_PATH"],
-                "--location",
-                "-b",
-                cookiePath,
-                "-c",
-                cookiePath,
-            ]
-            if headers:
-                for header, value in headers.items():
-                    cmd.extend(["--header", "%s: %s" % (header, value)])
-            cmd.append(url)
-            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            (content, stderr) = proc.communicate()
-            if proc.returncode:
-                os.remove(cookiePath)
-                raise ProcessorError("Could not retrieve URL %s: %s" % (url, stderr))
-        except OSError:
-            os.remove(cookiePath)
-            raise ProcessorError("Could not retrieve URL: %s" % url)
+        parser = TerradataVersionInfo()
+        parser.feed(downloads_page.text)
 
-        match = re_pattern.search(content)
-
-        if not match:
-            os.remove(cookiePath)
-            raise ProcessorError("No match found on URL: %s" % url)
-
-        # return the last matched group with the dict of named groups
-        return (
-            match.group(match.lastindex or 0),
-            match.groupdict(),
-        )
-
-    def getTeradataAuthCookie(self, cookiePath, headers):
-        authURL = "https://downloads.teradata.com/user/login"
-
-        dataString = "username={}&password={}&rememberme=forever".format(
-            self.env["teradata_username"], self.env["teradata_password"]
-        )
-
-        try:
-            cmd = [
-                self.env["CURL_PATH"],
-                "--location",
-                "-b",
-                cookiePath,
-                "-c",
-                cookiePath,
-                "-d",
-                dataString,
-            ]
-            if headers:
-                for header, value in headers.items():
-                    cmd.extend(["--header", "%s: %s" % (header, value)])
-            cmd.append(authURL)
-            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            (content, stderr) = proc.communicate()
-            if proc.returncode:
-                os.remove(cookiePath)
-                raise ProcessorError(
-                    "Could not retrieve URL %s: %s" % (authURL, stderr)
-                )
-        except OSError:
-            os.remove(cookiePath)
-            raise ProcessorError(
-                "Could not retrieve URL: %s when attempting to get auth cookie"
-                % authURL
-            )
-
-        # Check returned content doesn't indicate auth failure
-        re_pattern = re.compile(r"Incorrect\susername")
-        match = re_pattern.search(content)
-        if match:
-            os.remove(cookiePath)
-            raise ProcessorError(
-                "Incorrect Ircam Forum authorisation credentials for user {}.".format(
-                    self.env["ircam_username"]
-                )
-            )
+        if parser.versions:
+            version = parser.versions[0]["version"]
+            return version
         else:
-            self.output("Ircam Forum authorisation successful.")
+            self.output("Version not found.")
+            return None
 
-        return
+    def get_download_url(self, username, password, app, architecture):
+        LOGIN_URL = "https://downloads.teradata.com/user/login?destination="
+        payload = {"name": username, "pass": password, "form_id": "user_login_form"}
+
+        self.session.post(
+            LOGIN_URL,
+            data=payload,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+
+        uid = (
+            self.session.get("https://downloads.teradata.com/user")
+            .url.rstrip("/")
+            .split("/")[-1]
+        )
+
+        payload = {
+            "os": self.app_info[app]["os"],
+            "version": self.env["version"],
+            "nid": self.app_info[app]["nid"],
+            "check_full_user_req": 0,
+            "uid": uid,
+            "check_user_details": "false",
+        }
+        r = self.session.post(
+            "https://downloads.teradata.com/downloads-packages/filter",
+            data=payload,
+        )
+
+        download_url = r.json()
+
+        parser = FilteredDownloadLinkExtractor(self.app_info[app]["name"], architecture)
+
+        parser.feed(download_url[0]["downloads_html"])
+        product_link = parser.filtered_link
+
+        download = requests.post(
+            product_link,
+            data={
+                "downloadnid": self.app_info[app]["nid"],
+                "form_id": "license_popup_form",
+            },
+            headers={
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            allow_redirects=False,
+        )
+
+        download_url = download.headers["Location"]
+
+        return download_url
 
     def main(self):
-        # clear any pre-exising summary result
-        if "ircam_downloader_summary_result" in self.env:
-            del self.env["ircam_downloader_summary_result"]
+        username = self.env.get("teradata_username", None)
+        password = self.env.get("teradata_password", None)
+        app = self.env.get("app", None)
+        if app not in self.app_info:
+            raise ProcessorError(
+                f"Invalid app name: {app}. Valid options are: {list(self.app_info.keys())}"
+            )
+        architecture = self.env.get("architecture", None)
+        if architecture not in self.app_info[app]["valid_archs"]:
+            raise ProcessorError(
+                f"Invalid architecture: {architecture}. Valid options are: {self.app_info[app]['valid_archs']}"
+            )
 
-        output_var_name = self.env["result_output_var_name"]
-
-        headers = self.env.get("request_headers", {})
-
-        flags = self.env.get("re_flags", {})
-
-        temporary_cookie_file = tempfile.NamedTemporaryFile(delete=False)
-        cookiePath = temporary_cookie_file.name
-
-        self.getIrcamAuthCookie(cookiePath, headers)
-
-        groupmatch, groupdict = self.get_url_and_search(
-            self.env["url"], self.env["re_pattern"], cookiePath, headers, flags
-        )
-
-        # favor a named group over a normal group match
-        if output_var_name not in groupdict.keys():
-            groupdict[output_var_name] = groupmatch
-
-        # Use download_found method to get matched URL.
-        self.download_found(groupmatch, cookiePath)
-
-        for key in groupdict.keys():
-            self.env[key] = groupdict[key]
-            # self.output('Found matching text (%s): %s' % (key, self.env[key], ))
-            self.output_variables[key] = {
-                "description": "Matched regular expression group"
-            }
-
-        os.remove(cookiePath)
+        self.env["version"] = self.get_product_version(app)
+        self.env["url"] = self.get_download_url(username, password, app, architecture)
+        self.output(f"Found URL: {self.env['url']}")
+        self.output(f"Found VERSION: {self.env['version']}")
 
 
 if __name__ == "__main__":
-    PROCESSOR = IrcamFindAndDownload()
+    PROCESSOR = TeradataProductURLFinder()
     PROCESSOR.execute_shell()
