@@ -1,11 +1,11 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.RStudio
-ParentRecipe: com.github.smithjw-actions.pkg.RStudio
+Identifier: com.github.smithjw-actions.jamf.R
+ParentRecipe: com.github.smithjw-actions.pkg.R
 MinimumVersion: '2.3'
 
 Input:
-  NAME: RStudio
-  SOFTWARE_TITLE: RStudio
+  NAME: R
+  SOFTWARE_TITLE: R
   CATEGORY: Apps
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
@@ -17,7 +17,7 @@ Input:
   REMOVE_OLD_PACKAGES: 'true'
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: Development
-  SELF_SERVICE_DESCRIPTION: 'RStudio is an integrated development environment (IDE) for R and Python. It includes a console, syntax-highlighting editor that supports direct code execution, and tools for plotting, history, debugging, and workspace management. RStudio is available in open source and commercial editions and runs on the desktop (Windows, Mac, and Linux).'
+  SELF_SERVICE_DESCRIPTION: 'R is a free software environment for statistical computing and graphics.'
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SELF_SERVICE_INSTALL_BUTTON: Install

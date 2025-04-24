@@ -5,9 +5,10 @@ MinimumVersion: '2.3'
 
 Input:
   NAME: RStudio
-  SOFTWARE_TITLE: '%NAME%'
+  SOFTWARE_TITLE: RStudio
 
 Process:
   - Processor: AppPkgCreator
     Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/Rstudio.dmg/RStudio.app'
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
