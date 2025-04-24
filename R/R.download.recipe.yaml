@@ -1,0 +1,50 @@
+Description: 'Downloads the latest version of R for macOS.'
+Identifier: com.github.smithjw-actions.download.R
+MinimumVersion: '2.3'
+
+Input:
+  NAME: R
+  SOFTWARE_TITLE: R
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: 'a href="(?P<arm64_url>big-sur-arm64/base/R-(?P<version_string>[\d\.]+)-arm64\.pkg)'
+      url: https://cran.rstudio.com/bin/macosx/
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: 'a href="(?P<x86_64_url>big-sur-x86_64/base/R-(?P<version_string>[\d\.]+)-x86_64\.pkg)'
+      url: https://cran.rstudio.com/bin/macosx/
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      url: https://cran.rstudio.com/bin/macosx/%arm64_url%
+      filename: '%RECIPE_CACHE_DIR%/downloads/R-arm64.pkg'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      url: https://cran.rstudio.com/bin/macosx/%x86_64_url%
+      filename: '%RECIPE_CACHE_DIR%/downloads/R-x86_64.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Simon Urbanek (VZLD955F6P)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/R-arm64.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Simon Urbanek (VZLD955F6P)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%RECIPE_CACHE_DIR%/downloads/R-x86_64.pkg'
