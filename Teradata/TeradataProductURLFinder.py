@@ -17,6 +17,7 @@
 
 from __future__ import absolute_import
 
+import re
 from html.parser import HTMLParser
 
 import requests
@@ -52,9 +53,10 @@ class TerradataVersionInfo(HTMLParser):
 
 
 class FilteredDownloadLinkExtractor(HTMLParser):
-    def __init__(self, product, arch):
+    def __init__(self, app_info, arch):
         super().__init__()
-        self.product = product
+        self.product = app_info.get("name", None)
+        self.search_pattern = app_info.get("search_pattern", None)
         self.arch = arch
         self.current_span_text = None
         self.filtered_link = []
@@ -78,7 +80,10 @@ class FilteredDownloadLinkExtractor(HTMLParser):
     def handle_endtag(self, tag):
         if tag == "span" and self.current_span_text:
             # Check if the span text matches the name and architecture
-            if (
+            if self.search_pattern:
+                if re.search(self.search_pattern, self.current_span_text):
+                    self.filtered_link = self.current_link
+            elif (
                 self.product == self.current_span_text.split("__")[0]
                 and self.arch in self.current_span_text.split("mac_")[-1]
             ):
@@ -122,7 +127,21 @@ class TeradataProductURLFinder(URLGetter):
                 "url": "https://downloads.teradata.com/download/tools/teradata-studio",
                 "name": "TeradataStudio",
                 "valid_archs": ["aarch64", "x86"],
-            }
+            },
+            "teradata_studio_express": {
+                "nid": 7557,
+                "os": 10872,
+                "url": "https://downloads.teradata.com/download/tools/teradata-studio-express",
+                "name": "TeradataStudioExpress",
+                "valid_archs": ["aarch64", "x86"],
+            },
+            "teradata_tools_utilities": {
+                "nid": 201214,
+                "os": 1541,
+                "url": "https://downloads.teradata.com/download/tools/teradata-tools-and-utilities-mac-osx-installation-package",
+                "name": "TTU",
+                "search_pattern": "^TTU\s\d+\.\d+\.\d+\.\d+\smacOS\sBase$",
+            },
         }
 
     def get_product_version(self, app):
@@ -150,18 +169,17 @@ class TeradataProductURLFinder(URLGetter):
             headers={"Content-Type": "application/x-www-form-urlencoded"},
         )
 
-        uid = (
-            self.session.get("https://downloads.teradata.com/user")
-            .url.rstrip("/")
-            .split("/")[-1]
-        )
+        # uid = (
+        #     self.session.get("https://downloads.teradata.com/user")
+        #     .url.rstrip("/")
+        #     .split("/")[-1]
+        # )
 
         payload = {
             "os": self.app_info[app]["os"],
             "version": self.env["version"],
             "nid": self.app_info[app]["nid"],
             "check_full_user_req": 0,
-            "uid": uid,
             "check_user_details": "false",
         }
         r = self.session.post(
@@ -170,9 +188,7 @@ class TeradataProductURLFinder(URLGetter):
         )
 
         download_url = r.json()
-
-        parser = FilteredDownloadLinkExtractor(self.app_info[app]["name"], architecture)
-
+        parser = FilteredDownloadLinkExtractor(self.app_info[app], architecture)
         parser.feed(download_url[0]["downloads_html"])
         product_link = parser.filtered_link
 
@@ -195,13 +211,16 @@ class TeradataProductURLFinder(URLGetter):
     def main(self):
         username = self.env.get("teradata_username", None)
         password = self.env.get("teradata_password", None)
+        architecture = self.env.get("architecture", None)
         app = self.env.get("app", None)
+
         if app not in self.app_info:
             raise ProcessorError(
                 f"Invalid app name: {app}. Valid options are: {list(self.app_info.keys())}"
             )
-        architecture = self.env.get("architecture", None)
-        if architecture not in self.app_info[app]["valid_archs"]:
+
+        valid_archs = self.app_info[app].get("valid_archs", None)
+        if valid_archs is not None and architecture not in valid_archs:
             raise ProcessorError(
                 f"Invalid architecture: {architecture}. Valid options are: {self.app_info[app]['valid_archs']}"
             )

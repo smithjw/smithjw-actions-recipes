@@ -1,11 +1,11 @@
-Description: Downloads the latest version of Teradata Studio
-Identifier: com.github.smithjw-actions.download.Teradata_Studio
+Description: Downloads the latest version of Teradata Studio Express
+Identifier: com.github.smithjw-actions.download.Teradata_Studio_Express
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Teradata Studio
-  SOFTWARE_TITLE: Teradata_Studio
-  PRODUCT: teradata_studio
+  NAME: Teradata Studio Express
+  SOFTWARE_TITLE: Teradata_Studio_Express
+  PRODUCT: teradata_studio_express
   DOWNLOAD_MISSING_FILE: null
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
@@ -58,7 +58,7 @@ Process:
         - 'Developer ID Installer: Teradata (Z6K9HW9JJ5)'
         - Developer ID Certification Authority
         - Apple Root CA
-      input_path: '%RECIPE_CACHE_DIR%/extracted/arm64/TeradataStudio.pkg'
+      input_path: '%RECIPE_CACHE_DIR%/extracted/arm64/TeradataStudioExpress.pkg'
 
   - Processor: CodeSignatureVerifier
     Arguments:
@@ -66,4 +66,4 @@ Process:
         - 'Developer ID Installer: Teradata (Z6K9HW9JJ5)'
         - Developer ID Certification Authority
         - Apple Root CA
-      input_path: '%RECIPE_CACHE_DIR%/extracted/x86_64/TeradataStudio.pkg'
+      input_path: '%RECIPE_CACHE_DIR%/extracted/x86_64/TeradataStudioExpress.pkg'
