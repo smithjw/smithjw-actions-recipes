@@ -15,7 +15,7 @@ Process:
       re_pattern: 'data-url="/download/neo4j-desktop/\?edition=desktop&flavour=osx&release=(\d+\.\d+\.\d+)&offline=false"'
       result_output_var_name: version
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.dmg'

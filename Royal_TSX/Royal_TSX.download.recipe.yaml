@@ -13,7 +13,7 @@ Process:
     Arguments:
       appcast_url: https://royaltsx-v6.royalapps.com/updates_stable
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       fetch_filename: true

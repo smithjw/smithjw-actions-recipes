@@ -12,7 +12,7 @@ Process:
       re_pattern: .*
       url: https://www.charlesproxy.com/latest.do
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       fetch_filename: true

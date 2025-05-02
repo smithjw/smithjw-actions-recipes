@@ -7,7 +7,7 @@ Input:
   SOFTWARE_TITLE: Tableau_Prep_Builder
 
 Process:
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.dmg'

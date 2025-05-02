@@ -20,7 +20,7 @@ Process:
     Arguments:
       predicate: DOWNLOAD_UUID == "Override_Jamf_Protect_Package_UUID_Here"
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.pkg'

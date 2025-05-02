@@ -17,7 +17,7 @@ Process:
       teradata_username: '%TERADATA_USERNAME%'
       teradata_password: '%TERADATA_PASSWORD%'
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-arm64.zip'
@@ -29,7 +29,7 @@ Process:
       teradata_username: '%TERADATA_USERNAME%'
       teradata_password: '%TERADATA_PASSWORD%'
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-x86_64.zip'

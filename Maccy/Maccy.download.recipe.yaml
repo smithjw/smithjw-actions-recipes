@@ -14,7 +14,7 @@ Process:
       asset_regex: (Maccy.app.zip)
       github_repo: p0deje/Maccy
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
 

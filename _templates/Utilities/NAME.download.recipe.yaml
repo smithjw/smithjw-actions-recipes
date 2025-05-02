@@ -15,7 +15,7 @@ Process:
       github_repo:
       include_prereleases: '%INCLUDE_PRERELEASES%'
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       filename: '%SOFTWARE_TITLE%.pkg'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'

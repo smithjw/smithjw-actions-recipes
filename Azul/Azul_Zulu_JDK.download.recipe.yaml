@@ -18,7 +18,7 @@ Process:
       extension: dmg
       java_major_version: '%JDK_VERSION%'
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%JDK_VERSION%-macos-arm64.dmg'
@@ -30,7 +30,7 @@ Process:
       extension: dmg
       java_major_version: '%JDK_VERSION%'
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%JDK_VERSION%-macos-x86_64.dmg'

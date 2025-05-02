@@ -27,4 +27,4 @@
 
 ### Download recipes
 - The final `Processor` of each download recipe should be `CodeSignatureVerifier`
-- Immediately following the `com.github.jgstew.SharedProcessors/URLDownloaderPython` Processor should be an `EndOfCheckPhase` and then `com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged`
+- Immediately following the `com.github.smithjw-actions.processors/URLDownloaderPython` Processor should be an `EndOfCheckPhase` and then `com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged`
