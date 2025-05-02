@@ -191,6 +191,10 @@ class TeradataProductURLFinder(URLGetter):
         parser = FilteredDownloadLinkExtractor(self.app_info[app], architecture)
         parser.feed(download_url[0]["downloads_html"])
         product_link = parser.filtered_link
+        if not product_link:
+            raise ProcessorError(
+                f"Download link not found for {self.app_info[app]['name']}. Please check your credentials or the product name."
+            )
 
         download = requests.post(
             product_link,
@@ -211,6 +215,11 @@ class TeradataProductURLFinder(URLGetter):
     def main(self):
         username = self.env.get("teradata_username", None)
         password = self.env.get("teradata_password", None)
+
+        if username is None or password is None:
+            raise ProcessorError(
+                "Username and password are required. Please provide them in the environment variables."
+            )
         architecture = self.env.get("architecture", None)
         app = self.env.get("app", None)
 
