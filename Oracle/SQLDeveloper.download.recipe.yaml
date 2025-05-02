@@ -19,13 +19,13 @@ Process:
       re_pattern: (?P<x86_64>download\.oracle\.com\/otn_software\/java\/sqldeveloper\/sqldeveloper-(?P<version>.*?)-macos-x64\.app\.zip)
       url: https://www.oracle.com/database/sqldeveloper/technologies/download/
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%version%-arm64.zip'
       url: 'https://%arm64_url%'
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%version%-x86_64.zip'

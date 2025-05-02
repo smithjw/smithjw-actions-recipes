@@ -15,7 +15,7 @@ Process:
       github_repo: HandBrake/HandBrake
       sort_by_highest_tag_names: true
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       fetch_filename: true

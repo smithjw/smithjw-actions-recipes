@@ -11,7 +11,7 @@ Input:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED:
 
 Process:
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       filename: '%SOFTWARE_TITLE%.pkg'
       url: '%DOWNLOAD_URL%'

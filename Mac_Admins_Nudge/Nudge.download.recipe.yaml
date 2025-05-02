@@ -25,7 +25,7 @@ Process:
       github_repo: macadmins/nudge
       include_prereleases: '%INCLUDE_PRERELEASES%'
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%PACKAGE_PREFIX%-%version%.pkg'

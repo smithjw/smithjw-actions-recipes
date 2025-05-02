@@ -15,7 +15,7 @@ Process:
       re_pattern: https://axure.cachefly.net/versions/10-0/AxureRP-Setup-arm64-[\d+]+\.dmg
       url: https://www.axure.com/release-history/rp10
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-arm64.dmg'
@@ -26,7 +26,7 @@ Process:
       re_pattern: https://axure.cachefly.net/versions/10-0/AxureRP-Setup-[\d+]+\.dmg
       url: https://www.axure.com/release-history/rp10
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       filename: '%SOFTWARE_TITLE%-x86_64.dmg'
       url: '%match%'

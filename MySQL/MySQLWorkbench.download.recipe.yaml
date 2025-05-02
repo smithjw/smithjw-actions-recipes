@@ -14,12 +14,12 @@ Process:
       url: https://dev.mysql.com/downloads/workbench
       re_pattern: (?P<dmg>mysql-workbench-community-(?P<version>[\d\.]+))
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       prefetch_filename: true
       url: https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community-%version%-macos-arm64.dmg
 
-  - Processor: com.github.jgstew.SharedProcessors/URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       prefetch_filename: true
