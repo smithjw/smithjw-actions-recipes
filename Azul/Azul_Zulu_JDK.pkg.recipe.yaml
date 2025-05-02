@@ -1,5 +1,5 @@
 Identifier: com.github.smithjw-actions.pkg.Azul_Zulu_JDK
-ParentRecipe: com.github.smithjw-actions.download.Azul_Zulu_JDK_8
+ParentRecipe: com.github.smithjw-actions.download.Azul_Zulu_JDK
 MinimumVersion: '2.3'
 
 Input:
