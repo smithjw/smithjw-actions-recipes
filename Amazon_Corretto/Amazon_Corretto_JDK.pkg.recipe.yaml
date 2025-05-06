@@ -39,9 +39,9 @@ Process:
       file_content: |
         #!/bin/bash
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/sbin/installer -pkg Amazon_Corretto_JDK-arm64.pkg -target /
+          /usr/sbin/installer -pkg %SOFTWARE_TITLE%-arm64.pkg -target /
         else
-          /usr/sbin/installer -pkg Amazon_Corretto_JDK-x86_64.pkg -target /
+          /usr/sbin/installer -pkg %SOFTWARE_TITLE%-x86_64.pkg -target /
         fi
         exit 0
 
