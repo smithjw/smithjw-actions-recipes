@@ -1,7 +1,6 @@
 #!/bin/bash
 
 JDK_VERSION="%JDK_VERSION%"
-JDK_VERSION="24"
 JDK_PLIST="/Library/Java/JavaVirtualMachines/zulu-${JDK_VERSION}.jdk/Contents/Info.plist"
 KEY="CFBundleName"
 
