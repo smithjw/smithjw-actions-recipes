@@ -1,0 +1,50 @@
+Identifier: com.github.smithjw-actions.jamf.Vault
+Description: Downloads and extracts the vault binary, create pkg and upload to jamf
+MinimumVersion: '2.3'
+ParentRecipe: com.github.smithjw-actions.pkg.Vault
+
+Input:
+  NAME: 'Vault'
+  SOFTWARE_TITLE: 'Vault'
+  CATEGORY: Apps
+  POLICY_CATEGORY: Apps
+  POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
+  POLICY_NAME: '%NAME%'
+  POLICY_RUN_COMMAND: ' '
+  POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_TEMPLATE: Policy_Template-Self_Service.xml
+  REMOVE_OLD_PACKAGES: 'true'
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_DESCRIPTION: Secure, store, and tightly control access to tokens, passwords, certificates, encryption keys for protecting secrets, and other sensitive data using a UI, CLI, or HTTP API.
+  SELF_SERVICE_CATEGORY: '%CATEGORY%'
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  SELF_SERVICE_INSTALL_BUTTON: Install
+  SELF_SERVICE_REINSTALL_BUTTON: Install
+  REPLACE_POLICY: 'true'
+  PACKAGE_INFO: autopkg
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      icon: '%SELF_SERVICE_ICON%'
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
+      replace_policy: '%REPLACE_POLICY%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%-'
+      versions_to_keep: 2
