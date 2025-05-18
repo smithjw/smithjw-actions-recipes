@@ -11,14 +11,14 @@ Input:
 
 Process:
   - Processor: FindLatestPolyLensURL
-  
+
   - Processor: URLDownloader
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.dmg'
       url: '%download_url%'
       CHECK_FILESIZE_ONLY: true
-      
+
   - Processor: EndOfCheckPhase
 
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
