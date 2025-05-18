@@ -1,0 +1,34 @@
+Identifier: com.github.smithjw-actions.download.polylens
+Description: Downloads the latest Poly Lens macOS .dmg
+MinimumVersion: '2.3'
+
+Input:
+  NAME: LensDesktop
+  SOFTWARE_TITLE: '%NAME%'
+  VENDOR: Poly
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: FindLatestPolyLensURL
+  
+  - Processor: URLDownloader
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
+      url: '%download_url%'
+      CHECK_FILESIZE_ONLY: true
+      
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/*.pkg'
+      expected_authority_names:
+        - "Developer ID Installer: Polycom (WJCM3F7AQ4)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"

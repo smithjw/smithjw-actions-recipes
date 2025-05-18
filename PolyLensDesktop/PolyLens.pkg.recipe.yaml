@@ -1,0 +1,23 @@
+Identifier: com.github.smithjw-actions.pkg.polylens
+Description: Downloads and extracts the Poly Lens .pkg from the DMG
+MinimumVersion: '2.3'
+ParentRecipe: com.github.smithjw-actions.download.polylens
+
+Input:
+  NAME: LensDesktop
+  VENDOR: Poly
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: PkgCopier
+    Arguments:
+      source_pkg: '%pathname%/*.pkg'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/*.pkg'
+      expected_authority_names:
+        - "Developer ID Installer: Polycom (WJCM3F7AQ4)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"
