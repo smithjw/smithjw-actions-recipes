@@ -1,11 +1,11 @@
-Identifier: com.github.smithjw-actions.jamf.Vault
 Description: Downloads and extracts the vault binary, create pkg and upload to jamf
+Identifier: com.github.smithjw-actions.jamf.HashiCorp_Vault
+ParentRecipe: com.github.smithjw-actions.pkg.HashiCorp_Vault
 MinimumVersion: '2.3'
-ParentRecipe: com.github.smithjw-actions.pkg.Vault
 
 Input:
-  NAME: 'Vault'
-  SOFTWARE_TITLE: 'Vault'
+  NAME: HashiCorp Vault
+  SOFTWARE_TITLE: HashiCorp_Vault
   CATEGORY: Apps
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
