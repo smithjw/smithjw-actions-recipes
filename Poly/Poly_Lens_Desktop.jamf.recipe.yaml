@@ -1,11 +1,11 @@
-Identifier: com.github.smithjw-actions.jamf.polylens
 Description: Downloads and extracts the Poly Lens .pkg from the DMG and uploads to JAMF
+Identifier: com.github.smithjw-actions.jamf.Poly_Lens_Desktop
+ParentRecipe: com.github.smithjw-actions.pkg.Poly_Lens_Desktop
 MinimumVersion: '2.3'
-ParentRecipe: com.github.smithjw-actions.pkg.polylens
 
 Input:
-  NAME: 'Poly Lens Desktop'
-  SOFTWARE_TITLE: 'Poly Lens Desktop'
+  NAME: Poly Lens Desktop
+  SOFTWARE_TITLE: Poly_Lens_Desktop
   CATEGORY: Apps
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
@@ -16,8 +16,7 @@ Input:
   POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   REMOVE_OLD_PACKAGES: 'true'
   SELF_SERVICE_AVAILABLE: 'true'
-  SELF_SERVICE_DESCRIPTION: |
-    Manage, customize, and update your Poly audio/video devices directly from your Mac.
+  SELF_SERVICE_DESCRIPTION: Manage, customize, and update your Poly audio/video devices directly from your Mac.
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
