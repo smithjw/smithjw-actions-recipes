@@ -1,0 +1,38 @@
+---
+Identifier: com.github.smithjw-actions.download.Vantage_Editor
+Description: Downloads the latest Vantage Editor Desktop (arm64) using custom processor
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Vantage Editor Desktop
+  SOFTWARE_TITLE: Vantage_Editor_Desktop
+  PRODUCT: teradata_vantage_editor
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: VantageProductURLFinder
+    Arguments:
+      app: '%PRODUCT%'
+      architecture: 'aarch64'
+      teradata_username: '%TERADATA_USERNAME%'
+      teradata_password: '%TERADATA_PASSWORD%'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      filename: '%SOFTWARE_TITLE%_%version%-arm64.pkg'
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%_%version%-arm64.pkg'
+      expected_authority_names:
+        - "Developer ID Installer: Teradata (Z6K9HW9JJ5)"
+        - "Developer ID Certification Authority"
+        - "Apple Root CA"
