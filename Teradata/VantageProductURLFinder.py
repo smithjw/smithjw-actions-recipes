@@ -127,7 +127,7 @@ class VantageProductURLFinder(URLGetter):
             match = re.search(r'<select[^>]*id="edit-version"[^>]*>.*?<option value="([^"]+)"', response.text, re.DOTALL)
 
         if match:
-            version = match.group(1).strip()    
+            version = match.group(1).strip()
             self.output(f"Found version: {version}")
             return version
         else:
