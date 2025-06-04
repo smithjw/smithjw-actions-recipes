@@ -1,0 +1,14 @@
+Description: 'Packages Vantage Editor Desktop'
+Identifier: com.github.smithjw-actions.pkg.Vantage_Editor
+ParentRecipe: com.github.smithjw-actions.download.Vantage_Editor
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Vantage Editor Desktop
+  SOFTWARE_TITLE: Vantage_Editor_Desktop
+
+Process:
+    - Processor: Copier
+      Arguments:
+        source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%_%version%-arm64.pkg'
+        destination_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%_%version%-arm64.pkg'
