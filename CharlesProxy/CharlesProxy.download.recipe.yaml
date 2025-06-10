@@ -5,25 +5,33 @@ MinimumVersion: '2.3'
 Input:
   NAME: CharlesProxy
   SOFTWARE_TITLE: '%NAME%'
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+  MAJOR_VERSION: '5'
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
-      re_pattern: .*
-      url: https://www.charlesproxy.com/latest.do
+      re_pattern: <h4>Version\s+(?P<version>%MAJOR_VERSION%\.\d+\.\d+)(?!b\d+).*?<\/h4>
+      url: https://www.charlesproxy.com/documentation/version-history/
 
   - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       fetch_filename: true
-      url: https://www.charlesproxy.com/assets/release/%match%/charles-proxy-%match%.dmg
+      url: https://www.charlesproxy.com/assets/release/%version%/charles-proxy-%version%.dmg
       User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
 
   - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
-      version: '%match%'
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:
       input_path: '%pathname%/*.app'
-      requirement: identifier "com.xk72.Charles" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "9A5PCU4FSD"
+      requirement: |
+        identifier "com.xk72.Charles" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "9A5PCU4FSD"
