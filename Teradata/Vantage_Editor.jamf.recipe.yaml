@@ -4,8 +4,8 @@ ParentRecipe: com.github.smithjw-actions.pkg.Vantage_Editor
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Vantage Editor Desktop
-  SOFTWARE_TITLE: Vantage_Editor_Desktop
+  NAME: Vantage Editor
+  SOFTWARE_TITLE: Vantage_Editor
   CATEGORY: Apps
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
@@ -17,7 +17,7 @@ Input:
   REMOVE_OLD_PACKAGES: 'true'
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: Development
-  SELF_SERVICE_DESCRIPTION: 'Vantage Editor Desktop is a lightweight, graphical SQL editor designed for querying and managing Teradata databases locally on your desktop.'
+  SELF_SERVICE_DESCRIPTION: 'Vantage Editor is a lightweight, graphical SQL editor designed for querying and managing Teradata databases locally on your desktop.'
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SELF_SERVICE_INSTALL_BUTTON: Install
