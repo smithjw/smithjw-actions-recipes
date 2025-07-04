@@ -2,7 +2,7 @@ Comment: |
   This is a template recipe and cannot be used without a RecipeOverride.
   UNTESTED_RECIPE_IDENTIFIER must be supplied
 Description: Creates a Generic Jamf Policy based on an app that has already been packaged
-Identifier: com.github.smithjw-actions.jamf.policy_only.App
+Identifier: com.github.smithjw-actions.jamf.self_service.App
 MinimumVersion: '2.3'
 
 Input:
