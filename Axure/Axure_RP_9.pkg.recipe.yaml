@@ -35,11 +35,9 @@ Process:
       file_content: |
         #!/bin/bash
           /usr/bin/hdiutil attach "Axure_RP_9-arm64.dmg" -mountpoint "/Volumes/Axure_RP_9" -nobrowse
-        else
-          /usr/bin/hdiutil attach "Axure_RP_9-x86_64.dmg" -mountpoint "/Volumes/Axure_RP_9" -nobrowse
-        fi
 
         /bin/cp -R "/Volumes/Axure_RP_9/Axure RP 9.app" "/Applications/Axure RP 9.app"
+        
         /usr/bin/hdiutil detach "/Volumes/Axure_RP_9"
         exit 0
 
