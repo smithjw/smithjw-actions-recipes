@@ -1,0 +1,61 @@
+Description: Downloads the latest version of Axure RP 9 and creates a package.
+Identifier: com.github.smithjw-actions.pkg.Axure_RP_9
+ParentRecipe: com.github.smithjw-actions.download.Axure_RP_9
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Axure RP 9
+  SOFTWARE_TITLE: Axure_RP_9
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.dmg'
+
+  - Processor: PlistReader
+    Arguments:
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Axure RP 9.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+        CFBundleVersion: version
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+          /usr/bin/hdiutil attach "Axure_RP_9-arm64.dmg" -mountpoint "/Volumes/Axure_RP_9" -nobrowse
+        else
+          /usr/bin/hdiutil attach "Axure_RP_9-x86_64.dmg" -mountpoint "/Volumes/Axure_RP_9" -nobrowse
+        fi
+
+        /bin/cp -R "/Volumes/Axure_RP_9/Axure RP 9.app" "/Applications/Axure RP 9.app"
+        /usr/bin/hdiutil detach "/Volumes/Axure_RP_9"
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: '%bundleid%'
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
