@@ -1,4 +1,4 @@
-Description: Downloads and extracts the vault binary, create pkg and upload to jamf
+Description: Downloads and extracts the csi app, create pkg and upload to jamf
 Identifier: com.github.smithjw-actions.jamf.NexThinkCollector
 ParentRecipe: com.github.smithjw-actions.pkg.NexThinkCollector
 MinimumVersion: '2.3'
