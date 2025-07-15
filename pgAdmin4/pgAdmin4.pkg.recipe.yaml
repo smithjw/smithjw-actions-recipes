@@ -1,0 +1,13 @@
+Description: Package the current  version of pgAdmin 4.
+Identifier: com.github.smithjw-actions.pkg.pgAdmin4
+ParentRecipe: com.github.smithjw-actions.download.pgAdmin4
+MinimumVersion: '2.3'
+Input:
+  NAME: pgAdmin4
+  SOFTWARE_TITLE: '%NAME%'
+
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%pathname%/*.app'
