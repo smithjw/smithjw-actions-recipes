@@ -1,0 +1,27 @@
+Description: Downloads the latest version of NexThink Collector.
+Identifier: com.github.smithjw-actions.download.NexThinkCollector
+Input:
+  NAME: Nexthink Collector
+  DOWNLOAD_URL: https://download.nexthink.com/releases/latest/OSX_Collector/Nexthink_Collector.dmg
+  VENDOR: NexThink
+  SOFTWARETITLE: Nexthink Collector
+MinimumVersion: "2.3.0"
+Process:
+  - Processor: local.jamf.NexThinkCollector
+    Arguments:
+      filename: "%VENDOR%%SOFTWARETITLE%.dmg"
+      url: "%DOWNLOAD_URL%"
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: Versioner
+    Comment: Get version from the installer application
+    Arguments:
+      input_plist_path: "%pathname%/csi.app/Contents/Info.plist"
+      plist_version_key: CFBundleVersion
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: "%pathname%/csi.app"
+      requirement: 'identifier "com.nexthink.collector.installer.csi" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and certificate leaf[field.1.2.840.113635.100.6.1.13] and certificate leaf[subject.OU] = PDEKAZ43QL'
+  
