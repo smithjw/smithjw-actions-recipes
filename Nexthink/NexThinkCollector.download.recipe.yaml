@@ -1,13 +1,14 @@
 Description: Downloads the latest version of NexThink Collector.
 Identifier: com.github.smithjw-actions.download.NexThinkCollector
+MinimumVersion: '2.3'
 Input:
   NAME: Nexthink Collector
   DOWNLOAD_URL: https://download.nexthink.com/releases/latest/OSX_Collector/Nexthink_Collector.dmg
   VENDOR: NexThink
   SOFTWARETITLE: Nexthink Collector
-MinimumVersion: "2.3.0"
+
 Process:
-  - Processor: local.jamf.NexThinkCollector
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       filename: "%VENDOR%%SOFTWARETITLE%.dmg"
       url: "%DOWNLOAD_URL%"
