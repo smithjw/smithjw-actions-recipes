@@ -16,7 +16,6 @@ Process:
   - Processor: EndOfCheckPhase
 
   - Processor: Versioner
-    Comment: Get version from the installer application
     Arguments:
       input_plist_path: "%pathname%/csi.app/Contents/Info.plist"
       plist_version_key: CFBundleVersion
