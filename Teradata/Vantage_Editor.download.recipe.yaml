@@ -10,7 +10,7 @@ Input:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
-  - Processor: VantageProductURLFinder
+  - Processor: TeradataProductURLFinder
     Arguments:
       app: teradata_vantage_editor
       architecture: 'aarch64'
@@ -22,7 +22,7 @@ Process:
       filename: '%SOFTWARE_TITLE%-arm64.pkg'
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
 
-  - Processor: VantageProductURLFinder
+  - Processor: TeradataProductURLFinder
     Arguments:
       app: teradata_vantage_editor
       architecture: 'x86'
