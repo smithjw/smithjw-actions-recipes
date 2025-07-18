@@ -58,9 +58,13 @@ class FilteredDownloadLinkExtractor(HTMLParser):
         super().__init__()
         self.product = app_info.get("name", None)
         self.search_pattern = app_info.get("search_pattern", None)
+        self.use_vantage_pattern = app_info.get("use_vantage_pattern", False)
         self.arch = arch
         self.current_span_text = None
         self.filtered_link = []
+        self.current_link = None
+        self.capture_text = False
+        self.link_text = ""
 
     def handle_starttag(self, tag, attrs):
         # Check if the tag is an anchor tag
@@ -70,29 +74,49 @@ class FilteredDownloadLinkExtractor(HTMLParser):
             # Store the href attribute if it exists
             self.current_link = attrs_dict.get("href", None)
         elif tag == "span":
-            # Prepare to capture the text inside the <span> tag
-            self.current_span_text = ""
+            if self.use_vantage_pattern:
+                # Vantage pattern: capture text for link matching
+                self.capture_text = True
+                self.link_text = ""
+            else:
+                # Original Teradata pattern: prepare to capture the text inside the <span> tag
+                self.current_span_text = ""
 
     def handle_data(self, data):
-        # Capture the text inside the <span> tag
-        if self.current_span_text is not None:
+        if self.use_vantage_pattern and self.capture_text:
+            # Vantage pattern: accumulate link text
+            self.link_text += data.strip()
+        elif self.current_span_text is not None:
+            # Original pattern: capture the text inside the <span> tag
             self.current_span_text += data
 
     def handle_endtag(self, tag):
-        if tag == "span" and self.current_span_text:
-            # Check if the span text matches the name and architecture
-            if self.search_pattern:
-                if re.search(self.search_pattern, self.current_span_text):
+        if tag == "span":
+            if self.use_vantage_pattern:
+                self.capture_text = False
+            elif self.current_span_text:
+                # Original Teradata pattern logic
+                if self.search_pattern:
+                    if re.search(self.search_pattern, self.current_span_text):
+                        self.filtered_link = self.current_link
+                elif (
+                    self.product == self.current_span_text.split("__")[0]
+                    and self.arch in self.current_span_text.split("mac_")[-1]
+                ):
+                    # Store the current link if it matches
                     self.filtered_link = self.current_link
-            elif (
-                self.product == self.current_span_text.split("__")[0]
-                and self.arch in self.current_span_text.split("mac_")[-1]
-            ):
-                # Store the current link if it matches
+                # Reset the span text and current link
+                self.current_span_text = None
+                self.current_link = None
+        elif tag == "a" and self.use_vantage_pattern and self.current_link:
+            # Vantage pattern: check link text for architecture match
+            text = self.link_text.lower().replace(" ", "")
+            if self.arch == "aarch64" and "macosm1pkg" in text:
                 self.filtered_link = self.current_link
-            # Reset the span text and current link
-            self.current_span_text = None
+            elif self.arch == "x86" and "macosintelpkg" in text:
+                self.filtered_link = self.current_link
             self.current_link = None
+            self.link_text = ""
 
 
 class TeradataProductURLFinder(URLGetter):
@@ -107,6 +131,14 @@ class TeradataProductURLFinder(URLGetter):
         "teradata_password": {
             "required": True,
             "description": ("Password Teradata Account"),
+        },
+        "app": {
+            "required": True,
+            "description": ("App identifier (teradata_studio, teradata_studio_express, teradata_tools_utilities, teradata_vantage_editor)"),
+        },
+        "architecture": {
+            "required": False,
+            "description": ("Architecture (aarch64 or x86)"),
         },
     }
     output_variables = {
@@ -142,6 +174,14 @@ class TeradataProductURLFinder(URLGetter):
                 "name": "TTU",
                 "search_pattern": "^TTU\s\d+\.\d+\.\d+\.\d+\smacOS\sBase$",
             },
+            "teradata_vantage_editor": {
+                "nid": 202573,
+                "os": 10872,
+                "url": "https://downloads.teradata.com/download/tools/vantage-editor-desktop",
+                "name": "Vantage Editor",
+                "valid_archs": ["aarch64", "x86"],
+                "use_vantage_pattern": True,
+            },
         }
 
     def get_product_version(self, app):
@@ -149,15 +189,33 @@ class TeradataProductURLFinder(URLGetter):
         url = self.app_info[app]["url"]
         downloads_page = self.download(url, text=True)
 
-        parser = TerradataVersionInfo()
-        parser.feed(downloads_page)
+        # Try Vantage pattern first (more specific)
+        if self.app_info[app].get("use_vantage_pattern", False):
+            # Check for single version div first
+            match = re.search(r'<div id="single_version">([^<]+)</div>', downloads_page)
 
-        if parser.versions:
-            version = parser.versions[0]["version"]
-            return version
+            # Fallback to select option pattern
+            if not match:
+                match = re.search(r'<select[^>]*id="edit-version"[^>]*>.*?<option value="([^"]+)"', downloads_page, re.DOTALL)
+
+            if match:
+                version = match.group(1).strip()
+                self.output(f"Found version: {version}")
+                return version
+            else:
+                self.output("Version not found, using default.")
+                return "1.0"
         else:
-            self.output("Version not found.")
-            return None
+            # Use original Teradata pattern
+            parser = TerradataVersionInfo()
+            parser.feed(downloads_page)
+
+            if parser.versions:
+                version = parser.versions[0]["version"]
+                return version
+            else:
+                self.output("Version not found.")
+                return None
 
     def get_download_url(self, username, password, app, architecture):
         LOGIN_URL = "https://downloads.teradata.com/user/login?destination="
@@ -200,18 +258,42 @@ class TeradataProductURLFinder(URLGetter):
                 f"Download link not found for {self.app_info[app]['name']}. Please check your credentials or the product name."
             )
 
-        # Final POST to get download URL with headers
-        final_data = {
-            "downloadnid": self.app_info[app]["nid"],
-            "form_id": "license_popup_form",
-        }
+        # Check if this is a Vantage app that needs form token handling
+        if self.app_info[app].get("use_vantage_pattern", False):
+            # Get the license form page to extract form tokens
+            curl_cmd = self.prepare_curl_cmd()
+            curl_cmd.extend(["-b", "/tmp/teradata_cookies.txt"])  # Use cookies
+            curl_cmd.append(product_link)
+            form_page_content = self.download_with_curl(curl_cmd, text=True)
 
+            # Extract form tokens
+            form_build_id = re.search(r'name="form_build_id" value="([^"]+)"', form_page_content)
+            form_token = re.search(r'name="form_token" value="([^"]+)"', form_page_content)
+
+            if not form_build_id or not form_token:
+                raise ProcessorError("Unable to parse license form tokens.")
+
+            # Prepare license acceptance data
+            final_data = {
+                "op": "I Agree",
+                "form_id": "license_popup_form",
+                "form_build_id": form_build_id.group(1),
+                "form_token": form_token.group(1),
+            }
+        else:
+            # Original Teradata pattern
+            final_data = {
+                "downloadnid": self.app_info[app]["nid"],
+                "form_id": "license_popup_form",
+            }
+
+        # Final POST to get download URL with headers
         curl_cmd = self.prepare_curl_cmd()
         curl_cmd.extend(["-X", "POST"])
         curl_cmd.extend(["-H", "Content-Type: application/x-www-form-urlencoded"])
-        # curl_cmd.extend(["-b", "/tmp/teradata_cookies.txt"])  # Use cookies
+        # curl_cmd.extend(["-b", "/tmp/teradata_cookies.txt"]) # Don't use cookies as this will result in error
         curl_cmd.extend(["-D", "-"])  # Include headers in output
-        # curl_cmd.extend(["--max-redirs", "0"])  # Don't follow redirects
+        # curl_cmd.extend(["--max-redirs", "0"])  # We follow redirects to capture the final URL
         for key, value in final_data.items():
             curl_cmd.extend(["-d", f"{key}={value}"])
         curl_cmd.append(product_link)
@@ -220,34 +302,39 @@ class TeradataProductURLFinder(URLGetter):
             response_with_headers = self.download_with_curl(curl_cmd, text=True)
         except ProcessorError as e:
             # Curl returns error code for 3xx redirects when max-redirs=0
-            # We need to capture the headers from stderr or handle this differently
+            # This is expected behavior - we need to extract the Location header
             if "302" in str(e) or "301" in str(e):
-                # Extract headers from the error - this is a workaround
-                curl_cmd_headers = self.prepare_curl_cmd()
-                curl_cmd_headers.extend(["-X", "POST"])
-                curl_cmd_headers.extend(["-H", "Content-Type: application/x-www-form-urlencoded"])
-                curl_cmd_headers.extend(["-b", "/tmp/teradata_cookies.txt"])
-                curl_cmd_headers.extend(["-I"])  # HEAD request to get headers only
-                for key, value in final_data.items():
-                    curl_cmd_headers.extend(["-d", f"{key}={value}"])
-                curl_cmd_headers.append(product_link)
+                # Try to extract headers from the error output
+                error_str = str(e)
+                if "Location:" in error_str:
+                    # Extract location from error message
+                    location_match = re.search(r'Location:\s*([^\r\n]+)', error_str)
+                    if location_match:
+                        download_url = location_match.group(1).strip()
 
-                headers_response = self.download_with_curl(curl_cmd_headers, text=True)
-                headers = self.parse_headers(headers_response)
-                download_url = headers.get("location")
-                if download_url:
-                    return download_url
+                        # Validate CloudFront URL for Vantage apps
+                        if self.app_info[app].get("use_vantage_pattern", False):
+                            if ".cloudfront.net" not in download_url:
+                                raise ProcessorError("Unexpected download URL. Not a CloudFront link.")
+
+                        self.output(f"Selected download link: {download_url}")
+                        return download_url
             raise e
 
-        # Parse headers from response
-        # self.output(f"Response headers: {response_with_headers}", 2)
+        # Parse headers from response (fallback)
         headers = self.parse_headers(response_with_headers.split('\r\n\r\n')[0])
         self.output(f"Response headers: {headers}", 2)
-        download_url = headers.get("http_redirected")
+        download_url = headers.get("location") or headers.get("http_redirected")
 
         if not download_url:
             raise ProcessorError("Could not extract download URL from response headers")
 
+        # Validate CloudFront URL for Vantage apps
+        if self.app_info[app].get("use_vantage_pattern", False):
+            if ".cloudfront.net" not in download_url:
+                raise ProcessorError("Unexpected download URL. Not a CloudFront link.")
+
+        self.output(f"Selected download link: {download_url}")
         return download_url
 
     def main(self):
