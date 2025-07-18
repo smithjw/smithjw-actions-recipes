@@ -17,10 +17,11 @@
 
 from __future__ import absolute_import
 
+import json
 import re
 from html.parser import HTMLParser
+from urllib.parse import urlencode
 
-import requests
 from autopkglib import ProcessorError, URLGetter
 
 __all__ = ["TeradataProductURLFinder"]
@@ -119,7 +120,6 @@ class TeradataProductURLFinder(URLGetter):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.session = requests.Session()
         self.app_info = {
             "teradata_studio": {
                 "nid": 183396,
@@ -147,10 +147,10 @@ class TeradataProductURLFinder(URLGetter):
     def get_product_version(self, app):
         """Returns the product version."""
         url = self.app_info[app]["url"]
-        downloads_page = self.session.get(url)
+        downloads_page = self.download(url, text=True)
 
         parser = TerradataVersionInfo()
-        parser.feed(downloads_page.text)
+        parser.feed(downloads_page)
 
         if parser.versions:
             version = parser.versions[0]["version"]
@@ -161,54 +161,92 @@ class TeradataProductURLFinder(URLGetter):
 
     def get_download_url(self, username, password, app, architecture):
         LOGIN_URL = "https://downloads.teradata.com/user/login?destination="
-        payload = {"name": username, "pass": password, "form_id": "user_login_form"}
+        login_data = {"name": username, "pass": password, "form_id": "user_login_form"}
 
-        self.session.post(
-            LOGIN_URL,
-            data=payload,
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-        )
+        # Login POST request using curl
+        curl_cmd = self.prepare_curl_cmd()
+        curl_cmd.extend(["-X", "POST"])
+        curl_cmd.extend(["-H", "Content-Type: application/x-www-form-urlencoded"])
+        curl_cmd.extend(["-c", "/tmp/teradata_cookies.txt"])  # Save cookies
+        for key, value in login_data.items():
+            curl_cmd.extend(["-d", f"{key}={value}"])
+        curl_cmd.append(LOGIN_URL)
+        self.download_with_curl(curl_cmd, text=True)
 
-        # uid = (
-        #     self.session.get("https://downloads.teradata.com/user")
-        #     .url.rstrip("/")
-        #     .split("/")[-1]
-        # )
-
-        payload = {
+        # Get downloads packages filter
+        filter_data = {
             "os": self.app_info[app]["os"],
             "version": self.env["version"],
             "nid": self.app_info[app]["nid"],
             "check_full_user_req": 0,
             "check_user_details": "false",
         }
-        r = self.session.post(
-            "https://downloads.teradata.com/downloads-packages/filter",
-            data=payload,
-        )
 
-        download_url = r.json()
+        curl_cmd = self.prepare_curl_cmd()
+        curl_cmd.extend(["-X", "POST"])
+        curl_cmd.extend(["-b", "/tmp/teradata_cookies.txt"])  # Use cookies
+        for key, value in filter_data.items():
+            curl_cmd.extend(["-d", f"{key}={value}"])
+        curl_cmd.append("https://downloads.teradata.com/downloads-packages/filter")
+
+        response_content = self.download_with_curl(curl_cmd, text=True)
+        download_data = json.loads(response_content)
+
         parser = FilteredDownloadLinkExtractor(self.app_info[app], architecture)
-        parser.feed(download_url[0]["downloads_html"])
+        parser.feed(download_data[0]["downloads_html"])
         product_link = parser.filtered_link
         if not product_link:
             raise ProcessorError(
                 f"Download link not found for {self.app_info[app]['name']}. Please check your credentials or the product name."
             )
 
-        download = requests.post(
-            product_link,
-            data={
-                "downloadnid": self.app_info[app]["nid"],
-                "form_id": "license_popup_form",
-            },
-            headers={
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            allow_redirects=False,
-        )
+        # Final POST to get download URL with headers
+        final_data = {
+            "downloadnid": self.app_info[app]["nid"],
+            "form_id": "license_popup_form",
+        }
 
-        download_url = download.headers["Location"]
+        curl_cmd = self.prepare_curl_cmd()
+        curl_cmd.extend(["-X", "POST"])
+        curl_cmd.extend(["-H", "Content-Type: application/x-www-form-urlencoded"])
+        # curl_cmd.extend(["-b", "/tmp/teradata_cookies.txt"])  # Use cookies
+        curl_cmd.extend(["-D", "-"])  # Include headers in output
+        # curl_cmd.extend(["--max-redirs", "0"])  # Don't follow redirects
+        for key, value in final_data.items():
+            curl_cmd.extend(["-d", f"{key}={value}"])
+        curl_cmd.append(product_link)
+
+        try:
+            response_with_headers = self.download_with_curl(curl_cmd, text=True)
+        except ProcessorError as e:
+            # Curl returns error code for 3xx redirects when max-redirs=0
+            # We need to capture the headers from stderr or handle this differently
+            if "302" in str(e) or "301" in str(e):
+                # Extract headers from the error - this is a workaround
+                curl_cmd_headers = self.prepare_curl_cmd()
+                curl_cmd_headers.extend(["-X", "POST"])
+                curl_cmd_headers.extend(["-H", "Content-Type: application/x-www-form-urlencoded"])
+                curl_cmd_headers.extend(["-b", "/tmp/teradata_cookies.txt"])
+                curl_cmd_headers.extend(["-I"])  # HEAD request to get headers only
+                for key, value in final_data.items():
+                    curl_cmd_headers.extend(["-d", f"{key}={value}"])
+                curl_cmd_headers.append(product_link)
+
+                headers_response = self.download_with_curl(curl_cmd_headers, text=True)
+                headers = self.parse_headers(headers_response)
+                download_url = headers.get("location")
+                if download_url:
+                    return download_url
+            raise e
+
+        # Parse headers from response
+        # self.output(f"Response headers: {response_with_headers}", 2)
+        headers = self.parse_headers(response_with_headers.split('\r\n\r\n')[0])
+        self.output(f"Response headers: {headers}", 2)
+        download_url = headers.get("http_redirected")
+
+        if not download_url:
+            raise ProcessorError("Could not extract download URL from response headers")
 
         return download_url
 
