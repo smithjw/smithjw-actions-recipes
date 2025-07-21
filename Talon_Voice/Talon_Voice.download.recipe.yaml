@@ -1,0 +1,28 @@
+Description: Downloads the latest version of Talon Voice for macOS.
+Identifier: com.github.smithjw-actions.download.Talon_Voice
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Talon Voice
+  SOFTWARE_TITLE: Talon_Voice
+  DOWNLOAD_URL: https://talonvoice.com/dl/latest/talon-mac.dmg
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
+      url: '%DOWNLOAD_URL%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/Talon.app'
+      requirement: identifier "com.talonvoice.Talon" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = D7SCFBXQXZ
