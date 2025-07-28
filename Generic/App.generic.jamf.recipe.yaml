@@ -25,7 +25,7 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: '%SELF_SERVICE_ICON%'
+      icon: '%POLICY_ICON%'
       policy_name: '%POLICY_NAME%'
       policy_template: '%POLICY_TEMPLATE%'
       replace_policy: 'true'
