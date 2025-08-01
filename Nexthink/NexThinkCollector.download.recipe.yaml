@@ -3,24 +3,22 @@ Identifier: com.github.smithjw-actions.download.NexThinkCollector
 MinimumVersion: '2.3'
 Input:
   NAME: Nexthink Collector
+  SOFTWARE_TITLE: Nexthink_Collector
   DOWNLOAD_URL: https://download.nexthink.com/releases/latest/OSX_Collector/Nexthink_Collector.dmg
-  VENDOR: NexThink
-  SOFTWARETITLE: Nexthink Collector
 
 Process:
   - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
-      filename: "%VENDOR%%SOFTWARETITLE%.dmg"
-      url: "%DOWNLOAD_URL%"
+      filename: '%SOFTWARE_TITLE%.dmg'
+      url: '%DOWNLOAD_URL%'
 
   - Processor: EndOfCheckPhase
 
-  - Processor: Versioner
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
-      input_plist_path: "%pathname%/csi.app/Contents/Info.plist"
-      plist_version_key: CFBundleVersion
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: "%pathname%/csi.app"
+      input_path: '%pathname%/csi.app'
       requirement: 'identifier "com.nexthink.collector.installer.csi" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and certificate leaf[field.1.2.840.113635.100.6.1.13] and certificate leaf[subject.OU] = PDEKAZ43QL'
