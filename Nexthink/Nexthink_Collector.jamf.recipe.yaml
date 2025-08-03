@@ -1,26 +1,21 @@
-Description: Downloads and extracts the csi app, create pkg and upload to jamf
-Identifier: com.github.smithjw-actions.jamf.NexThinkCollector
-ParentRecipe: com.github.smithjw-actions.pkg.NexThinkCollector
+Description: Downloads and extracts Nexthink Collector (csi.app), for distribution via Jamf into /private/var/tmp/Nexthink on managed devices
+Identifier: com.github.smithjw-actions.jamf.Nexthink_Collector
+ParentRecipe: com.github.smithjw-actions.pkg.Nexthink_Collector
 MinimumVersion: '2.3'
 
 Input:
-  NAME: NexthinkCollector
-  SOFTWARE_TITLE: NexthinkCollector
+  NAME: Nexthink Collector
+  SOFTWARE_TITLE: Nexthink_Collector
   CATEGORY: Apps
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_NAME: '%NAME%'
+  POLICY_ICON: '%SOFTWARE_TITLE%.png'
   POLICY_RUN_COMMAND: ' '
   POLICY_RUN_RECON: 'false'
   POLICY_SCOPE_ALL_COMPUTERS: 'true'
-  POLICY_TEMPLATE: Policy_Template-Self_Service.xml
+  POLICY_TEMPLATE: Policy_Template-Utilities.xml
   REMOVE_OLD_PACKAGES: 'true'
-  SELF_SERVICE_AVAILABLE: 'true'
-  SELF_SERVICE_DESCRIPTION: ''
-  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
-  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  SELF_SERVICE_INSTALL_BUTTON: Install
-  SELF_SERVICE_REINSTALL_BUTTON: Install
   REPLACE_POLICY: 'true'
   PACKAGE_INFO: autopkg
 
@@ -32,7 +27,7 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: '%SELF_SERVICE_ICON%'
+      icon: '%POLICY_ICON%'
       policy_name: '%POLICY_NAME%'
       policy_template: '%POLICY_TEMPLATE%'
       replace_policy: '%REPLACE_POLICY%'

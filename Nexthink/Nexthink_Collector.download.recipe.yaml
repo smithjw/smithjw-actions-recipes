@@ -1,6 +1,7 @@
-Description: Downloads the latest version of NexThink Collector.
-Identifier: com.github.smithjw-actions.download.NexThinkCollector
+Description: Downloads the latest version of Nexthink Collector dmg
+Identifier: com.github.smithjw-actions.download.Nexthink_Collector
 MinimumVersion: '2.3'
+
 Input:
   NAME: Nexthink Collector
   SOFTWARE_TITLE: Nexthink_Collector
@@ -21,4 +22,8 @@ Process:
   - Processor: CodeSignatureVerifier
     Arguments:
       input_path: '%pathname%/csi.app'
-      requirement: 'identifier "com.nexthink.collector.installer.csi" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and certificate leaf[field.1.2.840.113635.100.6.1.13] and certificate leaf[subject.OU] = PDEKAZ43QL'
+      requirement: |
+        identifier "com.nexthink.collector.installer.csi" and
+        anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] and
+        certificate leaf[subject.OU] = PDEKAZ43QL
