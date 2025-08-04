@@ -38,3 +38,9 @@ Process:
         pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
         scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
         version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
