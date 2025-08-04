@@ -19,7 +19,7 @@ Input:
   REMOVE_OLD_PACKAGES: 'true'
   REPLACE_POLICY: 'true'
   SELF_SERVICE_AVAILABLE: 'true'
-  SELF_SERVICE_DESCRIPTION: 'pgAdmin is a management tool for PostgreSQL and derivative relational databases such as EnterpriseDB's EDB Advanced Server.'
+  SELF_SERVICE_DESCRIPTION: pgAdmin is a management tool for PostgreSQL and derivative relational databases such as EnterpriseDBs EDB Advanced Server.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_INSTALL_BUTTON: Install
   SELF_SERVICE_REINSTALL_BUTTON: Reinstall
