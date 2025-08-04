@@ -8,9 +8,13 @@ Input:
   SOFTWARE_TITLE: Axure_RP_9
 
 Process:
-  - Processor: AppDmgVersioner
+  - Processor: PlistReader
     Arguments:
-      dmg_path: '%pathname%'
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Axure RP 9.app/Contents/Info.plist'
+      plist_keys:
+        CFBundleIdentifier: bundleid
+        CFBundleName: app_name
+        CFBundleVersion: version
 
   - Processor: AppPkgCreator
     Arguments:
