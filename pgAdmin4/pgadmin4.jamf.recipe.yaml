@@ -2,26 +2,27 @@ Description: ''
 Identifier: com.github.smithjw-actions.jamf.pgAdmin4
 ParentRecipe: com.github.smithjw-actions.pkg.pgAdmin4
 MinimumVersion: '2.3'
+
 Input:
-  NAME: pgAdmin4
-  SOFTWARE_TITLE: '%NAME%'
+  NAME: pgAdmin 4
+  SOFTWARE_TITLE: pgAdmin4
   CATEGORY: Apps
+  PACKAGE_INFO: autopkg
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
+  POLICY_ICON: '%SOFTWARE_TITLE%.png'
   POLICY_NAME: '%NAME%'
   POLICY_RUN_COMMAND: ' '
   POLICY_RUN_RECON: 'false'
   POLICY_SCOPE_ALL_COMPUTERS: 'true'
   POLICY_TEMPLATE: Policy_Template-Self_Service.xml
   REMOVE_OLD_PACKAGES: 'true'
-  SELF_SERVICE_AVAILABLE: 'true'
-  SELF_SERVICE_DESCRIPTION: ''
-  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
-  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  SELF_SERVICE_INSTALL_BUTTON: Install
-  SELF_SERVICE_REINSTALL_BUTTON: Install
   REPLACE_POLICY: 'true'
-  PACKAGE_INFO: autopkg
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_DESCRIPTION: 'pgAdmin is a management tool for PostgreSQL and derivative relational databases such as EnterpriseDB's EDB Advanced Server.'
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_INSTALL_BUTTON: Install
+  SELF_SERVICE_REINSTALL_BUTTON: Reinstall
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
@@ -31,7 +32,7 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: '%SELF_SERVICE_ICON%'
+      icon: '%POLICY_ICON%'
       policy_name: '%POLICY_NAME%'
       policy_template: '%POLICY_TEMPLATE%'
       replace_policy: '%REPLACE_POLICY%'
