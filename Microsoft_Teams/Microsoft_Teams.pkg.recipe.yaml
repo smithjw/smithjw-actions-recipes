@@ -1,11 +1,12 @@
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Teams
-ParentRecipe: com.github.smithjw-actions.download.Microsoft_Teams
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Package
 MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft Teams
   SOFTWARE_TITLE: Microsoft_Teams
+  PRODUCT_ID: '2249065'
   VERSION_TYPE: CFBundleShortVersionString
 
 Process:

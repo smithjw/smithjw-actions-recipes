@@ -1,11 +1,12 @@
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Defender
-ParentRecipe: com.github.smithjw-actions.download.Microsoft_Defender
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Package
 MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft Defender
   SOFTWARE_TITLE: Microsoft_Defender
+  PRODUCT_ID: '2097502'
   VERSION_TYPE: CFBundleShortVersionString
 
 Process:

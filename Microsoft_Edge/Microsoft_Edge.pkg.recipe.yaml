@@ -1,11 +1,13 @@
 Description: Downloads the latest version of the Microsoft Edge installer package and renames the package.
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Edge
-ParentRecipe: com.github.smithjw-actions.download.Microsoft_Edge
+# ParentRecipe: com.github.smithjw-actions.download.Microsoft_Generic_Package
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Package
 MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft Edge
   SOFTWARE_TITLE: Microsoft_Edge
+  PRODUCT_ID: '2093504'
   VERSION_TYPE: CFBundleShortVersionString
 
 Process:
