@@ -1,0 +1,44 @@
+Description: Creates a versioned pkg for M365 Copilot from the downloaded installer. This is the enterprise version, not the consumer version available on the Apple App Store.
+Identifier: com.github.smithjw-actions.pkg.Microsoft_M365_Copilot
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_M365_Copilot
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft M365 Copilot
+  SOFTWARE_TITLE: Microsoft_M365_Copilot
+  VERSION_TYPE: CFBundleShortVersionString
+
+Process:
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/unpack'
+      flat_pkg_path: '%pathname%'
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/*365_Copilot*.pkg'
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/payload'
+      pkg_payload_path: '%found_filename%/Payload'
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/payload/*Microsoft 365 Copilot*.app/Contents/Info.plist'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%found_filename%'
+      plist_version_key: '%VERSION_TYPE%'
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/downloads/unpack'
+        - '%RECIPE_CACHE_DIR%/downloads/payload'
