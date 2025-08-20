@@ -1,14 +1,21 @@
 Description: Downloads the latest version of the Microsoft Office Suite installer package and renames the package.
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Office_Suite
-ParentRecipe: com.github.smithjw-actions.download.Microsoft_Office_Suite
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Package
 MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft Office Suite
   SOFTWARE_TITLE: Microsoft_Office_Suite
+  PRODUCT_ID: '525133'
   VERSION_TYPE: CFBundleShortVersionString
 
 Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: Version (\*|\d+(\.\d+){0,2}(\.\*)?)
+      result_output_var_name: version
+      url: https://learn.microsoft.com/en-us/officeupdates/release-notes-office-for-mac
+
   - Processor: PkgCopier
     Arguments:
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

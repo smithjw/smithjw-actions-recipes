@@ -1,11 +1,12 @@
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Company_Portal
-ParentRecipe: com.github.smithjw-actions.download.Microsoft_Company_Portal
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Package
 MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft Company Portal
   SOFTWARE_TITLE: Microsoft_Company_Portal
+  PRODUCT_ID: '853070'
   VERSION_TYPE: CFBundleShortVersionString
 
 Process:

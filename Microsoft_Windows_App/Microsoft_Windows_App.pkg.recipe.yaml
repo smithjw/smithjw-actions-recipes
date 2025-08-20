@@ -1,22 +1,45 @@
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Windows_App
-ParentRecipe: com.github.smithjw-actions.download.Microsoft_Windows_App
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Package
 MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft Windows App
   SOFTWARE_TITLE: Microsoft_Windows_App
+  PRODUCT_ID: '868963'
   VERSION_TYPE: CFBundleShortVersionString
 
 Process:
-  - Processor: AppPkgCreator
+  - Processor: FlatPkgUnpacker
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/unpack/Windows App Preview.app'
-      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/unpack'
+      flat_pkg_path: '%pathname%'
 
-  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+  - Processor: FileFinder
     Arguments:
-      fail_deleter_silently: true
+      pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/*rdc*.pkg'
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/payload'
+      pkg_payload_path: '%found_filename%/Payload'
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/payload/Windows App.app/Contents/Info.plist'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%found_filename%'
+      plist_version_key: '%VERSION_TYPE%'
+
+  - Processor: PkgCopier
+    Arguments:
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+      source_pkg: '%pathname%'
+
+  - Processor: PathDeleter
+    Arguments:
       path_list:
-        - '%RECIPE_CACHE_DIR%/unpack'
-        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/downloads/unpack'
+        - '%RECIPE_CACHE_DIR%/downloads/payload'

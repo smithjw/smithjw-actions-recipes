@@ -1,11 +1,12 @@
 Description: Creates a versioned pkg for M365 Copilot from the downloaded installer. This is the enterprise version, not the consumer version available on the Apple App Store.
 Identifier: com.github.smithjw-actions.pkg.Microsoft_M365_Copilot
-ParentRecipe: com.github.smithjw-actions.download.Microsoft_M365_Copilot
+ParentRecipe: com.github.smithjw-actions.download.Microsoft_Package
 MinimumVersion: '2.3'
 
 Input:
   NAME: Microsoft M365 Copilot
   SOFTWARE_TITLE: Microsoft_M365_Copilot
+  PRODUCT_ID: '2325438'
   VERSION_TYPE: CFBundleShortVersionString
 
 Process:
