@@ -1,11 +1,11 @@
-Description: Uploads M365 Copilot to Jamf Pro and creates a Self Service policy. This is the enterprise version, not the consumer version available on the Apple App Store.
-Identifier: com.github.smithjw-actions.jamf.Microsoft_M365_Copilot
-ParentRecipe: com.github.smithjw-actions.pkg.Microsoft_M365_Copilot
+Description: Uploads 365 Copilot to Jamf Pro and creates a Self Service policy. This is the enterprise version, not the consumer version available on the Apple App Store.
+Identifier: com.github.smithjw-actions.jamf.Microsoft_365_Copilot
+ParentRecipe: com.github.smithjw-actions.pkg.Microsoft_365_Copilot
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Microsoft M365 Copilot
-  SOFTWARE_TITLE: Microsoft_M365_Copilot
+  NAME: Microsoft 365 Copilot
+  SOFTWARE_TITLE: Microsoft_365_Copilot
   CATEGORY: Apps
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
@@ -17,7 +17,7 @@ Input:
   REMOVE_OLD_PACKAGES: 'true'
   SELF_SERVICE_AVAILABLE: 'true'
   SELF_SERVICE_CATEGORY: '%CATEGORY%'
-  SELF_SERVICE_DESCRIPTION: ' '
+  SELF_SERVICE_DESCRIPTION: The Microsoft 365 Copilot app is your AI-first productivity app for work and home. It provides one place for you to chat with your AI assistant, create and edit content, quickly find files, and access your favorite Microsoft 365 apps—helping you get more done, without doing more.
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SELF_SERVICE_INSTALL_BUTTON: Install
