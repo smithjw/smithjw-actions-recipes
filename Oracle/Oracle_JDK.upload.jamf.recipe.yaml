@@ -7,10 +7,11 @@ Input:
   NAME: Oracle JDK
   SOFTWARE_TITLE: Oracle_JDK
   CATEGORY: Apps
-  REMOVE_OLD_PACKAGES: 'true'
+  JDK_VERSION: '23'
   PACKAGE_INFO: autopkg
   PKG_TO_KEEP: '2'
-  PKG_NAME_MATCH: '%SOFTWARE_TITLE%-'
+  PKG_NAME_MATCH: '%SOFTWARE_TITLE%-%JDK_VERSION%'
+  REMOVE_OLD_PACKAGES: 'true'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
