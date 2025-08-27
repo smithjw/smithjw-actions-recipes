@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Principle
+Identifier: com.github.smithjw-actions.jamf.upload.Principle
 ParentRecipe: com.github.smithjw-actions.pkg.Principle
 MinimumVersion: '2.3'
 

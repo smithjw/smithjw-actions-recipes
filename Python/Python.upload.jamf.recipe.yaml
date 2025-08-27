@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Python
+Identifier: com.github.smithjw-actions.jamf.upload.Python
 ParentRecipe: com.github.smithjw-actions.pkg.Python
 MinimumVersion: '2.3'
 

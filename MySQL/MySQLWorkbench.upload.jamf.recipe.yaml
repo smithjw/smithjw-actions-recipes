@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.MySQLWorkbench
+Identifier: com.github.smithjw-actions.jamf.upload.MySQLWorkbench
 ParentRecipe: com.github.smithjw-actions.pkg.MySQLWorkbench
 MinimumVersion: '2.3'
 

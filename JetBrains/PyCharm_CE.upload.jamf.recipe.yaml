@@ -1,5 +1,5 @@
 Description: Downloads the latest version PyCharm, packages it, then uploads it to Jamf.
-Identifier: com.github.smithjw-actions.jamf.PyCharm_CE
+Identifier: com.github.smithjw-actions.jamf.upload.PyCharm_CE
 ParentRecipe: com.github.smithjw-actions.pkg.PyCharm_CE
 MinimumVersion: '2.3'
 

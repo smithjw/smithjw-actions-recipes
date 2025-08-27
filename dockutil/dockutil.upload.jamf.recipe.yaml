@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.dockutil
+Identifier: com.github.smithjw-actions.jamf.upload.dockutil
 ParentRecipe: com.github.smithjw-actions.pkg.dockutil
 MinimumVersion: '2.3'
 

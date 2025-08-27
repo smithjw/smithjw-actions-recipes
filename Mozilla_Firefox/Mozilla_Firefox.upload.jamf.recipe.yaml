@@ -1,5 +1,5 @@
 Description: Downloads latest Mozilla Firefox package.
-Identifier: com.github.smithjw-actions.jamf.Mozilla_Firefox
+Identifier: com.github.smithjw-actions.jamf.upload.Mozilla_Firefox
 ParentRecipe: com.github.smithjw-actions.pkg.Mozilla_Firefox
 MinimumVersion: '2.3'
 

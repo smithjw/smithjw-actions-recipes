@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.dotnet
+Identifier: com.github.smithjw-actions.jamf.upload.dotnet
 ParentRecipe: com.github.smithjw-actions.pkg.dotnet
 MinimumVersion: '2.3'
 

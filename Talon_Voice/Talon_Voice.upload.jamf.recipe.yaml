@@ -1,5 +1,5 @@
 Description: Downloads the latest version of Talon Voice, creates an installer package, and uploads it to Jamf Pro.
-Identifier: com.github.smithjw-actions.jamf.Talon_Voice
+Identifier: com.github.smithjw-actions.jamf.upload.Talon_Voice
 ParentRecipe: com.github.smithjw-actions.pkg.Talon_Voice
 MinimumVersion: '2.3'
 

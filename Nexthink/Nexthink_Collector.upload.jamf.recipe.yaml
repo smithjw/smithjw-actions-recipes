@@ -1,5 +1,5 @@
 Description: Downloads and extracts Nexthink Collector (csi.app), for distribution via Jamf into /private/var/tmp/Nexthink on managed devices
-Identifier: com.github.smithjw-actions.jamf.Nexthink_Collector
+Identifier: com.github.smithjw-actions.jamf.upload.Nexthink_Collector
 ParentRecipe: com.github.smithjw-actions.pkg.Nexthink_Collector
 MinimumVersion: '2.3'
 

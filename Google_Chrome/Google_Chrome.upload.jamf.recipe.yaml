@@ -1,5 +1,5 @@
 Description: Downloads latest Google Chrome package.
-Identifier: com.github.smithjw-actions.jamf.Google_Chrome
+Identifier: com.github.smithjw-actions.jamf.upload.Google_Chrome
 ParentRecipe: com.github.smithjw-actions.pkg.Google_Chrome
 MinimumVersion: '2.3'
 

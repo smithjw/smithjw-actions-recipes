@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.VLC
+Identifier: com.github.smithjw-actions.jamf.upload.VLC
 ParentRecipe: com.github.smithjw-actions.pkg.VLC
 MinimumVersion: '2.3'
 

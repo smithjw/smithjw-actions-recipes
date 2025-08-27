@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.MacPass
+Identifier: com.github.smithjw-actions.jamf.upload.MacPass
 ParentRecipe: com.github.smithjw-actions.pkg.MacPass
 MinimumVersion: '2.3'
 

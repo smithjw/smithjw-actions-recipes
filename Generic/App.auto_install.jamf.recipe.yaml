@@ -26,8 +26,6 @@ Process:
       cache_dir: '%CACHE_DIR%'
       recipeoverride_identifier: '%OVERRIDE_RECIPE_IDENTIFIER%'
 
-  - Processor: com.github.grahampugh.recipes.commonprocessors/VersionRegexGenerator
-
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
     Arguments:
       computergroup_name: '%SMART_GROUP_NAME%'

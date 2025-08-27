@@ -1,5 +1,5 @@
 Description: Downloads the latest version of iTerm, creates a package, then uploads to Jamf
-Identifier: com.github.smithjw-actions.jamf.iTerm
+Identifier: com.github.smithjw-actions.jamf.upload.iTerm
 ParentRecipe: com.github.smithjw-actions.pkg.iTerm
 MinimumVersion: '2.3'
 

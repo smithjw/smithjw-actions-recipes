@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.GlobalProtect
+Identifier: com.github.smithjw-actions.jamf.upload.GlobalProtect
 ParentRecipe: com.github.smithjw-actions.pkg.GlobalProtect
 MinimumVersion: '2.3'
 
