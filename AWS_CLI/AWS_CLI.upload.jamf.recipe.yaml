@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.AWS_CLI
+Identifier: com.github.smithjw-actions.jamf.upload.AWS_CLI
 ParentRecipe: com.github.smithjw-actions.pkg.AWS_CLI
 MinimumVersion: '2.3'
 

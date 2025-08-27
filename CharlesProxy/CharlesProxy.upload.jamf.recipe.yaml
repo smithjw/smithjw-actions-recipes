@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.CharlesProxy
+Identifier: com.github.smithjw-actions.jamf.upload.CharlesProxy
 ParentRecipe: com.github.smithjw-actions.pkg.CharlesProxy
 MinimumVersion: '2.3'
 

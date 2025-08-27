@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Android_Studio
+Identifier: com.github.smithjw-actions.jamf.upload.Android_Studio
 ParentRecipe: com.github.smithjw-actions.pkg.Android_Studio
 MinimumVersion: '2.3'
 

@@ -1,5 +1,5 @@
 Description: Downloads and extracts the vault binary, create pkg and upload to jamf
-Identifier: com.github.smithjw-actions.jamf.HashiCorp_Vault
+Identifier: com.github.smithjw-actions.jamf.upload.HashiCorp_Vault
 ParentRecipe: com.github.smithjw-actions.pkg.HashiCorp_Vault
 MinimumVersion: '2.3'
 

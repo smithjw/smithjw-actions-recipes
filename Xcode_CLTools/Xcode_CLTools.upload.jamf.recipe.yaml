@@ -1,6 +1,6 @@
 Comment: The group specified in POLICY_GROUP_NAME must already exist on the Jamf Server
 Description: Processes the Xcode Command Line Tools package manually downloaded from the Apple Developer Portal and uploads to Jamf
-Identifier: com.github.smithjw-actions.jamf.Xcode_CLTools
+Identifier: com.github.smithjw-actions.jamf.upload.Xcode_CLTools
 ParentRecipe: com.github.smithjw-actions.pkg.Xcode_CLTools
 MinimumVersion: '2.3'
 

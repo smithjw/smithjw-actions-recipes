@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.UTM
+Identifier: com.github.smithjw-actions.jamf.upload.UTM
 ParentRecipe: com.github.smithjw-actions.pkg.UTM
 MinimumVersion: '2.3'
 

@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Visual_Studio_Code
+Identifier: com.github.smithjw-actions.jamf.upload.Visual_Studio_Code
 ParentRecipe: com.github.smithjw-actions.pkg.Visual_Studio_Code
 MinimumVersion: '2.3'
 

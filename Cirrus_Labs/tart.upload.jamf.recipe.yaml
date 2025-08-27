@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.tart
+Identifier: com.github.smithjw-actions.jamf.upload.tart
 ParentRecipe: com.github.smithjw-actions.pkg.tart
 MinimumVersion: '2.3'
 

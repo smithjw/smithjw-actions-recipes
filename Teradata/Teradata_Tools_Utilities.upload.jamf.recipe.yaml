@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Teradata_Tools_Utilities
+Identifier: com.github.smithjw-actions.jamf.upload.Teradata_Tools_Utilities
 ParentRecipe: com.github.smithjw-actions.pkg.Teradata_Tools_Utilities
 MinimumVersion: '2.3'
 

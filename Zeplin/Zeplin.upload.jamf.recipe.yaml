@@ -1,5 +1,5 @@
 Description: Downloads the latest version of Zeplin, creates a package, then uploads to Jamf
-Identifier: com.github.smithjw-actions.jamf.Zeplin
+Identifier: com.github.smithjw-actions.jamf.upload.Zeplin
 ParentRecipe: com.github.smithjw-actions.pkg.Zeplin
 MinimumVersion: '2.3'
 

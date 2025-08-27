@@ -1,5 +1,5 @@
 Description: ' '
-Identifier: com.github.smithjw-actions.jamf.Support_App
+Identifier: com.github.smithjw-actions.jamf.upload.Support_App
 ParentRecipe: com.github.smithjw-actions.pkg.Support_App
 MinimumVersion: '2.3'
 

@@ -1,5 +1,5 @@
 Description: ' '
-Identifier: com.github.smithjw-actions.jamf.desktoppr
+Identifier: com.github.smithjw-actions.jamf.upload.desktoppr
 ParentRecipe: com.github.smithjw-actions.pkg.desktoppr
 MinimumVersion: '2.3'
 
@@ -12,18 +12,18 @@ Input:
   VERSIONS_TO_KEEP: 2
 
 Process:
-- Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
-  Arguments:
-    pkg_category: '%CATEGORY%'
-    pkg_info: '%PACKAGE_INFO%'
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
 
-- Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
 
-- Processor: StopProcessingIf
-  Arguments:
-    predicate: '%REMOVE_OLD_PACKAGES% == false'
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
 
-- Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
-  Arguments:
-    pkg_name_match: '%SOFTWARE_TITLE%-'
-    versions_to_keep: '%VERSIONS_TO_KEEP%'
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%-'
+      versions_to_keep: '%VERSIONS_TO_KEEP%'

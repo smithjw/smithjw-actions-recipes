@@ -1,31 +1,30 @@
 Comment: |
   This is a template recipe and cannot be used without a RecipeOverride.
-  UNTESTED_RECIPE_IDENTIFIER must be supplied
+  PARENT_RECIPE_IDENTIFIER must be supplied
 Description: Creates a Generic Jamf Policy based on an app that has already been packaged
-Identifier: com.github.smithjw-actions.jamf.generic.App
+Identifier: com.github.smithjw-actions.jamf.custom_trigger_only.App
 MinimumVersion: '2.3'
 
 Input:
   NAME: ''
   SOFTWARE_TITLE: ''
-  OVERRIDE_RECIPE_IDENTIFIER: null
+  PARENT_RECIPE_IDENTIFIER: null
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: ' '
   POLICY_FREQUENCY: Ongoing
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_RUN_RECON: 'false'
   POLICY_NAME: null
-  POLICY_TEMPLATE: Policy_Template-Self_Service_with_Group.xml
-  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
-  PREEXISTING_GROUP_NAME: null
+  POLICY_TEMPLATE: Policy_Template-Custom_Trigger_Only.xml
 
 Process:
   - Processor: com.github.grahampugh.recipes.preprocessors/LastRecipeRunChecker
     Arguments:
       cache_dir: '%CACHE_DIR%'
-      recipeoverride_identifier: '%OVERRIDE_RECIPE_IDENTIFIER%'
+      recipeoverride_identifier: '%PARENT_RECIPE_IDENTIFIER%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      icon: '%POLICY_ICON%'
       policy_name: '%POLICY_NAME%'
       policy_template: '%POLICY_TEMPLATE%'
       replace_policy: 'true'

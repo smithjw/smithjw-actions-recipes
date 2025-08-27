@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.snowflakeODBC
+Identifier: com.github.smithjw-actions.jamf.upload.snowflakeODBC
 ParentRecipe: com.github.smithjw-actions.pkg.snowflakeODBC
 MinimumVersion: '2.3'
 

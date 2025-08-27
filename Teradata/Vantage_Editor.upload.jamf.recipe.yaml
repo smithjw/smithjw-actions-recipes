@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Vantage_Editor
+Identifier: com.github.smithjw-actions.jamf.upload.Vantage_Editor
 ParentRecipe: com.github.smithjw-actions.pkg.Vantage_Editor
 MinimumVersion: '2.3'
 

@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.node
+Identifier: com.github.smithjw-actions.jamf.upload.node
 ParentRecipe: com.github.smithjw-actions.pkg.node
 MinimumVersion: '2.3'
 

@@ -1,6 +1,6 @@
 ---
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Self_Service
+Identifier: com.github.smithjw-actions.jamf.upload.Self_Service
 ParentRecipe: com.github.smithjw-actions.pkg.Self_Service
 MinimumVersion: '2.3'
 

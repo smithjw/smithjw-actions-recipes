@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Privileges
+Identifier: com.github.smithjw-actions.jamf.upload.Privileges
 ParentRecipe: com.github.smithjw-actions.pkg.Privileges
 MinimumVersion: '2.3'
 

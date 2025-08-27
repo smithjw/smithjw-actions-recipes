@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Azul_Zulu_JDK
+Identifier: com.github.smithjw-actions.jamf.upload.Azul_Zulu_JDK
 ParentRecipe: com.github.smithjw-actions.pkg.Azul_Zulu_JDK
 MinimumVersion: '2.3'
 

@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.RStudio
+Identifier: com.github.smithjw-actions.jamf.upload.RStudio
 ParentRecipe: com.github.smithjw-actions.pkg.RStudio
 MinimumVersion: '2.3'
 
