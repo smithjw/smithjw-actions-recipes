@@ -1,0 +1,30 @@
+Description: ''
+Identifier: com.github.smithjw-actions.jamf.dotnet
+ParentRecipe: com.github.smithjw-actions.pkg.dotnet
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Microsoft .NET
+  SOFTWARE_TITLE: microsoft_dotnet
+  SDK_VERSION: '9'
+  CATEGORY: Apps
+  REMOVE_OLD_PACKAGES: 'true'
+  PACKAGE_INFO: autopkg
+  VERSIONS_TO_KEEP: 2
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%-%SDK_VERSION%'
+      versions_to_keep: '%VERSIONS_TO_KEEP%'

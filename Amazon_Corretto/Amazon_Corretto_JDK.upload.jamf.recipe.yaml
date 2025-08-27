@@ -1,0 +1,33 @@
+Comment: |
+  This recipe leverages Amazon's permanent links so that it can be overrided to fetch multiple versions
+  Valid options for JDK_VERSION are 8, 11, 17, 21, 23, & 24
+Description: Downloads the current version of Amazon Corretto JDK and updates the package version
+Identifier: com.github.smithjw-actions.jamf.Amazon_Corretto_JDK
+ParentRecipe: com.github.smithjw-actions.pkg.Amazon_Corretto_JDK
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Amazon Corretto JDK
+  SOFTWARE_TITLE: Amazon_Corretto_JDK
+  JDK_VERSION: '17'
+  CATEGORY: Apps
+  REMOVE_OLD_PACKAGES: 'true'
+  PACKAGE_INFO: autopkg
+  VERSIONS_TO_KEEP: 2
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%-%JDK_VERSION%'
+      versions_to_keep: '%VERSIONS_TO_KEEP%'
