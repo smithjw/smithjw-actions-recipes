@@ -1,0 +1,29 @@
+Description: ''
+Identifier: com.github.smithjw-actions.jamf.Visual_Studio_Code
+ParentRecipe: com.github.smithjw-actions.pkg.Visual_Studio_Code
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Visual Studio Code
+  SOFTWARE_TITLE: Visual_Studio_Code
+  CATEGORY: Developer
+  REMOVE_OLD_PACKAGES: 'true'
+  PACKAGE_INFO: autopkg
+  VERSIONS_TO_KEEP: 2
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%-'
+      versions_to_keep: '%VERSIONS_TO_KEEP%'

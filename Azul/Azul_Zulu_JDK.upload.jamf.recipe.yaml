@@ -1,0 +1,30 @@
+Description: ''
+Identifier: com.github.smithjw-actions.jamf.Azul_Zulu_JDK
+ParentRecipe: com.github.smithjw-actions.pkg.Azul_Zulu_JDK
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Azul Zulu JDK
+  SOFTWARE_TITLE: Azul_Zulu_JDK
+  CATEGORY: Apps
+  JDK_VERSION: '24'
+  REMOVE_OLD_PACKAGES: 'true'
+  PACKAGE_INFO: autopkg
+  VERSIONS_TO_KEEP: 2
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%_%JDK_VERSION%-'
+      versions_to_keep: '%VERSIONS_TO_KEEP%'
