@@ -1,0 +1,29 @@
+Description: Downloads the latest version of the DisplayLink Manager App, then uploads to your Jamf Pro instance.
+Identifier: com.github.smithjw-actions.jamf.DisplayLink_Manager
+ParentRecipe: com.github.smithjw-actions.pkg.DisplayLink_Manager
+MinimumVersion: '2.3'
+
+Input:
+  NAME: DisplayLink Manager
+  SOFTWARE_TITLE: DisplayLink_Manager
+  CATEGORY: Apps
+  PACKAGE_INFO: autopkg
+  VERSIONS_TO_KEEP: 2
+  REMOVE_OLD_PACKAGES: 'true'
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%-'
+      versions_to_keep: '%VERSIONS_TO_KEEP%'

@@ -1,0 +1,39 @@
+Comment: The group specified in POLICY_GROUP_NAME must already exist on the Jamf Server
+Description: Processes the Xcode Command Line Tools package manually downloaded from the Apple Developer Portal and uploads to Jamf
+Identifier: com.github.smithjw-actions.jamf.Xcode_CLTools
+ParentRecipe: com.github.smithjw-actions.pkg.Xcode_CLTools
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Xcode Command Line Tools
+  SOFTWARE_TITLE: Xcode_CLTools
+  CATEGORY: Apps
+  PACKAGE_INFO: autopkg
+  VERSIONS_TO_KEEP: 2
+  REMOVE_OLD_PACKAGES: 'true'
+  SMART_GROUP_NAME_PREFIX: '%NAME%'
+  SMART_GROUP_NAME_SUFFIX: null
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_name: '%SMART_GROUP_NAME_PREFIX% - %min_os_version%-%max_os_version%%SMART_GROUP_NAME_SUFFIX%'
+      computergroup_template: '%POLICY_GROUP_TEMPLATE%'
+      replace_group: 'true'
+      sleep: 2
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%-%xcode_version%'
+      versions_to_keep: '%VERSIONS_TO_KEEP%'

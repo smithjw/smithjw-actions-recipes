@@ -1,0 +1,36 @@
+Description: ''
+Identifier: com.github.smithjw-actions.jamf.pgAdmin4
+ParentRecipe: com.github.smithjw-actions.pkg.pgAdmin4
+MinimumVersion: '2.3'
+
+Input:
+  NAME: pgAdmin 4
+  SOFTWARE_TITLE: pgAdmin4
+  CATEGORY: Apps
+  PACKAGE_INFO: autopkg
+  VERSIONS_TO_KEEP: 2
+  REMOVE_OLD_PACKAGES: 'true'
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      icon: '%POLICY_ICON%'
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
+      replace_policy: '%REPLACE_POLICY%'
+
+  - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == false'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      pkg_name_match: '%SOFTWARE_TITLE%-'
+      versions_to_keep: '%VERSIONS_TO_KEEP%'
