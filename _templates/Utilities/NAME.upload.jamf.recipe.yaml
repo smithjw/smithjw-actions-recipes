@@ -1,6 +1,6 @@
 ---
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Utilities
+Identifier: com.github.smithjw-actions.jamf.upload.Utilities
 ParentRecipe: com.github.smithjw-actions.pkg.Utilities
 MinimumVersion: '2.3'
 

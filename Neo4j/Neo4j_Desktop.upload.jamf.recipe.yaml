@@ -1,5 +1,5 @@
 Description: Downloads the latest version of Neo4j Desktop, packages it, then uploads it to Jamf.
-Identifier: com.github.smithjw-actions.jamf.Neo4j_Desktop
+Identifier: com.github.smithjw-actions.jamf.upload.Neo4j_Desktop
 MinimumVersion: '2.3'
 ParentRecipe: com.github.smithjw-actions.pkg.Neo4j_Desktop
 

@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.HandBrake
+Identifier: com.github.smithjw-actions.jamf.upload.HandBrake
 ParentRecipe: com.github.smithjw-actions.pkg.HandBrake
 MinimumVersion: '2.3'
 

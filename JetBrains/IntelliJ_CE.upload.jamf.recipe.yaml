@@ -1,5 +1,5 @@
 Description: Downloads the latest version IntelliJ IDEA, packages it, then uploads it to Jamf.
-Identifier: com.github.smithjw-actions.jamf.IntelliJ_CE
+Identifier: com.github.smithjw-actions.jamf.upload.IntelliJ_CE
 ParentRecipe: com.github.smithjw-actions.pkg.IntelliJ_CE
 MinimumVersion: '2.3'
 

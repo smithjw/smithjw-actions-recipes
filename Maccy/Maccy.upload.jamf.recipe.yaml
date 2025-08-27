@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Maccy
+Identifier: com.github.smithjw-actions.jamf.upload.Maccy
 ParentRecipe: com.github.smithjw-actions.pkg.Maccy
 MinimumVersion: '2.3'
 

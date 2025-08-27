@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Royal_TSX
+Identifier: com.github.smithjw-actions.jamf.upload.Royal_TSX
 ParentRecipe: com.github.smithjw-actions.pkg.Royal_TSX
 MinimumVersion: '2.3'
 

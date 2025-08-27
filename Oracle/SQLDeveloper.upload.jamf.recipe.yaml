@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.SQLDeveloper
+Identifier: com.github.smithjw-actions.jamf.upload.SQLDeveloper
 ParentRecipe: com.github.smithjw-actions.pkg.SQLDeveloper
 MinimumVersion: '2.3'
 

@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Axure_RP_9
+Identifier: com.github.smithjw-actions.jamf.upload.Axure_RP_9
 ParentRecipe: com.github.smithjw-actions.pkg.Axure_RP_9
 MinimumVersion: '2.3'
 

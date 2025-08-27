@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Microsoft_Windows_App
+Identifier: com.github.smithjw-actions.jamf.upload.Microsoft_Windows_App
 ParentRecipe: com.github.smithjw-actions.pkg.Microsoft_Windows_App
 MinimumVersion: '2.3'
 

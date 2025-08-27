@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Teradata_Studio
+Identifier: com.github.smithjw-actions.jamf.upload.Teradata_Studio
 ParentRecipe: com.github.smithjw-actions.pkg.Teradata_Studio
 MinimumVersion: '2.3'
 

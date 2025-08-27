@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.Oracle_JDK
+Identifier: com.github.smithjw-actions.jamf.upload.Oracle_JDK
 ParentRecipe: com.github.smithjw-actions.pkg.Oracle_JDK
 MinimumVersion: '2.3'
 

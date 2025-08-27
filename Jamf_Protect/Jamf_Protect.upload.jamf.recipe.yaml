@@ -1,5 +1,5 @@
 Description: Downloads the most recent Jamf Protect version and uploads it to your Jamf Pro instance.
-Identifier: com.github.smithjw-actions.jamf.Jamf_Protect
+Identifier: com.github.smithjw-actions.jamf.upload.Jamf_Protect
 ParentRecipe: com.github.smithjw-actions.pkg.Jamf_Protect
 MinimumVersion: '2.3'
 

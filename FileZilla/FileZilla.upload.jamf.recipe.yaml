@@ -1,5 +1,5 @@
 Description: ''
-Identifier: com.github.smithjw-actions.jamf.FileZilla
+Identifier: com.github.smithjw-actions.jamf.upload.FileZilla
 ParentRecipe: com.github.smithjw-actions.pkg.FileZilla
 MinimumVersion: '2.3'
 
