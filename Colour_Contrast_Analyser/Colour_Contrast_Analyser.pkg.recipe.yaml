@@ -11,3 +11,4 @@ Process:
   - Processor: AppPkgCreator
     Arguments:
       app_path: '%pathname%/*.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

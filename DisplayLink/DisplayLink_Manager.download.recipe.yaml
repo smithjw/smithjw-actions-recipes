@@ -34,15 +34,15 @@ Process:
       filename: '%SOFTWARE_TITLE%_Extension.dmg'
       url: '%LOGIN_EXTENSION_URL%'
 
-  - Processor: FileFinder
-    Arguments:
-      pattern: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%_Extension.dmg/*.pkg'
-
   - Processor: EndOfCheckPhase
 
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%_Extension.dmg/*.pkg'
 
   - Processor: CodeSignatureVerifier
     Arguments:

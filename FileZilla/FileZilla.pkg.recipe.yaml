@@ -11,6 +11,7 @@ Process:
   - Processor: AppPkgCreator
     Arguments:
       app_path: '%RECIPE_CACHE_DIR%/unpack/FileZilla.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
