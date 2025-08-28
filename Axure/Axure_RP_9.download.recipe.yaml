@@ -23,6 +23,10 @@ Process:
 
   - Processor: EndOfCheckPhase
 
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
   - Processor: CodeSignatureVerifier
     Arguments:
       input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Axure RP 9.app'
