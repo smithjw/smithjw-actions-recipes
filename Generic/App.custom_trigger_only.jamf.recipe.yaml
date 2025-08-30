@@ -12,15 +12,14 @@ Input:
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: ' '
   POLICY_FREQUENCY: Ongoing
-  POLICY_SCOPE_ALL_COMPUTERS: 'true'
-  POLICY_RUN_RECON: 'false'
   POLICY_NAME: null
+  POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
   POLICY_TEMPLATE: Policy_Template-Custom_Trigger_Only.xml
 
 Process:
   - Processor: com.github.grahampugh.recipes.preprocessors/LastRecipeRunChecker
     Arguments:
-      cache_dir: '%CACHE_DIR%'
       recipeoverride_identifier: '%PARENT_RECIPE_IDENTIFIER%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
