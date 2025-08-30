@@ -9,7 +9,9 @@ Input:
   NAME: ''
   SOFTWARE_TITLE: ''
   APPLICATION_TITLE: null
-  OVERRIDE_RECIPE_IDENTIFIER: null
+  EXTENSION_ATTRIBUTE_NAME: null
+  EXTENSION_ATTRIBUTE_SCRIPT: null
+  PARENT_RECIPE_IDENTIFIER: null
   POLICY_CATEGORY: Apps - Auto-Update
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_FREQUENCY: Once every day
@@ -20,14 +22,11 @@ Input:
   REPLACE_POLICY: 'True'
   SMART_GROUP_NAME: null
   SMART_GROUP_TEMPLATE: Smart_Group-Auto-Update-App-Bundle.xml
-  EXTENSION_ATTRIBUTE_NAME: null
-  EXTENSION_ATTRIBUTE_SCRIPT: null
 
 Process:
   - Processor: com.github.grahampugh.recipes.preprocessors/LastRecipeRunChecker
     Arguments:
-      cache_dir: '%CACHE_DIR%'
-      recipeoverride_identifier: '%OVERRIDE_RECIPE_IDENTIFIER%'
+      recipeoverride_identifier: '%PARENT_RECIPE_IDENTIFIER%'
 
   - Processor: com.github.grahampugh.recipes.commonprocessors/VersionRegexGenerator
 
