@@ -26,6 +26,7 @@ Input:
 Process:
   - Processor: com.github.grahampugh.recipes.preprocessors/LastRecipeRunChecker
     Arguments:
+      cache_dir: '%CACHE_DIR%'
       recipeoverride_identifier: '%PARENT_RECIPE_IDENTIFIER%'
 
   - Processor: com.github.grahampugh.recipes.commonprocessors/VersionRegexGenerator
