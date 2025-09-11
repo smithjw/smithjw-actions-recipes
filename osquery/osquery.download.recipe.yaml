@@ -1,0 +1,37 @@
+Description: ''
+Identifier: com.github.smithjw-actions.download.osquery
+MinimumVersion: '2.3'
+
+Input:
+  NAME: osquery
+  SOFTWARE_TITLE: osquery
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: '.*\.pkg'
+      github_repo: osquery/osquery
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+      # filename: '%SOFTWARE_TITLE%.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: OSQUERY A Series of LF Projects, LLC (3522FA9PXF)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
