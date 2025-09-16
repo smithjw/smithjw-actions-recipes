@@ -19,7 +19,7 @@ Input:
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
     Arguments:
-      computergroup_name: '%SMART_GROUP_NAME_PREFIX% - %min_os_version%-%max_os_version% %SMART_GROUP_NAME_SUFFIX%'
+      computergroup_name: '%SMART_GROUP_NAME_PREFIX% - %min_os_version%-%max_os_version%%SMART_GROUP_NAME_SUFFIX%'
       computergroup_template: '%SMART_GROUP_TEMPLATE%'
       replace_group: 'true'
       sleep: 2
