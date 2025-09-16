@@ -13,13 +13,14 @@ Input:
   REMOVE_OLD_PACKAGES: 'true'
   SMART_GROUP_NAME_PREFIX: '%NAME%'
   SMART_GROUP_NAME_SUFFIX: null
+  SMART_GROUP_TEMPLATE: Smart_Group-OS_Requirements.xml
   PKG_NAME_MATCH: '%SOFTWARE_TITLE%-%xcode_version%-'
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
     Arguments:
       computergroup_name: '%SMART_GROUP_NAME_PREFIX% - %min_os_version%-%max_os_version%%SMART_GROUP_NAME_SUFFIX%'
-      computergroup_template: '%POLICY_GROUP_TEMPLATE%'
+      computergroup_template: '%SMART_GROUP_TEMPLATE%'
       replace_group: 'true'
       sleep: 2
 
