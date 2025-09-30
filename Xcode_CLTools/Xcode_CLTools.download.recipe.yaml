@@ -5,7 +5,7 @@ Identifier: com.github.smithjw-actions.download.Xcode_CLTools
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Xcode Command Line Tools
+  NAME: Command Line Tools for Xcode
   SOFTWARE_TITLE: Xcode_CLTools
 
 Process:
