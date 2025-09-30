@@ -9,26 +9,27 @@ Input:
   SOFTWARE_TITLE: Xcode_CLTools
   CATEGORY: Apps
   PACKAGE_INFO: autopkg
+  PKG_MAX_OS_VERSION: '15.99'
+  PKG_MIN_OS_VERSION: '13.0'
+  PKG_TO_KEEP: '2'
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
-  POLICY_GROUP_NAME: macOS Version
-  POLICY_GROUP_TEMPLATE: Smart_Group-OS_Requirements.xml
   POLICY_NAME_PREFIX: '%NAME%'
   POLICY_NAME_SUFFIX: null
   POLICY_RUN_COMMAND: ' '
   POLICY_RUN_RECON: 'false'
-  POLICY_SCOPE_ALL_COMPUTERS: 'true'
-  POLICY_TEMPLATE: Policy_Template-Utilities-OS_Requirements.xml
+  POLICY_TEMPLATE: Policy_Template-Utilities-OS_Requirements-Xcode_CLTools.xml
   REMOVE_OLD_PACKAGES: 'true'
   REPLACE_POLICY: 'true'
   SMART_GROUP_NAME_PREFIX: '%NAME%'
   SMART_GROUP_NAME_SUFFIX: null
+  SMART_GROUP_TEMPLATE: Smart_Group-OS_Requirements-Xcode_CLTools.xml
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
     Arguments:
-      computergroup_name: '%SMART_GROUP_NAME_PREFIX% - %min_os_version%-%max_os_version%%SMART_GROUP_NAME_SUFFIX%'
-      computergroup_template: '%POLICY_GROUP_TEMPLATE%'
+      computergroup_name: '%SMART_GROUP_NAME_PREFIX% - %PKG_MIN_OS_VERSION%-%PKG_MAX_OS_VERSION%%SMART_GROUP_NAME_SUFFIX%'
+      computergroup_template: '%SMART_GROUP_TEMPLATE%'
       replace_group: 'true'
       sleep: 2
 
@@ -51,5 +52,5 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
-      pkg_name_match: '%SOFTWARE_TITLE%-%xcode_version%'
+      pkg_name_match: '%SOFTWARE_TITLE%-%xcode_version%-'
       versions_to_keep: 2
