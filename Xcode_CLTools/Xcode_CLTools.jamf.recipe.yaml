@@ -5,7 +5,7 @@ ParentRecipe: com.github.smithjw-actions.pkg.Xcode_CLTools
 MinimumVersion: '2.3'
 
 Input:
-  NAME: Xcode Command Line Tools
+  NAME: Command Line Tools for Xcode
   SOFTWARE_TITLE: Xcode_CLTools
   CATEGORY: Apps
   PACKAGE_INFO: autopkg
@@ -28,7 +28,7 @@ Input:
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
     Arguments:
-      computergroup_name: '%SMART_GROUP_NAME_PREFIX% - macOS %PKG_MIN_OS_VERSION%-%PKG_MAX_OS_VERSION%%SMART_GROUP_NAME_SUFFIX%'
+      computergroup_name: '%SMART_GROUP_NAME_PREFIX% %xcode_version% - macOS %PKG_MIN_OS_VERSION%-%PKG_MAX_OS_VERSION%%SMART_GROUP_NAME_SUFFIX%'
       computergroup_template: '%SMART_GROUP_TEMPLATE%'
       replace_group: 'true'
       sleep: 2
@@ -40,7 +40,7 @@ Process:
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
-      policy_name: '%POLICY_NAME_PREFIX% (Xcode %xcode_version%)%POLICY_NAME_SUFFIX%'
+      policy_name: '%POLICY_NAME_PREFIX% %xcode_version%%POLICY_NAME_SUFFIX%'
       policy_template: '%POLICY_TEMPLATE%'
       replace_policy: '%REPLACE_POLICY%'
 
