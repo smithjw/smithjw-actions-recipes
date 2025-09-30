@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<computer_group>
+	<name>%SMART_GROUP_NAME%</name>
+	<is_smart>true</is_smart>
+	<criteria>
+		<criterion>
+			<name>Operating System Version</name>
+			<priority>0</priority>
+			<and_or>and</and_or>
+			<search_type>less than or equal</search_type>
+			<value>%PKG_MAX_OS_VERSION%</value>
+		</criterion>
+		<criterion>
+			<name>Operating System Version</name>
+			<priority>1</priority>
+			<and_or>and</and_or>
+			<search_type>greater than or equal</search_type>
+			<value>%PKG_MIN_OS_VERSION%</value>
+		</criterion>
+	</criteria>
+</computer_group>
