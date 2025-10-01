@@ -1,0 +1,56 @@
+Description: Downloads the current release version of Claude Code.
+Identifier: com.github.smithjw-actions.download.Claude_Code
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Claude Code
+  SOFTWARE_TITLE: Claude_Code
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: EndOfCheckPhase
+    Arguments:
+      base_url: https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: (?P<version>\d+\.\d+\.\d+)
+      url: '%base_url%/stable'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: claude-arm64-%version%
+      url: '%base_url%/%version%/darwin-arm64/claude'
+      User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: claude-x86_64-%version%
+      url: '%base_url%/%version%/darwin-x64/claude'
+      User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+
+  - Processor: EndOfCheckPhase
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/downloads/claude-arm64-%version%'
+      requirement: |
+        identifier "com.anthropic.claude-code" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = Q6L2SF6YDW
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%RECIPE_CACHE_DIR%/downloads/claude-x86_64-%version%'
+      requirement: |
+        identifier "com.anthropic.claude-code" and anchor apple generic and
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = Q6L2SF6YDW

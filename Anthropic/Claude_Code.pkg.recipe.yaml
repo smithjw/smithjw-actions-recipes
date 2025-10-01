@@ -1,0 +1,92 @@
+Description: Downloads the latest versions of Claude Code and creates a package.
+Identifier: com.github.smithjw-actions.pkg.Claude_Code
+ParentRecipe: com.github.smithjw-actions.download.Claude_Code
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Claude Code
+  SOFTWARE_TITLE: Claude_Code
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/claude-arm64-%version%'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/claude-arm64'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/claude-x86_64-%version%'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/claude-x86_64'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+
+        logged_in_user=$( /usr/sbin/scutil <<< "show State:/Users/ConsoleUser" | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }' )
+        logged_in_user_uid=$(/usr/bin/id -u "$logged_in_user")
+        log_prefix="CLAUDE_POSTINSTALL"
+
+        function echo_logger() {
+            # echo_logger version 1.1
+            log_folder="${log_folder:=/private/var/log}"
+            /bin/mkdir -p "$log_folder"
+            echo -e "$(/bin/date +'%Y-%m-%d %T%z') - ${log_prefix:+$log_prefix }${1}" | /usr/bin/tee -a "$log_folder/${log_name:=management.log}"
+        }
+
+        if [[ -z "$logged_in_user" ]] || [[ "$logged_in_user" =~ (loginwindow|_mbsetupuser|root) ]]; then
+            echo_logger "No user logged in, exiting."
+            exit 1
+        else
+            echo_logger "Installing for user: $logged_in_user (UID: $logged_in_user_uid)"
+            logged_in_user_home=$( /usr/bin/dscl . -read /users/"$logged_in_user" NFSHomeDirectory | /usr/bin/cut -d " " -f 2 )
+            LOCAL_USER_CLAUDE_DIR="$logged_in_user_home/.claude"
+            LOCAL_USER_BIN_DIR="$logged_in_user_home/.local/bin"
+
+            echo_logger "Creating directories:"
+            echo_logger "  - $LOCAL_USER_CLAUDE_DIR"
+            echo_logger "  - $LOCAL_USER_BIN_DIR"
+            /bin/mkdir -p "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
+            /usr/sbin/chown "$logged_in_user_uid":staff "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
+            /bin/chmod 755 "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
+        fi
+
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          echo_logger "Copying arm64 version into place & setting permissions"
+          /bin/cp claude-arm64 "$LOCAL_USER_BIN_DIR/claude"
+          /usr/sbin/chown "$logged_in_user_uid":staff "$LOCAL_USER_BIN_DIR/claude"
+          /bin/chmod +x "$LOCAL_USER_BIN_DIR/claude"
+        else
+          echo_logger "Copying x86_64 version into place & setting permissions"
+          /bin/cp claude-x86_64 "$LOCAL_USER_BIN_DIR/claude"
+          /usr/sbin/chown "$logged_in_user_uid":staff "$LOCAL_USER_BIN_DIR/claude"
+          /bin/chmod +x "$LOCAL_USER_BIN_DIR/claude"
+        fi
+
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: com.anthropic.claude-code
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
