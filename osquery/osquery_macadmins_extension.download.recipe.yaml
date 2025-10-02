@@ -1,0 +1,35 @@
+Description: ''
+Identifier: com.github.smithjw-actions.download.osquery_macadmins_extension
+MinimumVersion: '2.3'
+
+Input:
+  NAME: osquery macadmins-extension
+  SOFTWARE_TITLE: osquery_macadmins_extension
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      # asset_regex: '.*\.pkg'
+      github_repo: macadmins/osquery-extension
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+      # filename: '%SOFTWARE_TITLE%.pkg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: Unarchiver
+    Arguments:
+      purge_destination: true
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      archive_path: '%pathname%'

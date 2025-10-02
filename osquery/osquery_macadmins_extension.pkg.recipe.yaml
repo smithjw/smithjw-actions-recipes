@@ -1,0 +1,43 @@
+Description: Downloads and builds a package that installs macadmins-extension, an osquery extension for endpoint engineers. The resulting package installs to /opt/osquery-extensions/macadmins_extension.ext
+Identifier: com.github.smithjw-actions.pkg.osquery_macadmins_extension
+ParentRecipe: com.github.smithjw-actions.download.osquery_macadmins_extension
+MinimumVersion: '2.3'
+
+Input:
+  NAME: osquery macadmins-extension
+  SOFTWARE_TITLE: osquery_macadmins_extension
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgdirs:
+        opt: '0755'
+        opt/osquery-extensions/: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+
+  - Processor: Copier
+    Arguments:
+      destination_path: '%pkgroot%/opt/osquery-extensions/macadmins_extension.ext'
+      overwrite: true
+      source_path: '%RECIPE_CACHE_DIR%/unpack/macadmins_extension/Darwin/macadmins_extension.ext'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: wheel
+            mode: '0755'
+            path: opt
+            user: root
+        id: com.github.macadmins.osquery-extension
+        options: purge_ds_store
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'
+        - '%RECIPE_CACHE_DIR%/payload'
