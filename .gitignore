@@ -3,7 +3,8 @@
 __pycache__
 processor.plist
 .env/
-
+*mise.local.toml*
+tmp/*
 # Ignore symlinked templates within recipe folders
 */*.xml
 !/_templates/*
