@@ -1,0 +1,39 @@
+Description: Downloads latest version of the Ricoh CloudStream Client
+Identifier: com.github.smithjw-actions.download.Ricoh_CloudStream_Client
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Ricoh CloudStream Client
+  SOFTWARE_TITLE: Ricoh_CloudStream_Client
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+  DOWNLOAD_MISSING_FILE: null
+
+Process:
+  # URLs to determine latest version and download:
+  #   - https://manual.na.ps.cloudstream.ricoh.com/docs/latest
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: <section.*?id="main-content".*?>\s*?<h2.*?>(?P<version>(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+))</h2>
+      url: https://manual.na.ps.cloudstream.ricoh.com/docs/latest
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      fetch_filename: true
+      # filename: '%SOFTWARE_TITLE%.pkg'
+      url: https://cdn.everyoneprint.com/ricoh-cloudstream-client-%version%.1-setup.pkg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Y Soft Corporation, a.s. (3CPED8WGS9)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
