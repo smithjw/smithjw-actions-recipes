@@ -10,7 +10,7 @@ Input:
 Process:
   - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
     Arguments:
-      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Tableau.pkg'
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Tableau Desktop.pkg'
       file_to_extract: Distribution
 
   - Processor: com.github.mlbz521.SharedProcessors/XPathParser
@@ -29,7 +29,7 @@ Process:
 
   - Processor: Copier
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Tableau.pkg'
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Tableau Desktop.pkg'
       destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%SOFTWARE_TITLE%-arm64.pkg'
 
   - Processor: Copier
