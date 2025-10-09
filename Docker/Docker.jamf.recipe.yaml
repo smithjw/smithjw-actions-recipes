@@ -1,14 +1,14 @@
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.smithjw-actions.jamf.Docker
-ParentRecipe: com.github.smithjw.pkg.Docker
+ParentRecipe: com.github.smithjw.pkg.Docker-Universal
 MinimumVersion: '2.3'
 
 Input:
   NAME: Docker
   SOFTWARE_TITLE: '%NAME%'
-  ARCHITECTURE: arm64
-  DOWNLOAD_TYPE: arm64
+  arm_dl_url: 'https://desktop.docker.com/mac/main/arm64/Docker.dmg'
   CATEGORY: Utilities
+  intel_dl_url: 'https://desktop.docker.com/mac/main/amd64/Docker.dmg'
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
   POLICY_NAME: '%NAME%'
@@ -24,12 +24,12 @@ Input:
     contains everything needed to run: code, runtime, system tools, system
     libraries - anything that can be installed on a server. This guarantees
     that the software will always run the same, regardless of its environment.
+  PACKAGE_INFO: autopkg
+  REPLACE_POLICY: 'true'
   SELF_SERVICE_DISPLAY_NAME: '%NAME%'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SELF_SERVICE_INSTALL_BUTTON: Install
   SELF_SERVICE_REINSTALL_BUTTON: Install
-  REPLACE_POLICY: 'true'
-  PACKAGE_INFO: autopkg
 
 Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
