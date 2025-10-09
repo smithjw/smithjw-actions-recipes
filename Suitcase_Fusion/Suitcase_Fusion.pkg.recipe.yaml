@@ -1,7 +1,7 @@
 Description: Downloads the latest version of Suitcase Fusion 21 and makes a pkg of it
 Identifier: com.github.smithjw-actions.pkg.Suitcase_Fusion
 ParentRecipe: com.github.smithjw-actions.download.Suitcase_Fusion
-MinimumVersion: '2.3'
+MinimumVersion: '2.7.6'
 
 Input:
   NAME: Suitcase Fusion

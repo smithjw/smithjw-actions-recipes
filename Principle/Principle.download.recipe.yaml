@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Principle.
 Identifier: com.github.smithjw-actions.download.Principle
-MinimumVersion: '2.3'
+MinimumVersion: '2.7.6'
 
 Input:
   NAME: Principle
@@ -12,6 +12,14 @@ Input:
 Process:
   - Processor: SparkleUpdateInfoProvider
     Arguments:
+      appcast_url: '%SPARKLE_FEED_URL%'
+
+  - Processor: FindAndReplace
+    Arguments:
+      input_string: '%url%'
+      find: 'http://'
+      replace: 'https://'
+      result_output_var_name: url
       appcast_url: '%SPARKLE_FEED_URL%'
 
   - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
