@@ -18,13 +18,6 @@ Process:
       pkg_category: '%CATEGORY%'
       pkg_info: '%PACKAGE_INFO%'
 
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
-    Arguments:
-      icon: '%POLICY_ICON%'
-      policy_name: '%POLICY_NAME%'
-      policy_template: '%POLICY_TEMPLATE%'
-      replace_policy: '%REPLACE_POLICY%'
-
   - Processor: com.github.grahampugh.recipes.postprocessors/LastRecipeRunResult
 
   - Processor: StopProcessingIf
