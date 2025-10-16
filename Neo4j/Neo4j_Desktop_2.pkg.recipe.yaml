@@ -1,11 +1,11 @@
 Description: Create a package from the Neo4j Desktop download.
-Identifier: com.github.smithjw-actions.pkg.Neo4j_Desktop
+Identifier: com.github.smithjw-actions.pkg.Neo4j_Desktop_2
 MinimumVersion: '2.3'
-ParentRecipe: com.github.smithjw-actions.download.Neo4j_Desktop
+ParentRecipe: com.github.smithjw-actions.download.Neo4j_Desktop_2
 
 Input:
-  NAME: Neo4j Desktop
-  SOFTWARE_TITLE: Neo4j_Desktop
+  NAME: Neo4j Desktop 2
+  SOFTWARE_TITLE: Neo4j_Desktop_2
 
 Process:
   - Processor: AppPkgCreator
