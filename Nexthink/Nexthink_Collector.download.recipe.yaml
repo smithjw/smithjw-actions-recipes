@@ -6,6 +6,7 @@ Input:
   NAME: Nexthink Collector
   SOFTWARE_TITLE: Nexthink_Collector
   DOWNLOAD_URL: https://download.nexthink.com/releases/latest/OSX_Collector/Nexthink_Collector.dmg
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
@@ -15,9 +16,9 @@ Process:
 
   - Processor: EndOfCheckPhase
 
-  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+  - Processor: StopProcessingIf
     Arguments:
-      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:

@@ -11,9 +11,6 @@ MinimumVersion: '2.3'
 Input:
   NAME: Bruno
   SOFTWARE_TITLE: '%NAME%'
-  INCLUDE_PRERELEASES: 'True'
-  DOWNLOAD_MISSING_FILE: null
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
 
 Process:
   - Processor: AppPkgCreator
