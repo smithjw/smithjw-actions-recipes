@@ -5,7 +5,7 @@ MinimumVersion: '2.3'
 Input:
   NAME: Ricoh CloudStream Client
   SOFTWARE_TITLE: Ricoh_CloudStream_Client
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
   DOWNLOAD_MISSING_FILE: null
 
 Process:
@@ -26,9 +26,9 @@ Process:
 
   - Processor: EndOfCheckPhase
 
-  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+  - Processor: StopProcessingIf
     Arguments:
-      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:
