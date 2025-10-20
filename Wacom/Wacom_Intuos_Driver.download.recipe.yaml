@@ -8,7 +8,7 @@ Input:
   DOWNLOAD_URL: https://www.wacom.com/en-us/support/product-support/drivers
   DOWNLOAD_PATTERN: https://cdn.wacom.com/u/productsupport/drivers/mac/professional/WacomTablet_+[0-9].+[0-9].+[0-9]*-*[0-9].dmg
   DOWNLOAD_MISSING_FILE: null
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLTextSearcher
@@ -25,9 +25,9 @@ Process:
 
   - Processor: EndOfCheckPhase
 
-  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+  - Processor: StopProcessingIf
     Arguments:
-      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:

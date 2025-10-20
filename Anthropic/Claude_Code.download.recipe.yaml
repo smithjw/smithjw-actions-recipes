@@ -6,7 +6,7 @@ Input:
   NAME: Claude Code
   SOFTWARE_TITLE: Claude_Code
   DOWNLOAD_MISSING_FILE: null
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: EndOfCheckPhase
@@ -33,9 +33,9 @@ Process:
       User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
 
   - Processor: EndOfCheckPhase
-  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+  - Processor: StopProcessingIf
     Arguments:
-      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:

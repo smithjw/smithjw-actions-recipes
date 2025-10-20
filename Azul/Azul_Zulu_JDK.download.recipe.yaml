@@ -8,7 +8,7 @@ Input:
   SOFTWARE_TITLE: Azul_Zulu_JDK
   JDK_VERSION: '24'
   DOWNLOAD_MISSING_FILE: null
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: AzulZuluJavaInfoProvider
@@ -37,9 +37,9 @@ Process:
 
   - Processor: EndOfCheckPhase
 
-  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+  - Processor: StopProcessingIf
     Arguments:
-      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:

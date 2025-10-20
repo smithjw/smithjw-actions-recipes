@@ -6,18 +6,18 @@ Input:
   NAME: SQLDeveloper
   SOFTWARE_TITLE: SQLDeveloper
   DOWNLOAD_MISSING_FILE: null
-  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLTextSearcher
     Arguments:
       re_pattern: (?P<arm64_url>download\.oracle\.com\/otn_software\/java\/sqldeveloper\/sqldeveloper-(?P<version>.*?)-macos-aarch64\.app\.zip)
-      url: https://www.oracle.com/database/sqldeveloper/technologies/download/
+      url: https://www.oracle.com/au/database/sqldeveloper/technologies/download/
 
   - Processor: URLTextSearcher
     Arguments:
       re_pattern: (?P<x86_64>download\.oracle\.com\/otn_software\/java\/sqldeveloper\/sqldeveloper-(?P<version>.*?)-macos-x64\.app\.zip)
-      url: https://www.oracle.com/database/sqldeveloper/technologies/download/
+      url: https://www.oracle.com/au/database/sqldeveloper/technologies/download/
 
   - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
@@ -33,9 +33,9 @@ Process:
 
   - Processor: EndOfCheckPhase
 
-  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+  - Processor: StopProcessingIf
     Arguments:
-      bypass_stop_processing_if: '%BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: Unarchiver
     Arguments:
