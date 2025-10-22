@@ -1,0 +1,34 @@
+Description: Downloads the latest version of ChatGPT Atlas.
+Identifier: com.github.smithjw-actions.download.ChatGPT_Atlas
+MinimumVersion: '2.3'
+
+Input:
+  NAME: ChatGPT Atlas
+  SOFTWARE_TITLE: ChatGPT_Atlas
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      url: https://persistent.oaistatic.com/atlas/public/ChatGPT_Atlas.dmg
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      input_path: '%pathname%/ChatGPT Atlas.app'
+      deep_verification: true
+      strict_verification: true
+      requirement: >-
+        anchor apple generic and identifier "com.openai.atlas" and
+        (certificate leaf[field.1.2.840.113635.100.6.1.9] /* exists */ or
+        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
+        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
+        certificate leaf[subject.OU] = "2DC432GLL2")

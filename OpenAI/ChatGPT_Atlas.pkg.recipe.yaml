@@ -1,0 +1,11 @@
+Description: Downloads the latest version of ChatGPT Atlas and creates a package.
+Identifier: com.github.smithjw-actions.pkg.ChatGPT_Atlas
+ParentRecipe: com.github.smithjw-actions.download.ChatGPT_Atlas
+MinimumVersion: '2.3'
+
+Input:
+  NAME: ChatGPT Atlas
+  SOFTWARE_TITLE: ChatGPT_Atlas
+
+Process:
+  - Processor: AppPkgCreator
