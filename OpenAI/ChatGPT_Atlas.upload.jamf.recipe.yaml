@@ -8,6 +8,7 @@ Input:
   SOFTWARE_TITLE: ChatGPT_Atlas
   CATEGORY: Apps
   PACKAGE_INFO: autopkg
+  PKG_NAME_MATCH: '%SOFTWARE_TITLE%-'
   PKG_TO_KEEP: '4'
   REMOVE_OLD_PACKAGES: 'true'
 
