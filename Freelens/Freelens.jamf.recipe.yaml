@@ -1,10 +1,10 @@
-Description: Downloads the latest version of FreeLens, creates a package, then uploads to Jamf
-Identifier: com.github.smithjw-actions.jamf.FreeLens
-ParentRecipe: com.github.smithjw-actions.pkg.FreeLens
+Description: Downloads the latest version of Freelens, creates a package, then uploads to Jamf
+Identifier: com.github.smithjw-actions.jamf.Freelens
+ParentRecipe: com.github.smithjw-actions.pkg.Freelens
 MinimumVersion: '2.3'
 
 Input:
-  NAME: FreeLens
+  NAME: Freelens
   SOFTWARE_TITLE: '%NAME%'
   CATEGORY: Engineering
   POLICY_CATEGORY: '%CATEGORY%'
@@ -57,4 +57,4 @@ Process:
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
     Arguments:
       pkg_name_match: '%SOFTWARE_TITLE%-'
-      versions_to_keep: 2
+      versions_to_keep: 4
