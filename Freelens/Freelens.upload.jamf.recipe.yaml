@@ -1,5 +1,5 @@
 Description: Uploads the latest version of Freelens package to Jamf
-Identifier: com.github.smithjw-actions.upload.jamf.Freelens
+Identifier: com.github.smithjw-actions.jamf.upload.Freelens
 ParentRecipe: com.github.smithjw-actions.pkg.Freelens
 MinimumVersion: '2.6'
 
