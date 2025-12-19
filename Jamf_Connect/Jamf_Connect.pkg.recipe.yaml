@@ -11,7 +11,7 @@ Input:
 Process:
   - Processor: com.github.mlbz521.SharedProcessors/XarExtractSingleFile
     Arguments:
-      archive_path: '%pathname%/JamfConnect.pkg'
+      archive_path: '%pathname%/JamfConnectLogin.pkg'
       file_to_extract: Distribution
 
   - Processor: com.github.mlbz521.SharedProcessors/XPathParser
@@ -19,12 +19,12 @@ Process:
       attribute_one: version
       return_variable_attribute_one: version
       xml_file: '%extracted_file%'
-      xpath: ./pkg-ref[@id="com.jamf.connect"]
+      xpath: ./pkg-ref[@id="com.jamf.connect.login"]
 
   - Processor: PkgCopier
     Arguments:
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
-      source_pkg: '%pathname%/JamfConnect.pkg'
+      source_pkg: '%pathname%/JamfConnectLogin.pkg'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
