@@ -28,6 +28,3 @@ Process:
   - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
     Arguments:
       predicate: download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%
-
-  
-

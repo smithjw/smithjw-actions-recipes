@@ -41,13 +41,13 @@ Process:
     Arguments:
       file_content: |
         #!/bin/bash
-        
+
         # Apache Maven Post-Installation Script
         # This script sets up symlinks and PATH configuration for Apache Maven
-        
+
         MAVEN_VERSION="%version%"
         MAVEN_HOME="/usr/local/apache-maven-${MAVEN_VERSION}"
-        
+
         # Create symlink for mvn command in /usr/local/bin
         if [[ -d "${MAVEN_HOME}/bin" ]]; then
             echo "Creating symlink: /usr/local/bin/mvn -> ${MAVEN_HOME}/bin/mvn"
@@ -57,20 +57,20 @@ Process:
             echo "Error: Maven bin directory not found at ${MAVEN_HOME}/bin" >&2
             exit 1
         fi
-        
+
         # Add Maven to PATH via /etc/paths.d
         echo "Adding Maven to system PATH"
         echo "${MAVEN_HOME}/bin" > /etc/paths.d/maven
-        
+
         # Set appropriate permissions
         chmod 755 "${MAVEN_HOME}/bin/mvn"
         chmod 755 "${MAVEN_HOME}/bin/mvnDebug"
         chmod 644 /etc/paths.d/maven
-        
+
         echo "Apache Maven ${MAVEN_VERSION} installation complete"
         echo "Maven is now available at: ${MAVEN_HOME}"
         echo "The 'mvn' command is available system-wide"
-        
+
         exit 0
       file_mode: '0755'
       file_path: '%RECIPE_CACHE_DIR%/scripts/postinstall'
