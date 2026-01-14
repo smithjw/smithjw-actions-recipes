@@ -1,0 +1,97 @@
+Description: Creates a package for Apache Maven with postinstall script for installation to /usr/local and PATH configuration.
+Identifier: com.github.smithjw-actions.pkg.Apache_Maven
+ParentRecipe: com.github.smithjw-actions.download.Apache_Maven
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Apache Maven
+  SOFTWARE_TITLE: Apache_Maven
+
+Process:
+  - Processor: Unarchiver
+    Comment: Extract the downloaded tar.gz archive
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/extract'
+      purge_destination: true
+
+  - Processor: PkgRootCreator
+    Comment: Create package root directory structure
+    Arguments:
+      pkgdirs:
+        usr: '0755'
+        usr/local: '0755'
+      pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
+
+  - Processor: Copier
+    Comment: Copy extracted Maven directory to /usr/local in package root
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/pkgroot/usr/local/apache-maven-%version%'
+      overwrite: true
+      source_path: '%RECIPE_CACHE_DIR%/extract/apache-maven-%version%'
+
+  - Processor: PkgRootCreator
+    Comment: Create scripts directory for postinstall script
+    Arguments:
+      pkgdirs: {}
+      pkgroot: '%RECIPE_CACHE_DIR%/scripts'
+
+  - Processor: FileCreator
+    Comment: Create postinstall script to set up symlinks and PATH
+    Arguments:
+      file_content: |
+        #!/bin/bash
+        
+        # Apache Maven Post-Installation Script
+        # This script sets up symlinks and PATH configuration for Apache Maven
+        
+        MAVEN_VERSION="%version%"
+        MAVEN_HOME="/usr/local/apache-maven-${MAVEN_VERSION}"
+        
+        # Create symlink for mvn command in /usr/local/bin
+        if [[ -d "${MAVEN_HOME}/bin" ]]; then
+            echo "Creating symlink: /usr/local/bin/mvn -> ${MAVEN_HOME}/bin/mvn"
+            ln -sf "${MAVEN_HOME}/bin/mvn" /usr/local/bin/mvn
+            ln -sf "${MAVEN_HOME}/bin/mvnDebug" /usr/local/bin/mvnDebug
+        else
+            echo "Error: Maven bin directory not found at ${MAVEN_HOME}/bin" >&2
+            exit 1
+        fi
+        
+        # Add Maven to PATH via /etc/paths.d
+        echo "Adding Maven to system PATH"
+        echo "${MAVEN_HOME}/bin" > /etc/paths.d/maven
+        
+        # Set appropriate permissions
+        chmod 755 "${MAVEN_HOME}/bin/mvn"
+        chmod 755 "${MAVEN_HOME}/bin/mvnDebug"
+        chmod 644 /etc/paths.d/maven
+        
+        echo "Apache Maven ${MAVEN_VERSION} installation complete"
+        echo "Maven is now available at: ${MAVEN_HOME}"
+        echo "The 'mvn' command is available system-wide"
+        
+        exit 0
+      file_mode: '0755'
+      file_path: '%RECIPE_CACHE_DIR%/scripts/postinstall'
+
+  - Processor: PkgCreator
+    Comment: Build the final package
+    Arguments:
+      pkg_request:
+        id: org.apache.maven
+        install_location: /
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Comment: Clean up temporary directories
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/extract'
+        - '%RECIPE_CACHE_DIR%/scripts'

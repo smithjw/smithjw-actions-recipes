@@ -1,0 +1,11 @@
+Description: Creates a package for ChatGPT Desktop.
+Identifier: com.github.smithjw-actions.pkg.ChatGPT
+ParentRecipe: com.github.smithjw-actions.download.ChatGPT
+MinimumVersion: '2.3'
+
+Input:
+  NAME: ChatGPT
+  SOFTWARE_TITLE: ChatGPT
+
+Process:
+  - Processor: AppPkgCreator
