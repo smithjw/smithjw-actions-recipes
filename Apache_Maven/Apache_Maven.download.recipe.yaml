@@ -10,13 +10,11 @@ Input:
 
 Process:
   - Processor: URLTextSearcher
-    Comment: Get the latest version number from the Apache Maven download page
     Arguments:
       re_pattern: 'apache-maven-(?P<version>\d+\.\d+\.\d+)-bin\.tar\.gz'
       url: https://maven.apache.org/download.cgi
 
   - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
-    Comment: Download the Apache Maven binary archive
     Arguments:
       CHECK_FILESIZE_ONLY: 'False'
       DOWNLOAD_MISSING_FILE: '%DOWNLOAD_MISSING_FILE%'

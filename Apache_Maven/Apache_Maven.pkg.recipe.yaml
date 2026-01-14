@@ -9,14 +9,12 @@ Input:
 
 Process:
   - Processor: Unarchiver
-    Comment: Extract the downloaded tar.gz archive
     Arguments:
       archive_path: '%pathname%'
       destination_path: '%RECIPE_CACHE_DIR%/extract'
       purge_destination: true
 
   - Processor: PkgRootCreator
-    Comment: Create package root directory structure
     Arguments:
       pkgdirs:
         usr: '0755'
@@ -24,20 +22,17 @@ Process:
       pkgroot: '%RECIPE_CACHE_DIR%/pkgroot'
 
   - Processor: Copier
-    Comment: Copy extracted Maven directory to /usr/local in package root
     Arguments:
       destination_path: '%RECIPE_CACHE_DIR%/pkgroot/usr/local/apache-maven-%version%'
       overwrite: true
       source_path: '%RECIPE_CACHE_DIR%/extract/apache-maven-%version%'
 
   - Processor: PkgRootCreator
-    Comment: Create scripts directory for postinstall script
     Arguments:
       pkgdirs: {}
       pkgroot: '%RECIPE_CACHE_DIR%/scripts'
 
   - Processor: FileCreator
-    Comment: Create postinstall script to set up symlinks and PATH
     Arguments:
       file_content: |
         #!/bin/bash
@@ -76,7 +71,6 @@ Process:
       file_path: '%RECIPE_CACHE_DIR%/scripts/postinstall'
 
   - Processor: PkgCreator
-    Comment: Build the final package
     Arguments:
       pkg_request:
         id: org.apache.maven
@@ -89,7 +83,6 @@ Process:
         version: '%version%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
-    Comment: Clean up temporary directories
     Arguments:
       fail_deleter_silently: true
       path_list:
