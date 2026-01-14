@@ -1,0 +1,33 @@
+Description: Downloads the latest version of Apache Maven from Apache mirrors.
+Identifier: com.github.smithjw-actions.download.Apache_Maven
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Apache Maven
+  SOFTWARE_TITLE: Apache_Maven
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Comment: Get the latest version number from the Apache Maven download page
+    Arguments:
+      re_pattern: 'apache-maven-(?P<version>\d+\.\d+\.\d+)-bin\.tar\.gz'
+      url: https://maven.apache.org/download.cgi
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Comment: Download the Apache Maven binary archive
+    Arguments:
+      CHECK_FILESIZE_ONLY: 'False'
+      DOWNLOAD_MISSING_FILE: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%version%.tar.gz'
+      url: https://dlcdn.apache.org/maven/maven-3/%version%/binaries/apache-maven-%version%-bin.tar.gz
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+    Arguments:
+      predicate: download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%
+
+  
+
