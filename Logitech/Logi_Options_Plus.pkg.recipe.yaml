@@ -49,7 +49,7 @@ Process:
         exit "${exitcode}"
 
       file_mode: '0755'
-      file_path: '%RECIPE_CACHE_DIR%/%NAME%/scripts/postinstall'
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
 
   - Processor: PkgCreator
     Arguments:

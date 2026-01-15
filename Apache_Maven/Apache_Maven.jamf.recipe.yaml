@@ -1,0 +1,50 @@
+Description: Uploads Apache Maven package to Jamf Pro and creates a Self Service policy.
+Identifier: com.github.smithjw-actions.jamf.Apache_Maven
+ParentRecipe: com.github.smithjw-actions.pkg.Apache_Maven
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Apache Maven
+  SOFTWARE_TITLE: Apache_Maven
+  CATEGORY: Apps
+  POLICY_CATEGORY: Apps
+  POLICY_CUSTOM_TRIGGER: install-%SOFTWARE_TITLE%
+  POLICY_NAME: '%NAME%'
+  POLICY_RUN_COMMAND: ' '
+  POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_TEMPLATE: Policy_Template-Self_Service.xml
+  REMOVE_OLD_PACKAGES: 'true'
+  SELF_SERVICE_AVAILABLE: 'true'
+  SELF_SERVICE_CATEGORY: Engineering
+  SELF_SERVICE_DESCRIPTION: |
+    Apache Maven is a build automation tool used primarily for Java projects. Requires Java JDK 8 or later.
+  SELF_SERVICE_DISPLAY_NAME: '%NAME%'
+  SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
+  SELF_SERVICE_INSTALL_BUTTON: Install
+  SELF_SERVICE_REINSTALL_BUTTON: Install
+  REPLACE_POLICY: 'true'
+  PACKAGE_INFO: autopkg
+
+Process:
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageUploader
+    Arguments:
+      pkg_category: '%CATEGORY%'
+      pkg_info: '%PACKAGE_INFO%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      icon: '%SELF_SERVICE_ICON%'
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
+      replace_policy: '%REPLACE_POLICY%'
+
+  - Processor: com.github.grahampugh.recipes.commonprocessors/LastRecipeRunResult
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: '%REMOVE_OLD_PACKAGES% == "false"'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPackageCleaner
+    Arguments:
+      versions_to_keep: 2
