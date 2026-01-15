@@ -8,3 +8,4 @@ tmp/*
 # Ignore symlinked templates within recipe folders
 */*.xml
 !/_templates/*
+/_templates/.DS_Store
