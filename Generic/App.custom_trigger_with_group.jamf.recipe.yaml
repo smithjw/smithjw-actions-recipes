@@ -1,0 +1,40 @@
+Comment: |
+  This is a template recipe and cannot be used without a RecipeOverride.
+  PARENT_RECIPE_IDENTIFIER must be supplied
+Description: Creates a Generic Jamf Policy based on an app that has already been packaged
+Identifier: com.github.smithjw-actions.jamf.custom_trigger_with_group.App
+MinimumVersion: '2.3'
+
+Input:
+  NAME: ''
+  SOFTWARE_TITLE: ''
+  PARENT_RECIPE_IDENTIFIER: null
+  POLICY_CATEGORY: Apps
+  POLICY_CUSTOM_TRIGGER: ' '
+  POLICY_FREQUENCY: Ongoing
+  POLICY_NAME: null
+  POLICY_RUN_RECON: 'false'
+  POLICY_SCOPE_ALL_COMPUTERS: 'true'
+  POLICY_TEMPLATE: Policy_Template-Custom_Trigger_Only.xml
+  REPLACE_GROUP: 'True'
+  REPLACE_POLICY: 'True'
+  SMART_GROUP_NAME: null
+  SMART_GROUP_TEMPLATE: Smart_Group-Architecture.xml
+
+Process:
+  - Processor: com.github.grahampugh.recipes.preprocessors/LastRecipeRunChecker
+    Arguments:
+      cache_dir: '%CACHE_DIR%'
+      recipeoverride_identifier: '%PARENT_RECIPE_IDENTIFIER%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
+    Arguments:
+      computergroup_name: '%SMART_GROUP_NAME%'
+      computergroup_template: '%SMART_GROUP_TEMPLATE%'
+      replace_group: '%REPLACE_GROUP%'
+
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
+    Arguments:
+      policy_name: '%POLICY_NAME%'
+      policy_template: '%POLICY_TEMPLATE%'
+      replace_policy: '%REPLACE_POLICY%'
