@@ -29,7 +29,7 @@ Process:
   - Processor: URLTextSearcher
     Arguments:
       url: '%postgresql_url%'
-      re_pattern: 'href="(https://ftp\.postgresql\.org/pub/pgadmin/pgadmin4/v%latest_version%/macos/pgadmin4-%latest_version%-x86_64\.dmg)"'
+      re_pattern: 'href="(https://ftp\.postgresql\.org/pub/pgadmin/pgadmin4/v%latest_version%/macos/pgadmin4-%latest_version%-x64\.dmg)"'
       result_output_var_name: download_url_x86_64
 
   - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
