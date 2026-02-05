@@ -40,10 +40,14 @@ Process:
 
         "$installApp"/Contents/MacOS/logioptionsplus_installer \
           --quiet \
-          --analytics 'No' \
-          --flow 'No' \
-          --sso 'No' \
-          --update 'Yes'
+          --analytics no \
+          --flow no \
+          --sso no \
+          --update no \
+          --aipromptbuilder no \
+          --device-recommendation no \
+          --smartactions no \
+          --actions-ring no
 
         exitcode=$?
         exit "${exitcode}"
