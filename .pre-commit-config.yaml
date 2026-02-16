@@ -20,13 +20,13 @@ repos:
   #     - id: forbid-autopkg-trust-info
 
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.37.1
+    rev: v1.38.0
     hooks:
       - id: yamllint
         args: [--format, parsable, -c=.yamllint, --strict]
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.35.0
+    rev: 0.36.2
     hooks:
       - id: check-jsonschema
         files: ^.*\.recipe\.yaml$
