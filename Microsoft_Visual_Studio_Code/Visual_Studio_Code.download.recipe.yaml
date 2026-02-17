@@ -5,8 +5,7 @@ MinimumVersion: '2.9'
 Input:
   NAME: Visual Studio Code
   SOFTWARE_TITLE: Visual_Studio_Code
-  PRODUCT_ID: '2156837'
-  DOWNLOAD_URL: https://go.microsoft.com/fwlink/?linkid=%PRODUCT_ID%
+  DOWNLOAD_URL: https://code.visualstudio.com/sha/download?build=stable&os=darwin-universal-dmg
   DOWNLOAD_MISSING_FILE: null
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
@@ -14,7 +13,7 @@ Process:
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARE_TITLE%.zip'
+      filename: '%SOFTWARE_TITLE%.dmg'
       url: '%DOWNLOAD_URL%'
 
   - Processor: EndOfCheckPhase
@@ -23,12 +22,7 @@ Process:
     Arguments:
       predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
-  - Processor: Unarchiver
-    Arguments:
-      destination_path: '%RECIPE_CACHE_DIR%/unpack'
-      purge_destination: true
-
   - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/unpack/Visual Studio Code.app'
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Visual Studio Code.app'
       requirement: identifier "com.microsoft.VSCode" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = UBF8T346G9

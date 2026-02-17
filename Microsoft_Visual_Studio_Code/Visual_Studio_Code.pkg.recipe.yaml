@@ -8,40 +8,18 @@ Input:
   SOFTWARE_TITLE: Visual_Studio_Code
 
 Process:
-  - Processor: PkgRootCreator
-    Arguments:
-      pkgdirs:
-        Applications: '0755'
-      pkgroot: '%RECIPE_CACHE_DIR%/payload'
-
-  - Processor: FileMover
-    Arguments:
-      source: '%RECIPE_CACHE_DIR%/unpack/Visual Studio Code.app'
-      target: '%pkgroot%/Applications/Visual Studio Code.app'
-
-  - Processor: Versioner
-    Arguments:
-      input_plist_path: '%pkgroot%/Applications/Visual Studio Code.app/Contents/Info.plist'
-
   - Processor: PlistReader
     Arguments:
-      info_path: '%pkgroot%/Applications/Visual Studio Code.app/Contents/Info.plist'
+      info_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Visual Studio Code.app/Contents/Info.plist'
       plist_keys:
         CFBundleIdentifier: bundleid
         CFBundleName: app_name
+        CFBundleVersion: version
 
-  - Processor: PkgCreator
+  - Processor: AppPkgCreator
     Arguments:
-      force_pkg_build: true
-      pkg_request:
-        chown:
-          - group: wheel
-            path: Applications
-            user: root
-        id: '%bundleid%'
-        options: purge_ds_store
-        pkgname: '%SOFTWARE_TITLE%-%version%'
-        version: '%version%'
+      app_path: '%pathname%/Visual Studio Code.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
