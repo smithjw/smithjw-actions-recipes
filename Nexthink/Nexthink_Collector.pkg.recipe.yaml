@@ -1,7 +1,7 @@
 Description: Packages Nexthink Collector into /private/var/tmp/Nexthink/csi.app on managed devices
 Identifier: com.github.smithjw-actions.pkg.Nexthink_Collector
 ParentRecipe: com.github.smithjw-actions.download.Nexthink_Collector
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Nexthink Collector

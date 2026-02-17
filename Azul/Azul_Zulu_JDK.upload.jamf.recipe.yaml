@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.upload.Azul_Zulu_JDK
 ParentRecipe: com.github.smithjw-actions.pkg.Azul_Zulu_JDK
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Azul Zulu JDK

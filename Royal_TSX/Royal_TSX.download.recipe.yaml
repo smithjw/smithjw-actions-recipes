@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Royal TSX.
 Identifier: com.github.smithjw-actions.download.Royal_TSX
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Royal TSX
@@ -13,7 +13,7 @@ Process:
     Arguments:
       appcast_url: https://royaltsx-v6.royalapps.com/updates_stable
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       fetch_filename: true

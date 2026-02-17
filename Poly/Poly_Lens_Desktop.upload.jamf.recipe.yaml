@@ -1,7 +1,7 @@
 Description: Downloads and extracts the Poly Lens .pkg from the DMG and uploads to JAMF
 Identifier: com.github.smithjw-actions.jamf.upload.Poly_Lens_Desktop
 ParentRecipe: com.github.smithjw-actions.pkg.Poly_Lens_Desktop
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Poly Lens Desktop

@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.Teradata_Tools_Utilities
 ParentRecipe: com.github.smithjw-actions.pkg.Teradata_Tools_Utilities
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Teradata Tools and Utilities

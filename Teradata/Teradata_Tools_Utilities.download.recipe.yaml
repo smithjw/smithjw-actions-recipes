@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Teradata Tools and Utilities
 Identifier: com.github.smithjw-actions.download.Teradata_Tools_Utilities
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Teradata Tools and Utilities
@@ -16,7 +16,7 @@ Process:
       teradata_username: '%TERADATA_USERNAME%'
       teradata_password: '%TERADATA_PASSWORD%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.tar.gz'

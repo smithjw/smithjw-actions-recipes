@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.upload.Microsoft_Company_Portal
 ParentRecipe: com.github.smithjw-actions.pkg.Microsoft_Company_Portal
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Microsoft Company Portal

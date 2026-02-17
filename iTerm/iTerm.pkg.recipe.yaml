@@ -1,7 +1,7 @@
 Description: Downloads the latest version of iTerm and creates a package.
 Identifier: com.github.smithjw-actions.pkg.iTerm
 ParentRecipe: com.github.smithjw-actions.download.iTerm
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: iTerm

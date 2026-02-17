@@ -1,7 +1,7 @@
 Description: Downloads the latest version of RStudio and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.RStudio
 ParentRecipe: com.github.smithjw-actions.download.RStudio
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: RStudio

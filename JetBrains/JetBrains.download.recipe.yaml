@@ -1,6 +1,6 @@
 Description: Downloads the current release version of JetBrains product.
 Identifier: com.github.smithjw-actions.download.JetBrains
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: JetBrains Product Download
@@ -16,7 +16,7 @@ Process:
       result_output_var_name: url
       url: https://data.services.jetbrains.com/products/releases?code=%PRODUCT_CODE%&latest=true&type=release
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.dmg'

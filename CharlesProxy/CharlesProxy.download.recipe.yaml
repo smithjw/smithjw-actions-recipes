@@ -1,6 +1,6 @@
 Description: Downloads the current release version of CharlesProxy.
 Identifier: com.github.smithjw-actions.download.CharlesProxy
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: CharlesProxy
@@ -15,7 +15,7 @@ Process:
       re_pattern: <h4>Version\s+(?P<version>%MAJOR_VERSION%\.\d+\.\d+)(?!b\d+).*?<\/h4>
       url: https://www.charlesproxy.com/documentation/version-history/
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       fetch_filename: true

@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.upload.Vantage_Editor
 ParentRecipe: com.github.smithjw-actions.pkg.Vantage_Editor
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Vantage Editor

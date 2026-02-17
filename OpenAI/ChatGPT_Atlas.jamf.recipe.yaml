@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.ChatGPT_Atlas
 ParentRecipe: com.github.smithjw-actions.pkg.ChatGPT_Atlas
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: ChatGPT Atlas

@@ -1,7 +1,7 @@
 Description: 'Downloads the latest version of Teradata Studio Express for macOS and packages it'
 Identifier: com.github.smithjw-actions.pkg.Teradata_Studio_Express
 ParentRecipe: com.github.smithjw-actions.download.Teradata_Studio_Express
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Teradata Studio Express

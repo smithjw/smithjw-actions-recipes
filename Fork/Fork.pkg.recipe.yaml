@@ -1,7 +1,7 @@
 Description: Downloads the latest release version of Fork and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.Fork
 ParentRecipe: com.github.smithjw-actions.download.Fork
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Fork

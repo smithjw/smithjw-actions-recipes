@@ -3,7 +3,7 @@ Comment: |
   Valid options for JDK_VERSION are 8, 11, 17, 21, 23, & 24
 Description: Downloads the current release version of Amazon Corretto JDK for macOS.
 Identifier: com.github.smithjw-actions.download.Amazon_Corretto_JDK
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Amazon Corretto JDK
@@ -13,13 +13,13 @@ Input:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%JDK_VERSION%-arm64.pkg'
       url: https://corretto.aws/downloads/latest/amazon-corretto-%JDK_VERSION%-aarch64-macos-jdk.pkg
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%JDK_VERSION%-x86_64.pkg'

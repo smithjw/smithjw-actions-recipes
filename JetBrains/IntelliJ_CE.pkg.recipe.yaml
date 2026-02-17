@@ -1,7 +1,7 @@
 Description: Downloads the latest version IntelliJ IDEA, and packages it.
 Identifier: com.github.smithjw-actions.pkg.IntelliJ_CE
 ParentRecipe: com.github.smithjw-actions.download.IntelliJ_CE
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: IntelliJ IDEA CE

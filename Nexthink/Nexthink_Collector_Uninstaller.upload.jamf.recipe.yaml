@@ -1,7 +1,7 @@
 Description: Downloads and extracts Nexthink Collector Uninstaller package and uploads it to Jamf Pro.
 Identifier: com.github.smithjw-actions.jamf.upload.Nexthink_Collector_Uninstaller
 ParentRecipe: com.github.smithjw-actions.pkg.Nexthink_Collector_Uninstaller
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Nexthink Collector Uninstaller

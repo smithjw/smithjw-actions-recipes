@@ -2,7 +2,7 @@ Comment: |
   You must manually download the Command Line Tools DMG from the Apple Developer Portal first, then pass it into the recipe with the --pkg option
 Description: Processes the Xcode Command Line Tools DMG manually downloaded from the Apple Developer Portal
 Identifier: com.github.smithjw-actions.download.Xcode_CLTools
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Command Line Tools for Xcode

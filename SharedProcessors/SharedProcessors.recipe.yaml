@@ -1,6 +1,6 @@
 Description: Recipe stub for any Shared Processors in this directory.
 Identifier: com.github.smithjw-actions.processors
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Shared Processors

@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Maccy.
 Identifier: com.github.smithjw-actions.download.Maccy
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Maccy
@@ -14,7 +14,7 @@ Process:
       asset_regex: (Maccy.app.zip)
       github_repo: p0deje/Maccy
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
 

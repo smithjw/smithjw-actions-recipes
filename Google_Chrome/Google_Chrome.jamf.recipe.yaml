@@ -1,7 +1,7 @@
 Description: Downloads latest Google Chrome package.
 Identifier: com.github.smithjw-actions.jamf.Google_Chrome
 ParentRecipe: com.github.smithjw-actions.pkg.Google_Chrome
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Google Chrome

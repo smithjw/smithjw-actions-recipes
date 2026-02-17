@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.UTM
 ParentRecipe: com.github.smithjw-actions.pkg.UTM
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: UTM

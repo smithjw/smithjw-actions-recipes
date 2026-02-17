@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Wacom Intuos tablet drivers.
 Identifier: com.github.smithjw-actions.download.Wacom_Intuos_Driver
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Wacom Intuos Driver
@@ -16,7 +16,7 @@ Process:
       re_pattern: '%DOWNLOAD_PATTERN%'
       url: '%DOWNLOAD_URL%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       fetch_filename: true

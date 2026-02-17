@@ -1,7 +1,7 @@
 Description: Downloads Principle and makes a pkg of it.
 Identifier: com.github.smithjw-actions.pkg.Principle
 ParentRecipe: com.github.smithjw-actions.download.Principle
-MinimumVersion: '2.7.6'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Principle

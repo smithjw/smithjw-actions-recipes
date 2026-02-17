@@ -1,7 +1,7 @@
 Description: Downloads the latest version of Axure RP 11 and creates a package.
 Identifier: com.github.smithjw-actions.pkg.Axure_RP_11
 ParentRecipe: com.github.smithjw-actions.download.Axure_RP_11
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Axure RP 11

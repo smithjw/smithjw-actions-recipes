@@ -1,7 +1,7 @@
 Description: Downloads the FreeLens PKG from GitHub releases.
 Identifier: com.github.smithjw-actions.pkg.Freelens
 ParentRecipe: com.github.smithjw-actions.download.Freelens
-MinimumVersion: '2.6'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Freelens

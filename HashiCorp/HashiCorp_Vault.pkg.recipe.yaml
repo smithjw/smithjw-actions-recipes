@@ -1,7 +1,7 @@
 Description: Downloads the latest Vault.
 Identifier: com.github.smithjw-actions.pkg.HashiCorp_Vault
 ParentRecipe: com.github.smithjw-actions.download.HashiCorp_Vault
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: HashiCorp Vault

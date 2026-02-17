@@ -1,7 +1,7 @@
 Description: Downloads the latest versions of Claude Code and creates a package.
 Identifier: com.github.smithjw-actions.pkg.Claude_Code
 ParentRecipe: com.github.smithjw-actions.download.Claude_Code
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Claude Code

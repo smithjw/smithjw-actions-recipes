@@ -6,7 +6,7 @@ Description: |
   INCLUDE_PRERELEASES must be set to an empty string.
 Identifier: com.github.smithjw-actions.pkg.Bruno
 ParentRecipe: com.github.smithjw-actions.download.Bruno
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Bruno

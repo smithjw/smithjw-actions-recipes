@@ -3,7 +3,7 @@ Comment: |
   PARENT_RECIPE_IDENTIFIER must be supplied
 Description: Creates a Generic Jamf Policy based on an app that has already been packaged
 Identifier: com.github.smithjw-actions.jamf.custom_trigger_with_group.App
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: ''

@@ -1,6 +1,6 @@
 Description: Create a package from the Neo4j Desktop download.
 Identifier: com.github.smithjw-actions.pkg.Neo4j_Desktop_2
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 ParentRecipe: com.github.smithjw-actions.download.Neo4j_Desktop_2
 
 Input:

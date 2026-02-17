@@ -1,6 +1,6 @@
 Description: ''
 Identifier: com.github.smithjw-actions.download.UTM
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: UTM
@@ -16,7 +16,7 @@ Process:
       github_repo: utmapp/UTM
       include_prereleases: '%INCLUDE_PRERELEASES%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.dmg'

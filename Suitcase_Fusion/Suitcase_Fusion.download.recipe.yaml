@@ -1,6 +1,6 @@
 Description: Downloads the current release version of Suitcase Fusion
 Identifier: com.github.smithjw-actions.download.Suitcase_Fusion
-MinimumVersion: '2.7.6'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Suitcase Fusion
@@ -22,7 +22,7 @@ Process:
       result_output_var_name: url
       appcast_url: '%SPARKLE_FEED_URL%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.dmg'

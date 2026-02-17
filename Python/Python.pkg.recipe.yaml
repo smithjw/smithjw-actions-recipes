@@ -1,7 +1,7 @@
 Description: Downloads the latest version of Python 3 and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.Python
 ParentRecipe: com.github.smithjw-actions.download.Python
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Python

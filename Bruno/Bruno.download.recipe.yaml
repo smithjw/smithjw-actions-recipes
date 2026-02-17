@@ -5,7 +5,7 @@ Description: |
   string (such as 'True'; this is the default). If you just want the latest full release instead,
   INCLUDE_PRERELEASES must be set to an empty string.
 Identifier: com.github.smithjw-actions.download.Bruno
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Bruno
@@ -21,7 +21,7 @@ Process:
       github_repo: usebruno/bruno
       include_prereleases: '%INCLUDE_PRERELEASES%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.dmg'

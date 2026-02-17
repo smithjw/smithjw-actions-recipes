@@ -1,7 +1,7 @@
 Description: Downloads the latest version of Claude Code, creates a package, then uploads to Jamf
 Identifier: com.github.smithjw-actions.jamf.upload.Claude_Code
 ParentRecipe: com.github.smithjw-actions.pkg.Claude_Code
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Claude Code

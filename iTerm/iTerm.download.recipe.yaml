@@ -1,6 +1,6 @@
 Description: Downloads the latest version of iTerm
 Identifier: com.github.smithjw-actions.download.iTerm
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: iTerm
@@ -10,7 +10,7 @@ Input:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'

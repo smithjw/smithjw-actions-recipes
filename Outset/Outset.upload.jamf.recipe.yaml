@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.upload.Outset
 ParentRecipe: com.github.smithjw-actions.pkg.Outset
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Outset

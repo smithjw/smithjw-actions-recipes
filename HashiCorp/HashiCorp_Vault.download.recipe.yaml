@@ -1,6 +1,6 @@
 Description: Downloads the latest HashiCorp Vault.
 Identifier: com.github.smithjw-actions.download.HashiCorp_Vault
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: HashiCorp Vault
@@ -15,7 +15,7 @@ Process:
       os: darwin
       project_name: vault
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-arm64.zip'
@@ -26,7 +26,7 @@ Process:
       os: darwin
       project_name: vault
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-x86_64.zip'

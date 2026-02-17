@@ -1,7 +1,7 @@
 Description: Downloads the latest version of MacPass and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.MacPass
 ParentRecipe: com.github.smithjw-actions.download.MacPass
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: MacPass

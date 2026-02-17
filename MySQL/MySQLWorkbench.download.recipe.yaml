@@ -1,6 +1,6 @@
 Description: Downloads the latest version of MySQL Workbench for macOS. Downloads both the ARM and Intel builds.
 Identifier: com.github.smithjw-actions.download.MySQLWorkbench
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: MySQLWorkbench
@@ -14,12 +14,12 @@ Process:
       url: https://dev.mysql.com/downloads/workbench
       re_pattern: (?P<dmg>mysql-workbench-community-(?P<version>[\d\.]+))
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       prefetch_filename: true
       url: https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community-%version%-macos-arm64.dmg
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       prefetch_filename: true

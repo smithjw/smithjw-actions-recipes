@@ -1,6 +1,6 @@
 Description: Downloads the latest SQL Developer.
 Identifier: com.github.smithjw-actions.download.SQLDeveloper
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: SQLDeveloper
@@ -19,13 +19,13 @@ Process:
       re_pattern: (?P<x86_64>download\.oracle\.com\/otn_software\/java\/sqldeveloper\/sqldeveloper-(?P<version>.*?)-macos-x64\.app\.zip)
       url: https://www.oracle.com/au/database/sqldeveloper/technologies/download/
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%version%-arm64.zip'
       url: 'https://%arm64_url%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%version%-x86_64.zip'

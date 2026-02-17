@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.Jamf_Setup_Manager
 ParentRecipe: com.github.smithjw-actions.pkg.Jamf_Setup_Manager
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Jamf Setup Manager

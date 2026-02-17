@@ -7,7 +7,7 @@ Description: |
   INCLUDE_PRERELEASES must be set to an empty string.
 Identifier: com.github.smithjw-actions.jamf.Nudge
 ParentRecipe: com.github.smithjw-actions.download.Nudge
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Nudge

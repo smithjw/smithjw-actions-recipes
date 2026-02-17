@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.upload.Wacom_Intuos_Driver
 ParentRecipe: com.github.smithjw-actions.pkg.Wacom_Intuos_Driver
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Wacom Intuos Driver

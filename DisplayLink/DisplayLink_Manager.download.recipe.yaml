@@ -1,6 +1,6 @@
 Description: Downloads the latest version of the DisplayLink Manager App.
 Identifier: com.github.smithjw-actions.download.DisplayLink_Manager
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: DisplayLink Manager
@@ -22,13 +22,13 @@ Process:
       re_pattern: <a.*href="(?P<download_url>.*[.]pkg)" download>Accept<\/a>
       url: '%BASE_URL%%match%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.pkg'
       url: '%BASE_URL%%download_url%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%_Extension.dmg'

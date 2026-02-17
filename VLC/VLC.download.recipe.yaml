@@ -1,6 +1,6 @@
 Description: Downloads the latest VLC universal.
 Identifier: com.github.smithjw-actions.download.VLC
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: VLC
@@ -16,7 +16,7 @@ Process:
       re_pattern: '%DOWNLOAD_PATTERN%'
       url: '%SEARCH_URL%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%NAME%.dmg'

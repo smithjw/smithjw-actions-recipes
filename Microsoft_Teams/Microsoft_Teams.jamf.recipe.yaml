@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.Microsoft_Teams
 ParentRecipe: com.github.smithjw-actions.pkg.Microsoft_Teams
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Microsoft Teams

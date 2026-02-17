@@ -1,7 +1,7 @@
 Description: Downloads the latest version of Royal TSX and creates an installer package.
 Identifier: com.github.smithjw-actions.pkg.Royal_TSX
 ParentRecipe: com.github.smithjw-actions.download.Royal_TSX
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Royal TSX

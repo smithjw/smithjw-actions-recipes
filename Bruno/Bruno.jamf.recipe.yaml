@@ -1,7 +1,7 @@
 Description: Downloads the latest version of Bruno, creates a package, then uploads to Jamf
 Identifier: com.github.smithjw-actions.jamf.Bruno
 ParentRecipe: com.github.smithjw-actions.pkg.Bruno
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Bruno

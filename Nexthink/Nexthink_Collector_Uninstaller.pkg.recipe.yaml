@@ -1,7 +1,7 @@
 Description: Downloads the latest NexThink Collector uninstaller and prepares it for deployment.
 Identifier: com.github.smithjw-actions.pkg.Nexthink_Collector_Uninstaller
 ParentRecipe: com.github.smithjw-actions.download.Nexthink_Collector
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Nexthink Collector Uninstaller

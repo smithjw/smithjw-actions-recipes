@@ -1,7 +1,7 @@
 Description: Downloads the latest version of Visual Studio Code and renames the package.
 Identifier: com.github.smithjw-actions.pkg.Visual_Studio_Code
 ParentRecipe: com.github.smithjw-actions.download.Visual_Studio_Code
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Visual Studio Code

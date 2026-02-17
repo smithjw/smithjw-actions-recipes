@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.MacPass
 ParentRecipe: com.github.smithjw-actions.pkg.MacPass
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: MacPass

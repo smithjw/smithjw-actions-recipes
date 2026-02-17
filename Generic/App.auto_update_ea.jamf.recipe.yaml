@@ -3,7 +3,7 @@ Comment: |
   UNTESTED_RECIPE_IDENTIFIER must be supplied
 Description: Creates a Jamf Update Policy for a given title
 Identifier: com.github.smithjw-actions.jamf.auto_update_ea.App
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: ''

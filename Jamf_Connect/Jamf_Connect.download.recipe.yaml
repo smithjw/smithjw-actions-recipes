@@ -1,7 +1,7 @@
 Comment: ''
 Description: Downloads latest Jamf Connect package.
 Identifier: com.github.smithjw-actions.download.Jamf_Connect
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Jamf Connect
@@ -11,7 +11,7 @@ Input:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.dmg'

@@ -2,7 +2,7 @@ Description: |
   Downloads the latest verison of Logitech Options Plus Offline installer
   https://prosupport.logi.com/hc/en-gb/articles/6046882446359-Mass-installation-and-configuration-of-Logitech-Options-software#h.k97ihcogiap9
 Identifier: com.github.smithjw-actions.download.logi_options_plus
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Logi Options+
@@ -11,7 +11,7 @@ Input:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.zip'

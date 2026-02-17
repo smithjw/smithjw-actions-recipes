@@ -1,6 +1,6 @@
 Description: Downloads the current release version of Claude Code.
 Identifier: com.github.smithjw-actions.download.Claude_Code
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Claude Code
@@ -18,14 +18,14 @@ Process:
       re_pattern: (?P<version>\d+\.\d+\.\d+)
       url: '%base_url%/stable'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: claude-arm64-%version%
       url: '%base_url%/%version%/darwin-arm64/claude'
       User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: claude-x86_64-%version%

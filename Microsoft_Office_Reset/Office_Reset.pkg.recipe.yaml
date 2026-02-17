@@ -13,7 +13,7 @@ Comment: |
     - AutoUpdate
 Identifier: com.github.smithjw-actions.pkg.Office_Reset
 ParentRecipe: com.github.smithjw-actions.download.Office_Reset
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Office Reset

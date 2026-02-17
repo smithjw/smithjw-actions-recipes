@@ -1,6 +1,6 @@
 Description: Downloads the latest HandBrake disk image. Set PRERELEASE to a non-empty string to download prereleases, either via Input in an override or via the -k option
 Identifier: com.github.smithjw-actions.download.HandBrake
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: HandBrake
@@ -15,7 +15,7 @@ Process:
       github_repo: HandBrake/HandBrake
       sort_by_highest_tag_names: true
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       fetch_filename: true

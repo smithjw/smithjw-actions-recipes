@@ -2,7 +2,7 @@ Description: Downloads the latest version of the Microsoft Edge installer packag
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Edge
 # ParentRecipe: com.github.smithjw-actions.download.Microsoft_Generic_Package
 ParentRecipe: com.github.smithjw-actions.download.Microsoft_Package
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Microsoft Edge

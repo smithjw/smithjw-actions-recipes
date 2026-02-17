@@ -1,7 +1,7 @@
 Description: Tableau Desktop empowers users to create, analyze, and visualize data with interactive dashboards and reports, making data-driven decision-making easy.
 Identifier: com.github.smithjw-actions.jamf.upload.Tableau_Desktop
 ParentRecipe: com.github.smithjw-actions.pkg.Tableau_Desktop
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Tableau Desktop

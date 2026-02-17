@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.tart
 ParentRecipe: com.github.smithjw-actions.pkg.tart
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: tart

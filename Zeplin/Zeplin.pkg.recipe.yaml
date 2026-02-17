@@ -1,6 +1,6 @@
 Identifier: com.github.smithjw-actions.pkg.Zeplin
 ParentRecipe: com.github.smithjw-actions.download.Zeplin
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Zeplin

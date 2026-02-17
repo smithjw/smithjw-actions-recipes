@@ -6,7 +6,7 @@ Comment: |
 Description: Downloads the latest versions of Docker (arm and intel) and creates a package.
 Identifier: com.github.smithjw-actions.pkg.Docker
 ParentRecipe: com.github.smithjw-actions.download.Docker
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Docker

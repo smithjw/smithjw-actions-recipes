@@ -1,7 +1,7 @@
 Description: ' '
 Identifier: com.github.smithjw-actions.jamf.Support_App
 ParentRecipe: com.github.smithjw-actions.pkg.Support_App
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Support App

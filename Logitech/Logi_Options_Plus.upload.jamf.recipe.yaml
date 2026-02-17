@@ -1,7 +1,7 @@
 Description: Downloads the current version of Logi Options+ and updates the package version
 Identifier: com.github.smithjw-actions.jamf.upload.logi_options_plus
 ParentRecipe: com.github.smithjw-actions.pkg.logi_options_plus
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Logi Options+

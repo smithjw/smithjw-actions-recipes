@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.pkg.Ice
 ParentRecipe: com.github.smithjw-actions.download.Ice
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Ice

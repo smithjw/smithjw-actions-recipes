@@ -1,7 +1,7 @@
 Description: Downloads the latest version of the Microsoft Office Suite installer package and renames the package.
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Office_Suite
 ParentRecipe: com.github.smithjw-actions.download.Microsoft_Package
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Microsoft Office Suite

@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.RStudio
 ParentRecipe: com.github.smithjw-actions.pkg.RStudio
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: RStudio

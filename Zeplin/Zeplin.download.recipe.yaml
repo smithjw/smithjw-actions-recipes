@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Zeplin.
 Identifier: com.github.smithjw-actions.download.Zeplin
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Zeplin
@@ -9,7 +9,7 @@ Input:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       prefetch_filename: true

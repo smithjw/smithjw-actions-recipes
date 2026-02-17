@@ -5,7 +5,7 @@ Description: |
   string (such as 'True'; this is the default). If you just want the latest full release instead,
   INCLUDE_PRERELEASES must be set to an empty string.
 Identifier: com.github.smithjw-actions.download.desktoppr
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: desktoppr
@@ -20,7 +20,7 @@ Process:
       github_repo: scriptingosx/desktoppr
       include_prereleases: '%INCLUDE_PRERELEASES%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.pkg'

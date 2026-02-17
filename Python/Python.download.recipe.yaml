@@ -6,7 +6,7 @@ Description: |
     - You can download a pre-release build if the minor version does not yet have a stable release.
   This recipe sets the env variable `version_major_minor` for use in child recipes.
 Identifier: com.github.smithjw-actions.download.Python
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Python
@@ -20,7 +20,7 @@ Process:
       re_pattern: (?P<url>https://.*/python-(?P<version>(\d.)?\d+\.[\d]+).*\.pkg)
       url: https://www.python.org/downloads/macos/
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       fetch_filename: true

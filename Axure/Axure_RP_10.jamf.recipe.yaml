@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.Axure_RP_10
 ParentRecipe: com.github.smithjw-actions.pkg.Axure_RP_10
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Axure RP 10

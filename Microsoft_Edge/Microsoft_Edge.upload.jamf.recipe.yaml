@@ -3,7 +3,7 @@ Description: |
   Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.smithjw-actions.jamf.upload.Microsoft_Edge
 ParentRecipe: com.github.smithjw-actions.pkg.Microsoft_Edge
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Microsoft Edge

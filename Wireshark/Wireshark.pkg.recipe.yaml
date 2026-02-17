@@ -1,7 +1,7 @@
 Description: Downloads latest version of the Wireshark DMG and creates a Package.
 Identifier: com.github.smithjw-actions.pkg.Wireshark
 ParentRecipe: com.github.smithjw-actions.download.Wireshark
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Wireshark

@@ -1,7 +1,7 @@
 Description: Downloads the latest version Tableau Prep Builder, packages it, then uploads it to Jamf.
 Identifier: com.github.smithjw-actions.jamf.Tableau_Prep_Builder
 ParentRecipe: com.github.smithjw-actions.pkg.Tableau_Prep_Builder
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Tableau Prep Builder

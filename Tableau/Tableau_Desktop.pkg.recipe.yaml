@@ -1,7 +1,7 @@
 Description: Downloads latest Tableau Desktop disk images and creates a universal pkg that installs the correct architecture.
 Identifier: com.github.smithjw-actions.pkg.Tableau_Desktop
 ParentRecipe: com.github.smithjw-actions.download.Tableau_Desktop
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Tableau Desktop

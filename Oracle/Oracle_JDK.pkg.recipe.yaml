@@ -1,7 +1,7 @@
 Description: Valid for versions 21 and 23 only
 Identifier: com.github.smithjw-actions.pkg.Oracle_JDK
 ParentRecipe: com.github.smithjw-actions.download.Oracle_JDK
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Oracle JDK

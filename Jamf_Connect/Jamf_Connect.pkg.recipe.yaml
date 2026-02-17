@@ -2,7 +2,7 @@ Comment: ''
 Description: Downloads latest Jamf Connect DMG and extracts the pkg.
 Identifier: com.github.smithjw-actions.pkg.Jamf_Connect
 ParentRecipe: com.github.smithjw-actions.download.Jamf_Connect
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Jamf Connect

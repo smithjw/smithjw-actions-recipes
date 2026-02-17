@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.node
 ParentRecipe: com.github.smithjw-actions.pkg.node
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Node.js

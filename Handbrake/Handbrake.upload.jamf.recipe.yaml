@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.upload.HandBrake
 ParentRecipe: com.github.smithjw-actions.pkg.HandBrake
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: HandBrake

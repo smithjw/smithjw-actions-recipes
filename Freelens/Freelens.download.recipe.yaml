@@ -1,6 +1,6 @@
 Description: Downloads the latest Freelens release packages from GitHub.
 Identifier: com.github.smithjw-actions.download.Freelens
-MinimumVersion: '2.6'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Freelens
@@ -14,7 +14,7 @@ Process:
       asset_regex: .*macos-arm64\.pkg$
       github_repo: freelensapp/freelens
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-arm64.pkg'
@@ -24,7 +24,7 @@ Process:
       asset_regex: .*macos-amd64\.pkg$
       github_repo: freelensapp/freelens
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-x86_64.pkg'

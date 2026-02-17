@@ -1,6 +1,6 @@
 Description: Downloads latest Tableau Desktop disk images for both Intel and ARM architectures.
 Identifier: com.github.smithjw-actions.download.Tableau_Desktop
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Tableau Desktop
@@ -18,13 +18,13 @@ Process:
       re_pattern: <a href="(\/.*?)+\/(?P<version>(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+))#.*class="cta">
       url: https://www.tableau.com/support/releases
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-x86_64.dmg'
       url: https://downloads.tableau.com/esdalt/%version%/TableauDesktop-%major%-%minor%-%patch%.dmg
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-arm64.dmg'

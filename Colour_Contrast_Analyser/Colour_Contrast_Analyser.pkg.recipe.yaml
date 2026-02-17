@@ -1,7 +1,7 @@
 Description: Downloads the latest version of Colour Contrast Analyser and builds a package.
 Identifier: com.github.smithjw-actions.pkg.Colour_Contrast_Analyser
 ParentRecipe: com.github.smithjw-actions.download.Colour_Contrast_Analyser
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Colour Contrast Analyser

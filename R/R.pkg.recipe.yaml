@@ -1,7 +1,7 @@
 Description: 'Downloads the latest version of R for macOS and packages it'
 Identifier: com.github.smithjw-actions.pkg.R
 ParentRecipe: com.github.smithjw-actions.download.R
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: R

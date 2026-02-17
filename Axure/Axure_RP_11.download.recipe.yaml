@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Axure RP.
 Identifier: com.github.smithjw-actions.download.Axure_RP_11
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Axure RP 11
@@ -9,13 +9,13 @@ Input:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-arm64.dmg'
       url: https://axure.cachefly.net/AxureRP-Setup-arm64.dmg
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-x86_64.dmg'

@@ -1,7 +1,7 @@
 Description: Creates an installer package for the latest version of the AWS Command Line Interface.
 Identifier: com.github.smithjw-actions.pkg.AWS_CLI
 ParentRecipe: com.github.smithjw-actions.download.AWS_CLI
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: AWS CLI

@@ -1,7 +1,7 @@
 Description: Downloads latest Google Chrome enterprise package and renames it based on the Chrome version.
 Identifier: com.github.smithjw-actions.pkg.Google_Chrome
 ParentRecipe: com.github.smithjw-actions.download.Google_Chrome
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Google Chrome

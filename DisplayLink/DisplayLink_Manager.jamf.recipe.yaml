@@ -1,7 +1,7 @@
 Description: Downloads the latest version of the DisplayLink Manager App, then uploads to your Jamf Pro instance.
 Identifier: com.github.smithjw-actions.jamf.DisplayLink_Manager
 ParentRecipe: com.github.smithjw-actions.pkg.DisplayLink_Manager
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: DisplayLink Manager

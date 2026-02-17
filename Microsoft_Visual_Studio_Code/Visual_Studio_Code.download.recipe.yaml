@@ -1,6 +1,6 @@
 Description: Downloads the latest version of Visual Studio Code using the URLDownloaderPython processor.
 Identifier: com.github.smithjw-actions.download.Visual_Studio_Code
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Visual Studio Code
@@ -11,7 +11,7 @@ Input:
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.zip'

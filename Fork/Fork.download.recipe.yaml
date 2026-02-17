@@ -1,6 +1,6 @@
 Description: Downloads the latest release version of Fork.
 Identifier: com.github.smithjw-actions.download.Fork
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Fork
@@ -14,7 +14,7 @@ Process:
       re_pattern: (?P<url>https://.*?Fork-(?P<version>[0-9]+\.[0-9]+\.[0-9]+)\.dmg)
       url: https://fork.dev
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
 

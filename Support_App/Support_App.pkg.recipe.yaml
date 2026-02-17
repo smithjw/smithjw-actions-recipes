@@ -1,7 +1,7 @@
 Description: Downloads the most recent signed release pkg of Support App from GitHub and renames the package.
 Identifier: com.github.smithjw-actions.pkg.Support_App
 ParentRecipe: com.github.smithjw-actions.download.Support_App
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Support App

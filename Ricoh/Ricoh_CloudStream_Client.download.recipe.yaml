@@ -1,6 +1,6 @@
 Description: Downloads latest version of the Ricoh CloudStream Client
 Identifier: com.github.smithjw-actions.download.Ricoh_CloudStream_Client
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Ricoh CloudStream Client
@@ -15,7 +15,7 @@ Process:
   #     re_pattern: <h2.*?id="(?P<version>(?P<major>\d+)\.(?P<minor>\d+)\.(?P<patch>\d+))".*?><span.*?></span>(?P=version)
   #     url: https://manual.na.ps.cloudstream.ricoh.com/docs/latest
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       fetch_filename: true

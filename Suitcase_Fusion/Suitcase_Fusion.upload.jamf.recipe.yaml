@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.upload.Suitcase_Fusion
 ParentRecipe: com.github.smithjw-actions.pkg.Suitcase_Fusion
-MinimumVersion: '2.7.6'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Suitcase Fusion

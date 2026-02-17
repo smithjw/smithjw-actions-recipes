@@ -1,7 +1,7 @@
 Description: Downloads the latest Wacom Intuos driver disk image and builds a package.
 Identifier: com.github.smithjw-actions.pkg.Wacom_Intuos_Driver
 ParentRecipe: com.github.smithjw-actions.download.Wacom_Intuos_Driver
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Wacom Intuos Driver

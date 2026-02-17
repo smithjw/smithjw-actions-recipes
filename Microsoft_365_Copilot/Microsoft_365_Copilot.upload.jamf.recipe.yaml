@@ -1,7 +1,7 @@
 Description: Uploads 365 Copilot to Jamf Pro and creates a Self Service policy. This is the enterprise version, not the consumer version available on the Apple App Store.
 Identifier: com.github.smithjw-actions.jamf.upload.Microsoft_365_Copilot
 ParentRecipe: com.github.smithjw-actions.pkg.Microsoft_365_Copilot
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Microsoft 365 Copilot

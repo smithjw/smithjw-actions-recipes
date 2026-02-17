@@ -1,7 +1,7 @@
 Description: ''
 Identifier: com.github.smithjw-actions.jamf.Ricoh_CloudStream_Client
 ParentRecipe: com.github.smithjw-actions.pkg.Ricoh_CloudStream_Client
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Ricoh CloudStream Client

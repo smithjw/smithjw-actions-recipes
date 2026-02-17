@@ -1,7 +1,7 @@
 Description: Downloads the current release version of CharlesProxy and builds a package.
 Identifier: com.github.smithjw-actions.pkg.CharlesProxy
 ParentRecipe: com.github.smithjw-actions.download.CharlesProxy
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: CharlesProxy
