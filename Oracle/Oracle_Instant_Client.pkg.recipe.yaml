@@ -1,0 +1,74 @@
+Description: |
+  Creates a package that installs Oracle Instant Client Basic for macOS ARM64
+  to /opt/oracle/IC_INSTALL_DIR (default: /opt/oracle/instantclient_23_3).
+
+  The DMG contains flat dylibs with no embedded installer. The DMG is bundled
+  into the package scripts directory and extracted at install time via postinstall.
+
+  Update IC_INSTALL_DIR in Input when the major.minor version changes.
+Identifier: com.github.smithjw-actions.pkg.Oracle_Instant_Client
+ParentRecipe: com.github.smithjw-actions.download.Oracle_Instant_Client
+MinimumVersion: '2.3'
+
+Input:
+  NAME: Oracle Instant Client
+  SOFTWARE_TITLE: Oracle_Instant_Client
+  IC_INSTALL_DIR: instantclient_23_3
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/oracle_ic.dmg'
+      overwrite: true
+
+  - Processor: FileCreator
+    Arguments:
+      file_content: |
+        #!/bin/bash
+        SCRIPTS_DIR="$(dirname "$0")"
+        INSTALL_DIR="/opt/oracle/%IC_INSTALL_DIR%"
+
+        hdiutil attach "${SCRIPTS_DIR}/oracle_ic.dmg" \
+          -mountpoint /tmp/oracle_ic_install \
+          -nobrowse -quiet
+
+        mkdir -p "${INSTALL_DIR}"
+        /usr/bin/ditto /tmp/oracle_ic_install/ "${INSTALL_DIR}/"
+
+        rm -f "${INSTALL_DIR}/install_ic.sh"
+        rm -f "${INSTALL_DIR}/INSTALL_IC_README.txt"
+        rm -f "${INSTALL_DIR}/BASIC_LICENSE"
+        rm -f "${INSTALL_DIR}/BASIC_README"
+
+        chown -R root:wheel "${INSTALL_DIR}"
+        hdiutil unmount /tmp/oracle_ic_install -quiet
+
+        exitcode=$?
+        exit "${exitcode}"
+      file_mode: '0755'
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: com.oracle.instantclient
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
