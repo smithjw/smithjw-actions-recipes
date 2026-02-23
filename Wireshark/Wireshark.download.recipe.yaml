@@ -21,13 +21,14 @@ Process:
     Arguments:
       re_pattern: ((https:\/\/)([a-zA-Z0-9.\/])+(Wireshark[%]20([\d\.]+)[%]20%DOWNLOAD_TYPE%[%]2064.dmg))
       request_headers:
-        User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+        user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
       result_output_var_name: url
       url: https://www.wireshark.org/download.html
 
   - Processor: URLDownloaderPython
     Arguments:
-      User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+      request_headers:
+        user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg'
 

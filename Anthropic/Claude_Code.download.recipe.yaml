@@ -23,14 +23,16 @@ Process:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: claude-arm64-%version%
       url: '%base_url%/%version%/darwin-arm64/claude'
-      User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+      request_headers:
+        user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
 
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: claude-x86_64-%version%
       url: '%base_url%/%version%/darwin-x64/claude'
-      User_Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36
+      request_headers:
+        user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15
 
   - Processor: EndOfCheckPhase
   - Processor: StopProcessingIf
