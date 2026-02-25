@@ -1,7 +1,7 @@
 Description: Packages and uploads Oracle Instant Client Basic for macOS ARM64 to Jamf Pro.
 Identifier: com.github.smithjw-actions.jamf.Oracle_Instant_Client
 ParentRecipe: com.github.smithjw-actions.pkg.Oracle_Instant_Client
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Oracle Instant Client

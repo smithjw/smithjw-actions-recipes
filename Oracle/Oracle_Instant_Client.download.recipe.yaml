@@ -1,12 +1,13 @@
 Description: Downloads the latest Oracle Instant Client Basic for macOS (ARM64).
 Identifier: com.github.smithjw-actions.download.Oracle_Instant_Client
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Oracle Instant Client
   SOFTWARE_TITLE: Oracle_Instant_Client
   SEARCH_URL: https://www.oracle.com/database/technologies/instant-client/macos-arm64-downloads.html
   DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
   - Processor: URLTextSearcher
@@ -14,7 +15,7 @@ Process:
       re_pattern: (?P<arm64_url>download\.oracle\.com/otn_software/mac/instantclient/[\d]+/instantclient-basic-macos\.arm64-(?P<version>[\d.]+)(?:-\d+)?\.dmg)
       url: '%SEARCH_URL%'
 
-  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+  - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%version%.dmg'
@@ -22,7 +23,9 @@ Process:
 
   - Processor: EndOfCheckPhase
 
-  - Processor: com.github.jgstew.SharedProcessors/StopProcessingIfDownloadUnchanged
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
 
   - Processor: CodeSignatureVerifier
     Arguments:
