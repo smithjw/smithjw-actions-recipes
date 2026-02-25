@@ -8,7 +8,7 @@ Description: |
   Update IC_INSTALL_DIR in Input when the major.minor version changes.
 Identifier: com.github.smithjw-actions.pkg.Oracle_Instant_Client
 ParentRecipe: com.github.smithjw-actions.download.Oracle_Instant_Client
-MinimumVersion: '2.3'
+MinimumVersion: '2.9'
 
 Input:
   NAME: Oracle Instant Client
@@ -31,12 +31,13 @@ Process:
 
   - Processor: FileCreator
     Arguments:
+      file_mode: '0755'
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
       file_content: |
         #!/bin/bash
-        SCRIPTS_DIR="$(dirname "$0")"
         INSTALL_DIR="/opt/oracle/%IC_INSTALL_DIR%"
 
-        hdiutil attach "${SCRIPTS_DIR}/oracle_ic.dmg" \
+        hdiutil attach "oracle_ic.dmg" \
           -mountpoint /tmp/oracle_ic_install \
           -nobrowse -quiet
 
@@ -51,10 +52,7 @@ Process:
         chown -R root:wheel "${INSTALL_DIR}"
         hdiutil unmount /tmp/oracle_ic_install -quiet
 
-        exitcode=$?
-        exit "${exitcode}"
-      file_mode: '0755'
-      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+        exit 0
 
   - Processor: PkgCreator
     Arguments:
