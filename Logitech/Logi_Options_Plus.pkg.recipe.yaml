@@ -28,32 +28,29 @@ Process:
   - Processor: Copier
     Arguments:
       source_path: '%found_filename%'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/%found_basename%'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/logioptionsplus_installer_offline.app'
 
   - Processor: FileCreator
     Arguments:
+      file_mode: '0755'
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
       file_content: |
         #!/bin/bash
-        # Determine working directory
-        installDir=$(dirname $0)
-        installApp=("${installDir}"/*\.app)
 
-        "$installApp"/Contents/MacOS/logioptionsplus_installer \
-          --quiet \
-          --analytics no \
-          --flow no \
-          --sso no \
-          --update no \
+        logioptionsplus_installer_offline.app/Contents/MacOS/logioptionsplus_installer \
+          --actions-ring no \
           --aipromptbuilder no \
+          --analytics no \
           --device-recommendation no \
+          --flow no \
+          --logivoice no \
+          --quiet \
           --smartactions no \
-          --actions-ring no
+          --sso no \
+          --update no
 
         exitcode=$?
         exit "${exitcode}"
-
-      file_mode: '0755'
-      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
 
   - Processor: PkgCreator
     Arguments:
