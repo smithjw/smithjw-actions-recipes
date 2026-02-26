@@ -8,6 +8,7 @@ MinimumVersion: '2.9'
 Input:
   NAME: ''
   SOFTWARE_TITLE: ''
+  BYPASS_STOP_PROCESSING_IF_PKG_UPLOADED: 'False'
   PARENT_RECIPE_IDENTIFIER: null
   POLICY_CATEGORY: Apps
   POLICY_CUSTOM_TRIGGER: ' '
@@ -22,6 +23,12 @@ Process:
     Arguments:
       cache_dir: '%CACHE_DIR%'
       recipeoverride_identifier: '%PARENT_RECIPE_IDENTIFIER%'
+
+  # This processor is used to allow the recipe to run and create the policy even if the result
+  # of LastRecipeRunChecker shows that the upload.jamf recipe did not upload a new version.
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'pkg_uploaded == %BYPASS_STOP_PROCESSING_IF_PKG_UPLOADED%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
