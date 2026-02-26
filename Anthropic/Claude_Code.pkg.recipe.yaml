@@ -37,27 +37,35 @@ Process:
         log_prefix="CLAUDE_POSTINSTALL"
 
         function echo_logger() {
-            # echo_logger version 1.1
-            log_folder="${log_folder:=/private/var/log}"
-            /bin/mkdir -p "$log_folder"
-            echo -e "$(/bin/date +'%Y-%m-%d %T%z') - ${log_prefix:+$log_prefix }${1}" | /usr/bin/tee -a "$log_folder/${log_name:=management.log}"
+          # echo_logger version 1.1
+          log_folder="${log_folder:=/private/var/log}"
+          /bin/mkdir -p "$log_folder"
+          echo -e "$(/bin/date +'%Y-%m-%d %T%z') - ${log_prefix:+$log_prefix }${1}" | /usr/bin/tee -a "$log_folder/${log_name:=management.log}"
         }
 
         if [[ -z "$logged_in_user" ]] || [[ "$logged_in_user" =~ (loginwindow|_mbsetupuser|root) ]]; then
-            echo_logger "No user logged in, exiting."
-            exit 1
+          echo_logger "No user logged in, exiting."
+          exit 1
         else
-            echo_logger "Installing for user: $logged_in_user (UID: $logged_in_user_uid)"
-            logged_in_user_home=$( /usr/bin/dscl . -read /users/"$logged_in_user" NFSHomeDirectory | /usr/bin/cut -d " " -f 2 )
-            LOCAL_USER_CLAUDE_DIR="$logged_in_user_home/.claude"
-            LOCAL_USER_BIN_DIR="$logged_in_user_home/.local/bin"
+          echo_logger "Installing for user: $logged_in_user (UID: $logged_in_user_uid)"
+          logged_in_user_home=$( /usr/bin/dscl . -read /users/"$logged_in_user" NFSHomeDirectory | /usr/bin/cut -d " " -f 2 )
+          LOCAL_USER_CLAUDE_DIR="$logged_in_user_home/.claude"
+          LOCAL_USER_BIN_DIR="$logged_in_user_home/.local/bin"
 
-            echo_logger "Creating directories:"
-            echo_logger "  - $LOCAL_USER_CLAUDE_DIR"
-            echo_logger "  - $LOCAL_USER_BIN_DIR"
-            /bin/mkdir -p "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
-            /usr/sbin/chown "$logged_in_user_uid":staff "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
-            /bin/chmod 755 "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
+          echo_logger "Creating directories:"
+          echo_logger "  - $LOCAL_USER_CLAUDE_DIR"
+          echo_logger "  - $LOCAL_USER_BIN_DIR"
+          /bin/mkdir -p "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
+          /usr/sbin/chown "$logged_in_user_uid":staff "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
+          /bin/chmod 755 "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
+
+          if grep -q 'PATH="$HOME/.local/bin' "$logged_in_user_home/.zshrc"; then
+            echo_logger "PATH already configured in ~/.zshrc"
+          else
+            echo_logger "Adding PATH configuration to ~/.zshrc"
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$logged_in_user_home/.zshrc"
+            /usr/sbin/chown "$logged_in_user_uid":staff "$logged_in_user_home/.zshrc"
+          fi
         fi
 
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
