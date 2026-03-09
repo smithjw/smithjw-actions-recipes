@@ -17,8 +17,9 @@ Input:
   POLICY_NAME: null
   POLICY_TEMPLATE: Policy_Template-Auto-Install.xml
   SMART_GROUP_NAME: null
-  SMART_GROUP_TEMPLATE: Smart_Group-Auto-Install-App-Bundle-.xml
+  SMART_GROUP_TEMPLATE: Smart_Group-Auto-Install-App-Bundle-with-Group.xml
   STATIC_GROUP_NAME: '%SMART_GROUP_NAME% - Static'
+  STATIC_GROUP_TEMPLATE: Static_Group.xml
 
 Process:
   - Processor: com.github.grahampugh.recipes.preprocessors/LastRecipeRunChecker
@@ -32,10 +33,10 @@ Process:
     Arguments:
       predicate: 'pkg_uploaded == %BYPASS_STOP_PROCESSING_IF_PKG_UPLOADED%'
 
-  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerStaticGroupUploader
+  - Processor: com.github.grahampugh.jamf-upload.processors/JamfComputerGroupUploader
     Arguments:
       computergroup_name: '%STATIC_GROUP_NAME%'
-      clear_assignments: 'False'
+      computergroup_template: '%STATIC_GROUP_TEMPLATE%'
       replace_group: 'False'
       sleep: '5'
 
