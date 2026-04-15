@@ -43,41 +43,43 @@ Process:
           echo -e "$(/bin/date +'%Y-%m-%d %T%z') - ${log_prefix:+$log_prefix }${1}" | /usr/bin/tee -a "$log_folder/${log_name:=management.log}"
         }
 
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          echo_logger "Setting arm64 version of claude"
+          CLAUDE_BINARY="claude-arm64"
+        else
+          echo_logger "Setting x86_64 version of claude"
+          CLAUDE_BINARY="claude-x86_64"
+        fi
+
         if [[ -z "$logged_in_user" ]] || [[ "$logged_in_user" =~ (loginwindow|_mbsetupuser|root) ]]; then
-          echo_logger "No user logged in, exiting."
-          exit 1
+          echo_logger "No logged in user detected, installing for all users"
+          CLAUDE_INSTALL_DIR="/usr/local/bin"
+          /bin/cp "$CLAUDE_BINARY" "$CLAUDE_INSTALL_DIR/claude"
+          /usr/sbin/chown root:wheel "$CLAUDE_INSTALL_DIR/claude"
+          /bin/chmod +x "$CLAUDE_INSTALL_DIR/claude"
         else
           echo_logger "Installing for user: $logged_in_user (UID: $logged_in_user_uid)"
           logged_in_user_home=$( /usr/bin/dscl . -read /users/"$logged_in_user" NFSHomeDirectory | /usr/bin/cut -d " " -f 2 )
+          CLAUDE_INSTALL_DIR="$logged_in_user_home/.local/bin"
           LOCAL_USER_CLAUDE_DIR="$logged_in_user_home/.claude"
-          LOCAL_USER_BIN_DIR="$logged_in_user_home/.local/bin"
 
           echo_logger "Creating directories:"
           echo_logger "  - $LOCAL_USER_CLAUDE_DIR"
-          echo_logger "  - $LOCAL_USER_BIN_DIR"
-          /bin/mkdir -p "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
-          /usr/sbin/chown "$logged_in_user_uid":staff "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
-          /bin/chmod 755 "$LOCAL_USER_CLAUDE_DIR" "$LOCAL_USER_BIN_DIR"
+          echo_logger "  - $CLAUDE_INSTALL_DIR"
+          /bin/mkdir -p "$LOCAL_USER_CLAUDE_DIR" "$CLAUDE_INSTALL_DIR"
 
-          if grep -q 'PATH="$HOME/.local/bin' "$logged_in_user_home/.zshrc"; then
+          /bin/cp "$CLAUDE_BINARY" "$CLAUDE_INSTALL_DIR/claude"
+          /bin/chmod 755 "$LOCAL_USER_CLAUDE_DIR" "$CLAUDE_INSTALL_DIR"
+          /bin/chmod +x "$CLAUDE_INSTALL_DIR/claude"
+          /usr/sbin/chown "$logged_in_user_uid":staff "$LOCAL_USER_CLAUDE_DIR" "$CLAUDE_INSTALL_DIR" "$CLAUDE_INSTALL_DIR/claude"
+
+          if /usr/bin/grep -q 'PATH="$HOME/.local/bin' "$logged_in_user_home/.zshrc"; then
             echo_logger "PATH already configured in ~/.zshrc"
           else
             echo_logger "Adding PATH configuration to ~/.zshrc"
             echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$logged_in_user_home/.zshrc"
             /usr/sbin/chown "$logged_in_user_uid":staff "$logged_in_user_home/.zshrc"
           fi
-        fi
-
-        if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          echo_logger "Copying arm64 version into place & setting permissions"
-          /bin/cp claude-arm64 "$LOCAL_USER_BIN_DIR/claude"
-          /usr/sbin/chown "$logged_in_user_uid":staff "$LOCAL_USER_BIN_DIR/claude"
-          /bin/chmod +x "$LOCAL_USER_BIN_DIR/claude"
-        else
-          echo_logger "Copying x86_64 version into place & setting permissions"
-          /bin/cp claude-x86_64 "$LOCAL_USER_BIN_DIR/claude"
-          /usr/sbin/chown "$logged_in_user_uid":staff "$LOCAL_USER_BIN_DIR/claude"
-          /bin/chmod +x "$LOCAL_USER_BIN_DIR/claude"
         fi
 
         exit 0
