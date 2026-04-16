@@ -17,6 +17,8 @@ Process:
       bundle_type: jdk
       extension: dmg
       java_major_version: '%JDK_VERSION%'
+      request_headers:
+        user-agent: 'curl/8.7.1'
 
   - Processor: URLDownloaderPython
     Arguments:
@@ -29,6 +31,8 @@ Process:
       bundle_type: jdk
       extension: dmg
       java_major_version: '%JDK_VERSION%'
+      request_headers:
+        user-agent: 'curl/8.7.1'
 
   - Processor: URLDownloaderPython
     Arguments:

@@ -13,6 +13,8 @@ Process:
   - Processor: URLTextSearcher
     Arguments:
       re_pattern: <h4>Version\s+(?P<version>%MAJOR_VERSION%\.\d+\.\d+)(?!b\d+).*?<\/h4>
+      request_headers:
+        user-agent: 'curl/8.7.1'
       url: https://www.charlesproxy.com/documentation/version-history/
 
   - Processor: URLDownloaderPython

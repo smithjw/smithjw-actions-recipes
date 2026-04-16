@@ -14,6 +14,8 @@ Process:
   - Processor: URLTextSearcher
     Arguments:
       re_pattern: '%DOWNLOAD_PATTERN%'
+      request_headers:
+        user-agent: 'curl/8.7.1'
       url: '%DOWNLOAD_URL%'
 
   - Processor: URLDownloaderPython

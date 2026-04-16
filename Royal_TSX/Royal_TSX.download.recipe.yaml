@@ -11,6 +11,8 @@ Input:
 Process:
   - Processor: SparkleUpdateInfoProvider
     Arguments:
+      appcast_request_headers:
+        user-agent: 'curl/8.7.1'
       appcast_url: https://royaltsx-v6.royalapps.com/updates_stable
 
   - Processor: URLDownloaderPython
