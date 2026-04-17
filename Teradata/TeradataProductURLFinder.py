@@ -118,6 +118,13 @@ class TeradataProductURLFinder(URLGetter):
     """Downloads Teradata Studio from Teradata's website."""
 
     description = __doc__
+
+    # Teradata's site blocks curl's default UA; use a browser UA for all requests.
+    USER_AGENT = (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 15_7_5) "
+        "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+        "Version/26.0 Safari/605.1.15"
+    )
     input_variables = {
         "teradata_username": {
             "required": True,
@@ -282,6 +289,7 @@ class TeradataProductURLFinder(URLGetter):
         curl_cmd = self.prepare_curl_cmd()
         self._add_proxy_from_env(curl_cmd)
         self.add_curl_common_opts(curl_cmd)
+        curl_cmd.extend(["--user-agent", self.USER_AGENT])
         curl_cmd.extend(["-X", "POST"])
         curl_cmd.extend(["-H", "Content-Type: application/x-www-form-urlencoded"])
 
@@ -303,6 +311,7 @@ class TeradataProductURLFinder(URLGetter):
         curl_cmd = self.prepare_curl_cmd()
         self._add_proxy_from_env(curl_cmd)
         self.add_curl_common_opts(curl_cmd)
+        curl_cmd.extend(["--user-agent", self.USER_AGENT])
         if use_cookies:
             curl_cmd.extend(["-b", self._get_cookie_file()])
         curl_cmd.append(url)
@@ -313,6 +322,7 @@ class TeradataProductURLFinder(URLGetter):
         curl_cmd = self.prepare_curl_cmd()
         self._add_proxy_from_env(curl_cmd)
         self.add_curl_common_opts(curl_cmd)
+        curl_cmd.extend(["--user-agent", self.USER_AGENT])
         self.add_curl_headers(curl_cmd, headers)
         curl_cmd.append(url)
         return self.download_with_curl(curl_cmd, text)
