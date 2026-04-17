@@ -22,6 +22,7 @@ import os
 import re
 import tempfile
 from html.parser import HTMLParser
+from urllib.parse import urlparse
 
 from autopkglib import ProcessorError, URLGetter
 
@@ -195,11 +196,92 @@ class TeradataProductURLFinder(URLGetter):
             os.unlink(self.cookie_file)
             self.cookie_file = None
 
+    def _add_proxy_from_env(self, curl_cmd) -> None:
+        """Append --proxy / --proxy-user to curl_cmd from proxy environment variables.
+
+        All Teradata endpoints are HTTPS, so only HTTPS-specific and generic proxy
+        vars are consulted — HTTP_PROXY/http_proxy are intentionally excluded to
+        avoid the CGI header-injection vulnerability documented in curl's own source.
+
+        Priority (mirrors curl for HTTPS targets):
+          HTTPS_PROXY → https_proxy → ALL_PROXY → all_proxy
+
+        If a proxy URL contains embedded credentials (http://user:pass@host:port)
+        they are split out into a separate --proxy-user flag. The URL passed to
+        --proxy is rebuilt without credentials so it is safe to log.
+
+        Respects NO_PROXY/no_proxy: if the target host matches the bypass list the
+        method is a no-op. Target hostname is resolved from the Teradata base URL
+        since curl_cmd does not yet contain the destination at call time.
+
+        If --proxy is already present in curl_cmd (set via curl_opts) this method
+        is a no-op — explicit recipe/prefs configuration takes precedence.
+        """
+        # Explicit curl_opts proxy wins; do not override it.
+        if "--proxy" in curl_cmd:
+            return
+
+        proxy_url = None
+        for var in ("HTTPS_PROXY", "https_proxy", "ALL_PROXY", "all_proxy"):
+            proxy_url = os.environ.get(var)
+            if proxy_url:
+                break
+
+        if not proxy_url:
+            return
+
+        # Respect NO_PROXY / no_proxy for the Teradata base domain.
+        from urllib.request import proxy_bypass
+
+        if proxy_bypass("downloads.teradata.com"):
+            return
+
+        parsed = urlparse(proxy_url)
+
+        # Rebuild netloc without credentials; handle IPv6 literal hostnames
+        # (urlparse strips brackets from hostname, so we must restore them).
+        host = parsed.hostname or ""
+        if ":" in host:
+            host = f"[{host}]"
+        netloc = f"{host}:{parsed.port}" if parsed.port else host
+        clean_url = parsed._replace(netloc=netloc).geturl()
+
+        curl_cmd.extend(["--proxy", clean_url])
+
+        # Emit --proxy-user separately only when credentials are present.
+        # The value is intentionally kept out of clean_url so that the URL
+        # logged by download_with_curl does not contain the password.
+        if parsed.username:
+            curl_cmd.extend(
+                ["--proxy-user", f"{parsed.username}:{parsed.password or ''}"]
+            )
+
+    def download_with_curl(self, curl_cmd, text=True) -> str:
+        """Override to redact --proxy-user value from verbose curl command log."""
+        safe_cmd = []
+        skip_next = False
+        for arg in curl_cmd:
+            if skip_next:
+                safe_cmd.append("<redacted>")
+                skip_next = False
+            else:
+                safe_cmd.append(arg)
+                if arg in ("--proxy-user", "-U"):
+                    skip_next = True
+        self.output(f"Curl command: {safe_cmd}", verbose_level=4)
+        proc_stdout, proc_stderr, retcode = self.execute_curl(curl_cmd, text)
+        if retcode:
+            curl_err = self.parse_curl_error(proc_stderr)
+            raise ProcessorError(f"curl failure: {curl_err} (exit code {retcode})")
+        return proc_stdout
+
     def _build_post_curl_cmd(
         self, url, data, use_cookies=True, save_cookies=False, include_headers=False
     ):
         """Build a POST curl command with common options."""
         curl_cmd = self.prepare_curl_cmd()
+        self._add_proxy_from_env(curl_cmd)
+        self.add_curl_common_opts(curl_cmd)
         curl_cmd.extend(["-X", "POST"])
         curl_cmd.extend(["-H", "Content-Type: application/x-www-form-urlencoded"])
 
@@ -219,10 +301,21 @@ class TeradataProductURLFinder(URLGetter):
     def _build_get_curl_cmd(self, url, use_cookies=True):
         """Build a GET curl command with common options."""
         curl_cmd = self.prepare_curl_cmd()
+        self._add_proxy_from_env(curl_cmd)
+        self.add_curl_common_opts(curl_cmd)
         if use_cookies:
             curl_cmd.extend(["-b", self._get_cookie_file()])
         curl_cmd.append(url)
         return curl_cmd
+
+    def download(self, url, headers=None, text=False) -> str:
+        """Override URLGetter.download to ensure proxy env vars are applied."""
+        curl_cmd = self.prepare_curl_cmd()
+        self._add_proxy_from_env(curl_cmd)
+        self.add_curl_common_opts(curl_cmd)
+        self.add_curl_headers(curl_cmd, headers)
+        curl_cmd.append(url)
+        return self.download_with_curl(curl_cmd, text)
 
     def _validate_cloudfront_url(self, url, app):
         """Validate CloudFront URL for Vantage apps."""
