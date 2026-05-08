@@ -31,9 +31,17 @@ Process:
       file_mode: '0755'
       file_content: |
         #!/bin/bash
+        # macOS Installer runs scripts as root. Anything we `mkdir -p` therefore lands
+        # root-owned unless we explicitly fix it, and the fix has to cover EVERY directory
+        # we created — not just the leaf. An earlier version of this script broke
+        # `~/.local`: `mkdir -p ~/.local/bin` created BOTH `~/.local` and `~/.local/bin`
+        # as root, the chown only repaired `~/.local/bin`, and downstream user-space tools
+        # (uv, pipx, npm user-prefix, etc.) subsequently couldn't write under
+        # `~/.local/share/...` because the parent was root-owned.
+
+        set -u
 
         logged_in_user=$( /usr/sbin/scutil <<< "show State:/Users/ConsoleUser" | /usr/bin/awk '/Name :/ && ! /loginwindow/ { print $3 }' )
-        logged_in_user_uid=$(/usr/bin/id -u "$logged_in_user")
 
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
           echo "Setting arm64 version of claude"
@@ -43,40 +51,74 @@ Process:
           CLAUDE_BINARY="claude-x86_64"
         fi
 
+        # No interactive user → drop a system-wide binary and we're done. /usr/local/bin
+        # is canonically root:wheel so there's no XDG dance to do.
         if [[ -z "$logged_in_user" ]] || [[ "$logged_in_user" =~ (loginwindow|_mbsetupuser|root) ]]; then
           echo "No logged in user detected, installing for all users"
           CLAUDE_INSTALL_DIR="/usr/local/bin"
           /bin/cp "$CLAUDE_BINARY" "$CLAUDE_INSTALL_DIR/claude"
           /usr/sbin/chown root:wheel "$CLAUDE_INSTALL_DIR/claude"
           /bin/chmod +x "$CLAUDE_INSTALL_DIR/claude"
-        else
-          echo "Installing for user: $logged_in_user (UID: $logged_in_user_uid)"
-          logged_in_user_home=$( /usr/bin/dscl . -read /users/"$logged_in_user" NFSHomeDirectory | /usr/bin/cut -d " " -f 2 )
-          if [[ ! "$logged_in_user_home" =~ ^/Users/ ]]; then
-            echo "ERROR: Unexpected home directory path: $logged_in_user_home"
-            exit 1
-          fi
-
-          CLAUDE_INSTALL_DIR="$logged_in_user_home/.local/bin"
-          /bin/mkdir -p "$CLAUDE_INSTALL_DIR"
-          if [[ -e "$CLAUDE_INSTALL_DIR/claude" ]] || [[ -L "$CLAUDE_INSTALL_DIR/claude" ]]; then
-            echo "Removing existing file at $CLAUDE_INSTALL_DIR/claude"
-            /bin/rm -f "$CLAUDE_INSTALL_DIR/claude"
-          fi
-
-          /bin/cp "$CLAUDE_BINARY" "$CLAUDE_INSTALL_DIR/claude"
-          /usr/sbin/chown "$logged_in_user_uid":staff "$CLAUDE_INSTALL_DIR" "$CLAUDE_INSTALL_DIR/claude"
-          /bin/chmod +x "$CLAUDE_INSTALL_DIR/claude"
-          for shell_rc in "$logged_in_user_home/.zshrc" "$logged_in_user_home/.bash_profile"; do
-            if /usr/bin/grep -qxF 'export PATH="$HOME/.local/bin:$PATH"' "$shell_rc" 2>/dev/null; then
-              echo "PATH already configured in $shell_rc"
-            else
-              echo "Adding PATH configuration to $shell_rc"
-              echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$shell_rc"
-              /usr/sbin/chown -h "$logged_in_user_uid":staff "$shell_rc"
-            fi
-          done
+          exit 0
         fi
+
+        logged_in_user_uid=$(/usr/bin/id -u "$logged_in_user")
+        logged_in_user_home=$( /usr/bin/dscl . -read /users/"$logged_in_user" NFSHomeDirectory | /usr/bin/cut -d " " -f 2 )
+        if [[ ! "$logged_in_user_home" =~ ^/Users/ ]]; then
+          echo "ERROR: Unexpected home directory path: $logged_in_user_home"
+          exit 1
+        fi
+
+        echo "Installing for user: $logged_in_user (UID: $logged_in_user_uid)"
+
+        # ensure_user_owned_dir <path>
+        #
+        # Three cases this handles:
+        #   1. Directory doesn't exist  → create it (root-owned by default), then chown to
+        #      the logged-in user.
+        #   2. Directory exists, root-owned  → repair the directory ownership itself ONLY
+        #      (no `-R`). This recovers from the prior buggy version of this script
+        #      without touching files inside that may legitimately have non-root, non-user
+        #      ownership for other reasons (eg per-tool caches).
+        #   3. Directory exists, owned by someone else  → leave it alone. We don't know
+        #      enough about why, and clobbering ownership could break the user's setup.
+        ensure_user_owned_dir() {
+          local dir="$1"
+          if [[ ! -d "$dir" ]]; then
+            /bin/mkdir -p "$dir"
+            /usr/sbin/chown "$logged_in_user_uid":staff "$dir"
+            return
+          fi
+          local owner
+          owner=$(/usr/bin/stat -f '%Su' "$dir")
+          if [[ "$owner" == "root" ]]; then
+            echo "Repairing root-owned $dir -> $logged_in_user:staff"
+            /usr/sbin/chown "$logged_in_user_uid":staff "$dir"
+          fi
+        }
+
+        ensure_user_owned_dir "$logged_in_user_home/.local"
+        ensure_user_owned_dir "$logged_in_user_home/.local/bin"
+
+        CLAUDE_INSTALL_DIR="$logged_in_user_home/.local/bin"
+        if [[ -e "$CLAUDE_INSTALL_DIR/claude" ]] || [[ -L "$CLAUDE_INSTALL_DIR/claude" ]]; then
+          echo "Removing existing file at $CLAUDE_INSTALL_DIR/claude"
+          /bin/rm -f "$CLAUDE_INSTALL_DIR/claude"
+        fi
+
+        /bin/cp "$CLAUDE_BINARY" "$CLAUDE_INSTALL_DIR/claude"
+        /usr/sbin/chown "$logged_in_user_uid":staff "$CLAUDE_INSTALL_DIR/claude"
+        /bin/chmod +x "$CLAUDE_INSTALL_DIR/claude"
+
+        for shell_rc in "$logged_in_user_home/.zshrc" "$logged_in_user_home/.bash_profile"; do
+          if /usr/bin/grep -qxF 'export PATH="$HOME/.local/bin:$PATH"' "$shell_rc" 2>/dev/null; then
+            echo "PATH already configured in $shell_rc"
+          else
+            echo "Adding PATH configuration to $shell_rc"
+            echo 'export PATH="$HOME/.local/bin:$PATH"' >> "$shell_rc"
+            /usr/sbin/chown -h "$logged_in_user_uid":staff "$shell_rc"
+          fi
+        done
 
         exit 0
 
