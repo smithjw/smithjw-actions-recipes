@@ -1,0 +1,73 @@
+Description: |
+  Downloads Zoom and produces a verified artefact for downstream packaging.
+
+  Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
+  processor (in `SharedProcessors/`) caches by ETag/Last-Modified and the
+  `StopProcessingIf download_changed == False` predicate short-circuits the chain
+  on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
+  this cache and re-upload on every CI run.
+
+  Downloads the most recent signed release IT-admin pkg of Zoom Desktop from the vendor's
+  CDN.
+
+  We use the `ZoomInstallerIT.pkg` distribution rather than the per-user pkg because IT
+  packages are unattended-install friendly (no quarantine prompts).
+
+  Zoom's IT installer is already a universal Mach-O binary covering both arm64 and
+  x86_64, so a single download is sufficient (the `?archType=` parameter served the same
+  bit-identical pkg as of 2026-05-07).
+Identifier: com.github.smithjw-actions.download.Zoom
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Zoom
+  SOFTWARE_TITLE: Zoom
+  DOWNLOAD_URL: https://zoom.us/client/latest/ZoomInstallerIT.pkg
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.pkg'
+      url: '%DOWNLOAD_URL%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      expected_authority_names:
+        - 'Developer ID Installer: Zoom Video Communications, Inc. (BJ4HAAB9B3)'
+        - Developer ID Certification Authority
+        - Apple Root CA
+      input_path: '%pathname%'
+
+  - Processor: FlatPkgUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/unpack'
+      flat_pkg_path: '%pathname%'
+
+  - Processor: FileFinder
+    Arguments:
+      pattern: '%RECIPE_CACHE_DIR%/downloads/unpack/zoomus.pkg'
+
+  - Processor: PkgPayloadUnpacker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/downloads/payload'
+      pkg_payload_path: '%found_filename%/Payload'
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/payload/zoom.us.app/Contents/Info.plist'
+      plist_version_key: CFBundleVersion
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/downloads/unpack'
+        - '%RECIPE_CACHE_DIR%/downloads/payload'

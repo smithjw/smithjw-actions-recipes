@@ -1,0 +1,18 @@
+Description: |
+  Packaging step for Keka. Must run after the download recipe so
+  `URLDownloaderPython` caching can short-circuit unchanged builds.
+
+  Wraps the downloaded Keka.app into an installer pkg.
+Identifier: com.github.smithjw-actions.pkg.Keka
+ParentRecipe: com.github.smithjw-actions.download.Keka
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Keka
+  SOFTWARE_TITLE: Keka
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%pathname%/Keka.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

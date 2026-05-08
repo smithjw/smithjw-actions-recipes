@@ -1,0 +1,18 @@
+Description: |
+  Packaging step for Slack. Must run after the download recipe so
+  `URLDownloaderPython` caching can short-circuit unchanged builds.
+
+  Wraps the downloaded Slack.app into an installer pkg.
+Identifier: com.github.smithjw-actions.pkg.Slack
+ParentRecipe: com.github.smithjw-actions.download.Slack
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Slack
+  SOFTWARE_TITLE: Slack
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Slack.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

@@ -1,0 +1,23 @@
+Description: |
+  Packaging step for Sourcetree. Must run after the download recipe so
+  `URLDownloaderPython` caching can short-circuit unchanged builds.
+
+  Wraps the unpacked Sourcetree.app into an installer pkg.
+Identifier: com.github.smithjw-actions.pkg.Sourcetree
+ParentRecipe: com.github.smithjw-actions.download.Sourcetree
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Sourcetree
+  SOFTWARE_TITLE: Sourcetree
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/Sourcetree.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'

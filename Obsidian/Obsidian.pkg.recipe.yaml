@@ -1,0 +1,18 @@
+Description: |
+  Packaging step for Obsidian. Must run after the download recipe so
+  `URLDownloaderPython` caching can short-circuit unchanged builds.
+
+  Wraps the downloaded Obsidian.app into an installer pkg.
+Identifier: com.github.smithjw-actions.pkg.Obsidian
+ParentRecipe: com.github.smithjw-actions.download.Obsidian
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Obsidian
+  SOFTWARE_TITLE: Obsidian
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Obsidian.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'

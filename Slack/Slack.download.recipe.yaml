@@ -1,0 +1,48 @@
+Description: |
+  Downloads Slack and produces a verified artefact for downstream packaging.
+
+  Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
+  processor (in `SharedProcessors/`) caches by ETag/Last-Modified and the
+  `StopProcessingIf download_changed == False` predicate short-circuits the chain
+  on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
+  this cache and re-upload on every CI run.
+
+  Downloads the most recent signed release dmg of Slack Desktop from the vendor's
+  universal-build redirect.
+
+  Slack publishes platform-specific download URLs at `slack.com/ssb/`. The universal
+  build is served by the `download-osx-universal` slug.
+Identifier: com.github.smithjw-actions.download.Slack
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Slack
+  SOFTWARE_TITLE: Slack
+  DOWNLOAD_URL: https://slack.com/ssb/download-osx-universal
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
+      url: '%DOWNLOAD_URL%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Slack.app'
+      requirement: identifier "com.tinyspeck.slackmacgap" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = BQR82RBBHL
+      strict_verification: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/Slack.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString
