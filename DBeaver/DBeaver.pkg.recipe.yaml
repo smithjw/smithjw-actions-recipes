@@ -1,0 +1,63 @@
+Description: |
+  Packaging step for DBeaver. Must run after the download recipe so
+  `URLDownloaderPython` caching can short-circuit unchanged builds.
+
+  Packages both architectures of DBeaver into a single installer pkg. A postinstall
+  script picks the correct .app for the device's architecture and removes the other.
+Identifier: com.github.smithjw-actions.pkg.DBeaver
+ParentRecipe: com.github.smithjw-actions.download.DBeaver
+MinimumVersion: '2.9'
+
+Input:
+  NAME: DBeaver
+  SOFTWARE_TITLE: DBeaver
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        Applications: '0755'
+        scripts: '0755'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/DBeaver.app'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/Applications/DBeaver-arm64.app'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/DBeaver.app'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/Applications/DBeaver-x86_64.app'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        set -euo pipefail
+        if [[ $( /usr/bin/arch ) = arm64* ]]; then
+          /bin/rm -rf "/Applications/DBeaver-x86_64.app"
+          /bin/mv "/Applications/DBeaver-arm64.app" "/Applications/DBeaver.app"
+        else
+          /bin/rm -rf "/Applications/DBeaver-arm64.app"
+          /bin/mv "/Applications/DBeaver-x86_64.app" "/Applications/DBeaver.app"
+        fi
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: org.jkiss.dbeaver.core.product
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'

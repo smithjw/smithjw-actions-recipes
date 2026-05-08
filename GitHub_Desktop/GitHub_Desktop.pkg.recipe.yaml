@@ -1,0 +1,23 @@
+Description: |
+  Packaging step for GitHub Desktop. Must run after the download recipe so
+  `URLDownloaderPython` caching can short-circuit unchanged builds.
+
+  Wraps the unpacked GitHub Desktop.app into an installer pkg.
+Identifier: com.github.smithjw-actions.pkg.GitHub_Desktop
+ParentRecipe: com.github.smithjw-actions.download.GitHub_Desktop
+MinimumVersion: '2.9'
+
+Input:
+  NAME: GitHub Desktop
+  SOFTWARE_TITLE: GitHub_Desktop
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/unpack/GitHub Desktop.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
+
+  - Processor: PathDeleter
+    Arguments:
+      path_list:
+        - '%RECIPE_CACHE_DIR%/unpack'
