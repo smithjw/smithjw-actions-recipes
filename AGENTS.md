@@ -120,7 +120,7 @@ For `.zip`/`.tar` containing `.app`:
 - `AppPkgCreator` from the extracted location
 
 For Microsoft fwlink `.pkg`:
-- See `Microsoft/Microsoft_Package.download.recipe.yaml` — uses `FlatPkgUnpacker` + 
+- See `Microsoft/Microsoft_Package.download.recipe.yaml` — uses `FlatPkgUnpacker` +
   `PkgPayloadUnpacker` + `Versioner` + `PkgCopier` to re-stamp with a friendly name.
 
 ## Universal binaries vs separate-arch builds
