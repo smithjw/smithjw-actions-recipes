@@ -1,10 +1,4 @@
 Description: |
-  Final step for Obsidian: uploads the pkg to Jamf Pro and rotates old packages
-  (keeps the most recent 2). Downstream override repos can override this recipe
-  to attach policies / scopes specific to their environment. Run as part of the
-  full download → pkg → upload chain so `URLDownloaderPython` caching can
-  short-circuit unchanged builds.
-
   Downloads the latest version of Obsidian, packages it, and uploads to Jamf Pro.
 Identifier: com.github.smithjw-actions.jamf.upload.Obsidian
 ParentRecipe: com.github.smithjw-actions.pkg.Obsidian

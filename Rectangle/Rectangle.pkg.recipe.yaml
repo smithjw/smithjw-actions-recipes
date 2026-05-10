@@ -1,7 +1,4 @@
 Description: |
-  Packaging step for Rectangle. Must run after the download recipe so
-  `URLDownloaderPython` caching can short-circuit unchanged builds.
-
   Wraps the downloaded Rectangle.app into an installer pkg.
 Identifier: com.github.smithjw-actions.pkg.Rectangle
 ParentRecipe: com.github.smithjw-actions.download.Rectangle

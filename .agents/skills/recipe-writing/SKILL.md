@@ -283,8 +283,10 @@ download.
 ## Pattern H — Multi-arch `.app` bundle (separate arm64 + x86_64)
 
 Use when the vendor publishes architecture-specific `.dmg` / `.zip` / `.pkg` files and
-no universal artefact exists. The recipe pulls both, verifies both, and the package
-recipe stitches them together with an arch-detecting `postinstall`.
+no universal artefact exists. The recipe pulls both and verifies both. The package
+recipe uses `AppPkgCreator` to build separate arm64 and x86_64 component pkgs,
+then uses `PkgCreator` for a top-level wrapper pkg whose `postinstall` runs only
+the matching component pkg.
 
 **Skeleton (`download` — two URLs in one recipe):**
 
@@ -329,34 +331,34 @@ Process:
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgroot: '%RECIPE_CACHE_DIR%/wrapper'
       pkgdirs:
-        Applications: '0755'
+        pkgroot: '0755'
         scripts: '0755'
 
-  - Processor: Copier
+  - Processor: AppPkgCreator
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/<App>.app'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/Applications/<App>-arm64.app'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/<App>.app'
+      force_pkg_build: true
+      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-arm64.pkg'
 
-  - Processor: Copier
+  - Processor: AppPkgCreator
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/<App>.app'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/Applications/<App>-x86_64.app'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/<App>.app'
+      force_pkg_build: true
+      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/postinstall'
       file_mode: '0755'
       file_content: |
         #!/bin/bash
         set -euo pipefail
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /bin/rm -rf "/Applications/<App>-x86_64.app"
-          /bin/mv "/Applications/<App>-arm64.app" "/Applications/<App>.app"
+          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-arm64.pkg" -target "$3"
         else
-          /bin/rm -rf "/Applications/<App>-arm64.app"
-          /bin/mv "/Applications/<App>-x86_64.app" "/Applications/<App>.app"
+          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-x86_64.pkg" -target "$3"
         fi
         exit 0
 
@@ -367,15 +369,15 @@ Process:
         options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'
         pkgname: '%SOFTWARE_TITLE%-%version%'
-        pkgroot: '%RECIPE_CACHE_DIR%/payload'
-        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        pkgroot: '%RECIPE_CACHE_DIR%/wrapper/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/wrapper/scripts'
         version: '%version%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/wrapper'
 ```
 
 **Reference recipes:** `DBeaver/`, `KeePassXC/`, `OBS_Studio/`, `Figma/`, `Zoom/`.

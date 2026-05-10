@@ -1,7 +1,4 @@
 Description: |
-  Packaging step for Suspicious Package. Must run after the download recipe so
-  `URLDownloaderPython` caching can short-circuit unchanged builds.
-
   Wraps the downloaded Suspicious Package.app into an installer pkg.
 Identifier: com.github.smithjw-actions.pkg.Suspicious_Package
 ParentRecipe: com.github.smithjw-actions.download.Suspicious_Package

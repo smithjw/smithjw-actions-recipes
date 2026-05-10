@@ -14,6 +14,7 @@ templates so you don't have to grep for an example.
 | Microsoft fwlink `.pkg` | `Microsoft_Edge/` | Inherits from `Microsoft/Microsoft_Package.download.recipe.yaml`. |
 | Sparkle feed `.dmg` | `Royal_TSX/` | Add user-agent override only if vendor blocks defaults. |
 | Sparkle feed with `http://` URL needing https | `Suitcase_Fusion/` | Has a `FindAndReplace` step. |
+| `.app` bundle, separate arm64/x86_64 assets | `DBeaver/` | Uses `AppPkgCreator` for per-arch component pkgs and a `PkgCreator` wrapper. |
 | CLI binary, multi-arch | `wizcli/` | Custom `WizVersionExtractor` + `postinstall` script. |
 | Java JDK / runtime | `Amazon_Corretto/` | Uses Azul / Corretto-style downloaders. |
 | JetBrains IDE | `JetBrains/` | Family of recipes sharing patterns. |
