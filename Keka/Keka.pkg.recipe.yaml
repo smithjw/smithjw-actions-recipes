@@ -1,7 +1,4 @@
 Description: |
-  Packaging step for Keka. Must run after the download recipe so
-  `URLDownloaderPython` caching can short-circuit unchanged builds.
-
   Wraps the downloaded Keka.app into an installer pkg.
 Identifier: com.github.smithjw-actions.pkg.Keka
 ParentRecipe: com.github.smithjw-actions.download.Keka

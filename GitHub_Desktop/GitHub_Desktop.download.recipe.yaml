@@ -1,33 +1,48 @@
 Description: |
-  Downloads GitHub Desktop and produces a verified artefact for downstream packaging.
+  Downloads GitHub Desktop and produces verified artefacts for downstream packaging.
 
   Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
-  processor (in `SharedProcessors/`) caches by ETag/Last-Modified and the
+  processor caches by ETag/Last-Modified/Content-Length and the
   `StopProcessingIf download_changed == False` predicate short-circuits the chain
   on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
   this cache and re-upload on every CI run.
 
-  Downloads the most recent signed release zip of GitHub Desktop from the vendor's
-  central deployment endpoint.
-
-  GitHub publishes a fixed URL that always serves the latest universal-binary release zip.
-  We unpack it, verify the bundle signature, and let the pkg recipe wrap it.
+  GitHub Desktop publishes separate `GitHub.Desktop-arm64.zip` and
+  `GitHub.Desktop-x64.zip` assets on GitHub Releases. We pull both, unpack them,
+  verify each bundle signature, and let the pkg recipe install only the matching
+  architecture.
 Identifier: com.github.smithjw-actions.download.GitHub_Desktop
 MinimumVersion: '2.9'
 
 Input:
   NAME: GitHub Desktop
   SOFTWARE_TITLE: GitHub_Desktop
-  DOWNLOAD_URL: https://central.github.com/deployments/desktop/desktop/latest/darwin
+  INCLUDE_PRERELEASES: null
   DOWNLOAD_MISSING_FILE: null
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: 'GitHub\.Desktop-arm64\.zip'
+      github_repo: desktop/desktop
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
   - Processor: URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARE_TITLE%.zip'
-      url: '%DOWNLOAD_URL%'
+      filename: '%SOFTWARE_TITLE%-arm64.zip'
+
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: 'GitHub\.Desktop-x64\.zip'
+      github_repo: desktop/desktop
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.zip'
 
   - Processor: EndOfCheckPhase
 
@@ -37,18 +52,31 @@ Process:
 
   - Processor: Unarchiver
     Arguments:
-      archive_path: '%pathname%'
-      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.zip'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack/arm64'
+      purge_destination: true
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.zip'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack/x86_64'
       purge_destination: true
 
   - Processor: CodeSignatureVerifier
     Arguments:
       deep_verification: true
-      input_path: '%RECIPE_CACHE_DIR%/unpack/GitHub Desktop.app'
-      requirement: identifier "com.github.GitHubClient" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = VEKTX9H2N7
+      input_path: '%RECIPE_CACHE_DIR%/unpack/arm64/GitHub Desktop.app'
+      requirement: identifier "com.github.GitHubClient" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "VEKTX9H2N7"
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/unpack/x86_64/GitHub Desktop.app'
+      requirement: identifier "com.github.GitHubClient" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "VEKTX9H2N7"
       strict_verification: true
 
   - Processor: Versioner
     Arguments:
-      input_plist_path: '%RECIPE_CACHE_DIR%/unpack/GitHub Desktop.app/Contents/Info.plist'
+      input_plist_path: '%RECIPE_CACHE_DIR%/unpack/arm64/GitHub Desktop.app/Contents/Info.plist'
       plist_version_key: CFBundleShortVersionString

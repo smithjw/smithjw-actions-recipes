@@ -2,15 +2,13 @@ Description: |
   Downloads Rectangle and produces a verified artefact for downstream packaging.
 
   Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
-  processor (in `SharedProcessors/`) caches by ETag/Last-Modified and the
+  processor caches by ETag/Last-Modified/Content-Length and the
   `StopProcessingIf download_changed == False` predicate short-circuits the chain
   on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
   this cache and re-upload on every CI run.
 
-  Downloads the most recent signed release pkg of Rectangle from GitHub.
-
   Rectangle ships its `.dmg` containing `Rectangle.app` and a separate `.pkg` per release.
-  We pull the `.pkg` to skip re-packaging.
+  We pull the `.dmg`, verify `Rectangle.app`, and let the pkg recipe wrap it.
 Identifier: com.github.smithjw-actions.download.Rectangle
 MinimumVersion: '2.9'
 

@@ -3,9 +3,10 @@ Description: |
   downstream packaging.
 
   Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
-  processor (in `SharedProcessors/`) caches by ETag/Last-Modified and the
+  processor caches by ETag/Last-Modified/Content-Length and the
   `StopProcessingIf download_changed == False` predicate short-circuits the chain
-  on no-op re-runs.
+  on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
+  this cache and re-upload on every CI run.
 
   Source: GitHub Releases at `swiftDialog/swiftDialog`. Asset is a signed `.pkg`
   produced by CSIRO (the project's origin institution); we keep the CSIRO authority

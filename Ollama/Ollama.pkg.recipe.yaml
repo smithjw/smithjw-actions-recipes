@@ -1,7 +1,4 @@
 Description: |
-  Packaging step for Ollama. Must run after the download recipe so
-  `URLDownloaderPython` caching can short-circuit unchanged builds.
-
   Wraps the unpacked Ollama.app into an installer pkg.
 Identifier: com.github.smithjw-actions.pkg.Ollama
 ParentRecipe: com.github.smithjw-actions.download.Ollama
@@ -17,7 +14,8 @@ Process:
       app_path: '%RECIPE_CACHE_DIR%/unpack/Ollama.app'
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
 
-  - Processor: PathDeleter
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
+      fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/unpack'

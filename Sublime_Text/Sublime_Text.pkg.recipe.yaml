@@ -1,7 +1,4 @@
 Description: |
-  Packaging step for Sublime Text. Must run after the download recipe so
-  `URLDownloaderPython` caching can short-circuit unchanged builds.
-
   Wraps the downloaded Sublime Text.app into an installer pkg.
 Identifier: com.github.smithjw-actions.pkg.Sublime_Text
 ParentRecipe: com.github.smithjw-actions.download.Sublime_Text
@@ -17,7 +14,8 @@ Process:
       app_path: '%RECIPE_CACHE_DIR%/unpack/Sublime Text.app'
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
 
-  - Processor: PathDeleter
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
+      fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/unpack'

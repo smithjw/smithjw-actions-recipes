@@ -38,8 +38,9 @@ Process:
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
       source_pkg: '%pathname%'
 
-  - Processor: PathDeleter
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
+      fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/downloads/unpack'
         - '%RECIPE_CACHE_DIR%/downloads/payload'

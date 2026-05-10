@@ -66,8 +66,9 @@ Process:
       input_plist_path: '%RECIPE_CACHE_DIR%/downloads/payload/zoom.us.app/Contents/Info.plist'
       plist_version_key: CFBundleVersion
 
-  - Processor: PathDeleter
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
+      fail_deleter_silently: true
       path_list:
         - '%RECIPE_CACHE_DIR%/downloads/unpack'
         - '%RECIPE_CACHE_DIR%/downloads/payload'

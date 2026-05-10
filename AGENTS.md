@@ -134,16 +134,17 @@ must:
 
 1. **Download recipe** — fetch BOTH artefacts via two separate `URLDownloaderPython`
    steps. Verify the signature on each before continuing.
-2. **Package recipe** — produce a single pkg that contains both `.app` bundles in
-   `/Applications/` with arch suffixes (`AppName-arm64.app`, `AppName-x86_64.app`),
-   plus a `postinstall` script that detects the device's architecture, removes the
-   wrong-arch bundle, and renames the right one to `AppName.app`.
+2. **Package recipe** — use `AppPkgCreator` to build separate arm64 and x86_64
+   component pkgs that each install the correctly named `.app` into `/Applications/`,
+   then use `PkgCreator` to wrap them in a top-level pkg whose `postinstall` script
+   detects the device architecture and runs only the matching component pkg. Do
+   **not** install both `.app` bundles and delete one afterward.
 
 **Reference (CLI binary):** `wizcli/wizcli.pkg.recipe.yaml` — multi-arch postinstall
 that picks the right binary for `/usr/local/bin/wizcli` based on `arch`.
 
 **Reference (.app bundle, this repo):** `DBeaver/`, `KeePassXC/`, `OBS_Studio/`,
-`Figma/`, `Zoom/` (all added 2026-05-07 with the universal multi-arch pattern).
+`Figma/`, `GitHub_Desktop/` (Docker-style wrapper pkg pattern).
 
 ### Multi-arch download skeleton
 
@@ -189,34 +190,34 @@ Process:
 Process:
   - Processor: PkgRootCreator
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgroot: '%RECIPE_CACHE_DIR%/wrapper'
       pkgdirs:
-        Applications: '0755'
+        pkgroot: '0755'
         scripts: '0755'
 
-  - Processor: Copier
+  - Processor: AppPkgCreator
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/<App>.app'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/Applications/<App>-arm64.app'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/<App>.app'
+      force_pkg_build: true
+      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-arm64.pkg'
 
-  - Processor: Copier
+  - Processor: AppPkgCreator
     Arguments:
-      source_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/<App>.app'
-      destination_path: '%RECIPE_CACHE_DIR%/payload/Applications/<App>-x86_64.app'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/<App>.app'
+      force_pkg_build: true
+      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
 
   - Processor: FileCreator
     Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/postinstall'
       file_mode: '0755'
       file_content: |
         #!/bin/bash
         set -euo pipefail
         if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /bin/rm -rf "/Applications/<App>-x86_64.app"
-          /bin/mv "/Applications/<App>-arm64.app" "/Applications/<App>.app"
+          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-arm64.pkg" -target "$3"
         else
-          /bin/rm -rf "/Applications/<App>-arm64.app"
-          /bin/mv "/Applications/<App>-x86_64.app" "/Applications/<App>.app"
+          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-x86_64.pkg" -target "$3"
         fi
         exit 0
 
@@ -227,15 +228,15 @@ Process:
         options: purge_ds_store
         pkgdir: '%RECIPE_CACHE_DIR%'
         pkgname: '%SOFTWARE_TITLE%-%version%'
-        pkgroot: '%RECIPE_CACHE_DIR%/payload'
-        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        pkgroot: '%RECIPE_CACHE_DIR%/wrapper/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/wrapper/scripts'
         version: '%version%'
 
   - Processor: com.github.smithjw.processors/FriendlyPathDeleter
     Arguments:
       fail_deleter_silently: true
       path_list:
-        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/wrapper'
 ```
 
 ### Jamf upload recipe (`.upload.jamf.recipe.yaml`)

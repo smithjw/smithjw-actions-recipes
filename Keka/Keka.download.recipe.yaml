@@ -2,12 +2,10 @@ Description: |
   Downloads Keka and produces a verified artefact for downstream packaging.
 
   Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
-  processor (in `SharedProcessors/`) caches by ETag/Last-Modified and the
+  processor caches by ETag/Last-Modified/Content-Length and the
   `StopProcessingIf download_changed == False` predicate short-circuits the chain
   on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
   this cache and re-upload on every CI run.
-
-  Downloads the most recent signed release of Keka (file archiver) from GitHub.
 
   Keka publishes a universal `.dmg` per release; we pull that and verify the bundle
   signature.

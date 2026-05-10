@@ -1,7 +1,4 @@
 Description: |
-  Packaging step for Zoom. Must run after the download recipe so
-  `URLDownloaderPython` caching can short-circuit unchanged builds.
-
   Renames the upstream Zoom IT installer pkg to a friendly name.
 Identifier: com.github.smithjw-actions.pkg.Zoom
 ParentRecipe: com.github.smithjw-actions.download.Zoom

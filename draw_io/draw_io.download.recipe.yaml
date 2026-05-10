@@ -3,9 +3,10 @@ Description: |
   artefact for downstream packaging. Pulls the universal `.dmg` asset.
 
   Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
-  processor (in `SharedProcessors/`) caches by ETag/Last-Modified and the
+  processor caches by ETag/Last-Modified/Content-Length and the
   `StopProcessingIf download_changed == False` predicate short-circuits the chain
-  on no-op re-runs.
+  on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
+  this cache and re-upload on every CI run.
 Identifier: com.github.smithjw-actions.download.draw_io
 MinimumVersion: '2.9'
 

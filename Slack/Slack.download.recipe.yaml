@@ -2,13 +2,10 @@ Description: |
   Downloads Slack and produces a verified artefact for downstream packaging.
 
   Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
-  processor (in `SharedProcessors/`) caches by ETag/Last-Modified and the
+  processor caches by ETag/Last-Modified/Content-Length and the
   `StopProcessingIf download_changed == False` predicate short-circuits the chain
   on no-op re-runs. Pointing the upload recipe at a pre-built pkg would defeat
   this cache and re-upload on every CI run.
-
-  Downloads the most recent signed release dmg of Slack Desktop from the vendor's
-  universal-build redirect.
 
   Slack publishes platform-specific download URLs at `slack.com/ssb/`. The universal
   build is served by the `download-osx-universal` slug.

@@ -1,7 +1,4 @@
 Description: |
-  Packaging step for Slack. Must run after the download recipe so
-  `URLDownloaderPython` caching can short-circuit unchanged builds.
-
   Wraps the downloaded Slack.app into an installer pkg.
 Identifier: com.github.smithjw-actions.pkg.Slack
 ParentRecipe: com.github.smithjw-actions.download.Slack

@@ -1,7 +1,4 @@
 Description: |
-  Packaging step for Obsidian. Must run after the download recipe so
-  `URLDownloaderPython` caching can short-circuit unchanged builds.
-
   Wraps the downloaded Obsidian.app into an installer pkg.
 Identifier: com.github.smithjw-actions.pkg.Obsidian
 ParentRecipe: com.github.smithjw-actions.download.Obsidian
