@@ -1,0 +1,55 @@
+Description: Packages the latest version of Apache Maven.
+Identifier: com.github.smithjw-actions.pkg.Maven
+ParentRecipe: com.github.smithjw-actions.download.Maven
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Maven
+  SOFTWARE_TITLE: Maven
+
+Process:
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        usr: '0755'
+        usr/local: '0755'
+        usr/local/bin: '0755'
+
+  - Processor: Copier
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/payload/usr/local/maven-%version%'
+      overwrite: true
+      source_path: '%RECIPE_CACHE_DIR%/unpack/apache-maven-%version%/'
+
+  - Processor: Symlinker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/payload/usr/local/maven'
+      source_path: /usr/local/maven-%version%
+
+  - Processor: Symlinker
+    Arguments:
+      destination_path: '%RECIPE_CACHE_DIR%/payload/usr/local/bin/mvn'
+      source_path: /usr/local/maven/bin/mvn
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        chown:
+          - group: wheel
+            mode: '0755'
+            path: usr
+            user: root
+        id: org.apache.maven
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
+        - '%RECIPE_CACHE_DIR%/unpack'
