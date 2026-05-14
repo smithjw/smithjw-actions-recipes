@@ -1,0 +1,33 @@
+Description: Downloads the latest version of Apache Maven.
+Identifier: com.github.smithjw-actions.download.Maven
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Maven
+  SOFTWARE_TITLE: Maven
+  DOWNLOAD_URL: https://maven.apache.org/download.cgi
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: 'href="(?P<url>https?[^"]*(?P<filename>apache-maven-(?P<version>[0-9.]+)-bin\.tar\.gz))"'
+      url: '%DOWNLOAD_URL%'
+
+  - Processor: URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%filename%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%pathname%'
+      destination_path: '%RECIPE_CACHE_DIR%/unpack'
+      purge_destination: true
