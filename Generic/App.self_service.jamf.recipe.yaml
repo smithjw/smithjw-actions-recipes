@@ -15,6 +15,7 @@ Input:
   POLICY_FREQUENCY: Ongoing
   POLICY_NAME: null
   POLICY_TEMPLATE: Policy_Template-Self_Service.xml
+  REPLACE_POLICY: 'True'
   SELF_SERVICE_ICON: '%SOFTWARE_TITLE%.png'
   SELF_SERVICE_AVAILABLE: ''
   SELF_SERVICE_INSTALL_BUTTON: ''
@@ -40,4 +41,4 @@ Process:
       icon: '%SELF_SERVICE_ICON%'
       policy_name: '%POLICY_NAME%'
       policy_template: '%POLICY_TEMPLATE%'
-      replace_policy: 'True'
+      replace_policy: '%REPLACE_POLICY%'

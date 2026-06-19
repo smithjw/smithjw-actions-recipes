@@ -17,6 +17,8 @@ Input:
   POLICY_RUN_RECON: 'false'
   POLICY_SCOPE_ALL_COMPUTERS: 'true'
   POLICY_TEMPLATE: Policy_Template-Custom_Trigger_Only.xml
+  REPLACE_GROUP: 'True'
+  REPLACE_POLICY: 'True'
   SMART_GROUP_NAME: null
   SMART_GROUP_TEMPLATE: Smart_Group-Architecture.xml
 
@@ -36,10 +38,10 @@ Process:
     Arguments:
       computergroup_name: '%SMART_GROUP_NAME%'
       computergroup_template: '%SMART_GROUP_TEMPLATE%'
-      replace_group: 'True'
+      replace_group: '%REPLACE_GROUP%'
 
   - Processor: com.github.grahampugh.jamf-upload.processors/JamfPolicyUploader
     Arguments:
       policy_name: '%POLICY_NAME%'
       policy_template: '%POLICY_TEMPLATE%'
-      replace_policy: 'True'
+      replace_policy: '%REPLACE_POLICY%'
