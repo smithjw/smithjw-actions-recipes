@@ -18,12 +18,12 @@ Process:
       re_pattern: 'a href="(?P<x86_64_url>big-sur-x86_64/base/R-(?P<version_string>[\d\.]+)-x86_64\.pkg)'
       url: https://cran.rstudio.com/bin/macosx/
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       url: https://cran.rstudio.com/bin/macosx/%arm64_url%
       filename: '%RECIPE_CACHE_DIR%/downloads/R-arm64.pkg'
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       url: https://cran.rstudio.com/bin/macosx/%x86_64_url%
       filename: '%RECIPE_CACHE_DIR%/downloads/R-x86_64.pkg'
@@ -32,7 +32,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:

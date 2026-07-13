@@ -6,7 +6,7 @@ Input:
   NAME: Teradata Studio Express
   SOFTWARE_TITLE: Teradata_Studio_Express
   PRODUCT: teradata_studio_express
-  DOWNLOAD_MISSING_FILE: null
+  DOWNLOAD_MISSING_FILE: 'True'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
@@ -17,7 +17,7 @@ Process:
       teradata_username: '%TERADATA_USERNAME%'
       teradata_password: '%TERADATA_PASSWORD%'
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-arm64.zip'
@@ -29,7 +29,7 @@ Process:
       teradata_username: '%TERADATA_USERNAME%'
       teradata_password: '%TERADATA_PASSWORD%'
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-x86_64.zip'
@@ -38,7 +38,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: Unarchiver
     Arguments:

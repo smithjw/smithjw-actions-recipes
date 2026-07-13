@@ -7,7 +7,7 @@ Input:
   SOFTWARE_TITLE: '%NAME%'
   DOWNLOAD_PATTERN: get.videolan.org/vlc/[0-9]+\.[0-9]+\.[0-9]+/macosx/vlc-[0-9]+\.[0-9]+\.[0-9]+-universal.dmg
   SEARCH_URL: https://www.videolan.org/vlc/download-macosx.html
-  DOWNLOAD_MISSING_FILE: null
+  DOWNLOAD_MISSING_FILE: 'True'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
@@ -16,7 +16,7 @@ Process:
       re_pattern: '%DOWNLOAD_PATTERN%'
       url: '%SEARCH_URL%'
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%NAME%.dmg'
@@ -26,7 +26,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:

@@ -19,17 +19,17 @@ Input:
   SOFTWARE_TITLE: Brave_Browser
   DOWNLOAD_URL_ARM64: https://laptop-updates.brave.com/latest/osxarm64
   DOWNLOAD_URL_X86_64: https://laptop-updates.brave.com/latest/osx
-  DOWNLOAD_MISSING_FILE: null
+  DOWNLOAD_MISSING_FILE: 'True'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-arm64.dmg'
       url: '%DOWNLOAD_URL_ARM64%'
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-x86_64.dmg'
@@ -39,7 +39,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   # Brave bundles a Sparkle.framework whose headers carry `com.apple.FinderInfo` xattrs.
   # `deep_verification: true` on macOS 14+ rejects those as "resource fork detritus",

@@ -8,7 +8,7 @@ Input:
   SOFTWARE_TITLE: Jamf_Protect
   DOWNLOAD_UUID: Override_Jamf_Protect_Package_UUID_Here
   DOWNLOAD_URL: Override_Jamf_Protect_Package_URL_Here
-  DOWNLOAD_MISSING_FILE: null
+  DOWNLOAD_MISSING_FILE: 'True'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
@@ -20,7 +20,7 @@ Process:
     Arguments:
       predicate: DOWNLOAD_UUID == "Override_Jamf_Protect_Package_UUID_Here"
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.pkg'
@@ -30,7 +30,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:

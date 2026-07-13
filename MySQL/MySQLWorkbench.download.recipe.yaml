@@ -5,7 +5,7 @@ MinimumVersion: '2.9'
 Input:
   NAME: MySQLWorkbench
   SOFTWARE_TITLE: '%NAME%'
-  DOWNLOAD_MISSING_FILE: null
+  DOWNLOAD_MISSING_FILE: 'True'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
@@ -14,12 +14,12 @@ Process:
       url: https://dev.mysql.com/downloads/workbench
       re_pattern: (?P<dmg>mysql-workbench-community-(?P<version>[\d\.]+))
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       prefetch_filename: true
       url: https://dev.mysql.com/get/Downloads/MySQLGUITools/mysql-workbench-community-%version%-macos-arm64.dmg
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       prefetch_filename: true
@@ -29,7 +29,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
