@@ -1,0 +1,64 @@
+Description: |
+  Downloads the latest OpenCode Terminal (the opencode CLI, named "OpenCode Terminal"
+  on https://opencode.ai/download) for Apple Silicon and Intel from the
+  anomalyco/opencode GitHub releases.
+
+  This is the opencode command-line tool, distinct from the OpenCode desktop app
+  (see ../OpenCode). opencode publishes per-architecture zips
+  (opencode-darwin-arm64.zip and opencode-darwin-x64.zip), each containing a single
+  `opencode` binary. Both are downloaded and extracted so the pkg recipe can build a
+  universal installer. The version comes from the GitHub release tag (vX.Y.Z).
+
+  Run as part of the full download -> pkg -> upload chain. URLDownloaderPython caches
+  by ETag/Last-Modified and the StopProcessingIf download_changed predicate
+  short-circuits the chain on no-op re-runs.
+Identifier: com.github.smithjw-actions.download.OpenCode_Terminal
+MinimumVersion: '2.9'
+
+Input:
+  NAME: OpenCode Terminal
+  SOFTWARE_TITLE: OpenCode_Terminal
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: 'True'
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: '^opencode-darwin-arm64\.zip$'
+      github_repo: anomalyco/opencode
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.zip'
+
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: '^opencode-darwin-x64\.zip$'
+      github_repo: anomalyco/opencode
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.zip'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.zip'
+      destination_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64'
+      purge_destination: true
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.zip'
+      destination_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-x86_64'
+      purge_destination: true
