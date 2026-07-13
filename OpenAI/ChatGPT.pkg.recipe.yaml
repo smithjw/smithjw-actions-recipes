@@ -1,0 +1,11 @@
+Description: Downloads latest version of the ChatGPT DMG and creates a Package.
+Identifier: com.github.smithjw-actions.pkg.ChatGPT
+ParentRecipe: com.github.smithjw-actions.download.ChatGPT
+MinimumVersion: '2.9'
+
+Input:
+  NAME: ChatGPT
+  SOFTWARE_TITLE: '%NAME%'
+
+Process:
+  - Processor: AppPkgCreator
