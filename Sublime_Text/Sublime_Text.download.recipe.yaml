@@ -19,7 +19,7 @@ Input:
   NAME: Sublime Text
   SOFTWARE_TITLE: Sublime_Text
   DOWNLOAD_PAGE: https://www.sublimetext.com/download
-  DOWNLOAD_MISSING_FILE: null
+  DOWNLOAD_MISSING_FILE: 'True'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
@@ -29,7 +29,7 @@ Process:
       re_pattern: 'Build (?P<version>\d+)'
       result_output_var_name: version
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%version%.zip'
@@ -39,7 +39,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: Unarchiver
     Arguments:

@@ -21,7 +21,7 @@ Input:
   NAME: Sourcetree
   SOFTWARE_TITLE: Sourcetree
   DOWNLOAD_PAGE: https://www.sourcetreeapp.com/
-  DOWNLOAD_MISSING_FILE: null
+  DOWNLOAD_MISSING_FILE: 'True'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
@@ -31,7 +31,7 @@ Process:
       re_pattern: 'https://product-downloads\.atlassian\.com/software/sourcetree/ga/Sourcetree_(?P<version>\d+\.\d+\.\d+)_(?P<build>\d+)\.zip'
       result_output_var_name: download_url
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.zip'
@@ -41,7 +41,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: Unarchiver
     Arguments:

@@ -17,7 +17,7 @@ Input:
   NAME: OBS Studio
   SOFTWARE_TITLE: OBS_Studio
   INCLUDE_PRERELEASES: null
-  DOWNLOAD_MISSING_FILE: null
+  DOWNLOAD_MISSING_FILE: 'True'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
@@ -27,7 +27,7 @@ Process:
       github_repo: obsproject/obs-studio
       include_prereleases: '%INCLUDE_PRERELEASES%'
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-arm64.dmg'
@@ -38,7 +38,7 @@ Process:
       github_repo: obsproject/obs-studio
       include_prereleases: '%INCLUDE_PRERELEASES%'
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-x86_64.dmg'
@@ -47,7 +47,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   # OBS uses an OR clause in its designated requirement; we use a simpler form here
   # (bundle-id + Team-ID match). `deep_verification` is off because OBS's bundled

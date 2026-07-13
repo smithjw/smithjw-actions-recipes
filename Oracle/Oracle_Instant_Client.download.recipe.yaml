@@ -6,7 +6,7 @@ Input:
   NAME: Oracle Instant Client
   SOFTWARE_TITLE: Oracle_Instant_Client
   SEARCH_URL: https://www.oracle.com/database/technologies/instant-client/macos-arm64-downloads.html
-  DOWNLOAD_MISSING_FILE: null
+  DOWNLOAD_MISSING_FILE: 'True'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
@@ -15,7 +15,7 @@ Process:
       re_pattern: (?P<arm64_url>download\.oracle\.com/otn_software/mac/instantclient/[\d]+/instantclient-basic-macos\.arm64-(?P<version>[\d.]+)(?:-\d+)?\.dmg)
       url: '%SEARCH_URL%'
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%-%version%.dmg'
@@ -25,13 +25,10 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
       input_path: '%pathname%/libociei.dylib'
       requirement: >-
-        anchor apple generic and
-        certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and
-        certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and
-        certificate leaf[subject.OU] = VB5E2TV963
+        anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = VB5E2TV963

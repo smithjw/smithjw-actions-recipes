@@ -5,7 +5,7 @@ MinimumVersion: '2.9'
 Input:
   NAME: Fork
   SOFTWARE_TITLE: '%NAME%'
-  DOWNLOAD_MISSING_FILE: null
+  DOWNLOAD_MISSING_FILE: 'True'
   BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
 
 Process:
@@ -14,7 +14,7 @@ Process:
       re_pattern: (?P<url>https://.*?Fork-(?P<version>[0-9]+\.[0-9]+\.[0-9]+)\.dmg)
       url: https://fork.dev
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
 
@@ -22,7 +22,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
