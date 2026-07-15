@@ -19,7 +19,9 @@ Process:
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
       filename: '%SOFTWARE_TITLE%.dmg'
-      url: https://neo4j.com/artifact.php?name=neo4j-desktop-2.%version%.dmg
+      url: https://neo4j.com/artifact.php?name=neo4j-desktop-%version%.dmg
+      request_headers:
+        user-agent: 'curl/8.7.1'
 
   - Processor: EndOfCheckPhase
 
