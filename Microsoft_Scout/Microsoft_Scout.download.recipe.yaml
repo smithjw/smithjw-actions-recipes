@@ -1,0 +1,72 @@
+Description: |
+  Downloads Microsoft Scout from Microsoft Download Center and produces verified
+  arm64 and x86_64 artefacts for downstream packaging.
+
+  Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
+  processor (in `SharedProcessors/`) caches by ETag/Last-Modified/Content-Length,
+  and the `StopProcessingIf download_changed == False` predicate short-circuits
+  the chain on no-op re-runs. Pointing the upload recipe at a pre-built pkg would
+  defeat this cache and re-upload on every CI run.
+
+  Microsoft publishes separate arm64 and x64 DMGs. This recipe discovers both
+  matching assets from Download Center product 108685, downloads them with stable
+  cache names, and verifies both Microsoft Scout.app bundles before packaging.
+Identifier: com.github.smithjw-actions.download.Microsoft_Scout
+MinimumVersion: '2.9'
+
+Input:
+  NAME: Microsoft Scout
+  SOFTWARE_TITLE: Microsoft_Scout
+  DOWNLOAD_PAGE_URL: https://www.microsoft.com/en-us/download/details.aspx?id=108685
+  DOWNLOAD_MISSING_FILE: 'True'
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '"name":"MicrosoftScout-Mac-(?P<version>\d+\.\d+\.\d+)-arm64-Installer\.dmg","url":"(?P<download_url_arm64>https://download\.microsoft\.com/[^"]+/MicrosoftScout-Mac-(?P=version)-arm64-Installer\.dmg)"'
+      result_output_var_name: download_url_arm64
+      url: '%DOWNLOAD_PAGE_URL%'
+
+  - Processor: URLTextSearcher
+    Arguments:
+      re_pattern: '"name":"MicrosoftScout-Mac-%version%-x64-Installer\.dmg","url":"(?P<download_url_x86_64>https://download\.microsoft\.com/[^"]+/MicrosoftScout-Mac-%version%-x64-Installer\.dmg)"'
+      result_output_var_name: download_url_x86_64
+      url: '%DOWNLOAD_PAGE_URL%'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.dmg'
+      url: '%download_url_arm64%'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
+      url: '%download_url_x86_64%'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Microsoft Scout.app'
+      requirement: identifier "com.microsoft.clawpilot" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "UBF8T346G9"
+      strict_verification: true
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/Microsoft Scout.app'
+      requirement: identifier "com.microsoft.clawpilot" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "UBF8T346G9"
+      strict_verification: true
+
+  - Processor: Versioner
+    Arguments:
+      input_plist_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Microsoft Scout.app/Contents/Info.plist'
+      plist_version_key: CFBundleShortVersionString
