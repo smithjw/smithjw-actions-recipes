@@ -35,6 +35,9 @@ class URLDownloaderPython(URLDownloader):
     See: https://github.com/autopkg/autopkg/blob/master/Code/autopkglib/URLDownloader.py
     """
 
+    default_request_headers = {
+        "User-Agent": "curl/8.7.1",
+    }
     description = __doc__
     lifecycle = {"introduced": "2.4.1"}
     input_variables = {
@@ -386,6 +389,8 @@ class URLDownloaderPython(URLDownloader):
         normalised_headers = {
             str(k): str(v) for k, v in request_headers.items() if v is not None
         }
+        if not any(k.lower() == "user-agent" for k in normalised_headers):
+            normalised_headers.update(self.default_request_headers)
         request_obj = Request(url, headers=normalised_headers)
 
         # get http headers
