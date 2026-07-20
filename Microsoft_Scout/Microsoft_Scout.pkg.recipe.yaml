@@ -1,15 +1,7 @@
 Description: |
-  Packages Microsoft Scout into a single architecture-selecting installer for
-  downstream Jamf upload.
+  Packages Microsoft Scout into a package from the DMG
 
-  Run as part of the full download → pkg → upload chain. The `URLDownloaderPython`
-  processor in the parent download recipe caches both vendor DMGs, and the
-  unchanged-download predicate short-circuits the full chain on no-op re-runs.
-  Pointing the upload recipe at a pre-built pkg would defeat that cache.
-
-  This recipe builds separate arm64 and x86_64 component packages, then wraps
-  them in a top-level installer whose postinstall script installs only the
-  component matching the device architecture.
+  ARCHITECTURE must be set to arm64 or x86_64 to match the downloaded DMG.
 Identifier: com.github.smithjw-actions.pkg.Microsoft_Scout
 ParentRecipe: com.github.smithjw-actions.download.Microsoft_Scout
 MinimumVersion: '2.9'
@@ -17,56 +9,11 @@ MinimumVersion: '2.9'
 Input:
   NAME: Microsoft Scout
   SOFTWARE_TITLE: Microsoft_Scout
+  ARCHITECTURE: arm64
 
 Process:
-  - Processor: PkgRootCreator
+  - Processor: AppDmgVersioner
     Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/wrapper'
-      pkgdirs:
-        pkgroot: '0755'
-        scripts: '0755'
+      dmg_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg'
 
   - Processor: AppPkgCreator
-    Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/Microsoft Scout.app'
-      force_pkg_build: true
-      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-arm64.pkg'
-
-  - Processor: AppPkgCreator
-    Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/Microsoft Scout.app'
-      force_pkg_build: true
-      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
-
-  - Processor: FileCreator
-    Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/postinstall'
-      file_mode: '0755'
-      file_content: |
-        #!/bin/bash
-        set -euo pipefail
-        script_dir="$( /usr/bin/dirname "$0" )"
-        if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/sbin/installer -pkg "${script_dir}/%SOFTWARE_TITLE%-arm64.pkg" -target "$3"
-        else
-          /usr/sbin/installer -pkg "${script_dir}/%SOFTWARE_TITLE%-x86_64.pkg" -target "$3"
-        fi
-        exit 0
-
-  - Processor: PkgCreator
-    Arguments:
-      force_pkg_build: true
-      pkg_request:
-        id: com.github.smithjw-actions.wrapper.MicrosoftScout
-        options: purge_ds_store
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%SOFTWARE_TITLE%-%version%'
-        pkgroot: '%RECIPE_CACHE_DIR%/wrapper/pkgroot'
-        scripts: '%RECIPE_CACHE_DIR%/wrapper/scripts'
-        version: '%version%'
-
-  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
-    Arguments:
-      fail_deleter_silently: true
-      path_list:
-        - '%RECIPE_CACHE_DIR%/wrapper'
