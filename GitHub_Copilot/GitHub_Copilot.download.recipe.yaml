@@ -1,0 +1,38 @@
+Description: |
+  Downloads GitHub Copilot (bundle id com.github.githubapp — the standalone
+  app, distinct from "GitHub Copilot for Xcode"/the CLI) from GitHub
+  Releases (github/app). arm64 only, no Intel build.
+Identifier: com.github.smithjw-actions.download.GitHub_Copilot
+MinimumVersion: '2.9'
+
+Input:
+  NAME: GitHub Copilot
+  SOFTWARE_TITLE: GitHub_Copilot
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: 'True'
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: 'GitHub-Copilot-darwin-arm64\.dmg$'
+      github_repo: github/app
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/GitHub Copilot.app'
+      requirement: identifier "com.github.githubapp" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "VEKTX9H2N7"
+      strict_verification: true
