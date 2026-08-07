@@ -1,0 +1,15 @@
+Description: |
+  Packages the downloaded GitHub Copilot.app into GitHub_Copilot-<version>.pkg.
+Identifier: com.github.smithjw-actions.pkg.GitHub_Copilot
+ParentRecipe: com.github.smithjw-actions.download.GitHub_Copilot
+MinimumVersion: '2.9'
+
+Input:
+  NAME: GitHub Copilot
+  SOFTWARE_TITLE: GitHub_Copilot
+
+Process:
+  - Processor: AppPkgCreator
+    Arguments:
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/GitHub Copilot.app'
+      pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
