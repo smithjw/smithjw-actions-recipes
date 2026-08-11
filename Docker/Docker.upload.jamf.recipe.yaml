@@ -1,14 +1,12 @@
 Description: Downloads the latest version and makes a pkg. Then, uploads the package to the Jamf Pro Server and creates a Self Service Policy and Smart Group.
 Identifier: com.github.smithjw-actions.jamf.upload.Docker
-ParentRecipe: com.github.smithjw.pkg.Docker-Universal
+ParentRecipe: com.github.smithjw-actions.pkg.Docker
 MinimumVersion: '2.9'
 
 Input:
   NAME: Docker
   SOFTWARE_TITLE: '%NAME%'
-  arm_dl_url: 'https://desktop.docker.com/mac/main/arm64/Docker.dmg'
   CATEGORY: Utilities
-  intel_dl_url: 'https://desktop.docker.com/mac/main/amd64/Docker.dmg'
   PACKAGE_INFO: autopkg
   PKG_NAME_MATCH: '%SOFTWARE_TITLE%-'
   PKG_TO_KEEP: '2'
