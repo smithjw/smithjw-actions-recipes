@@ -1,0 +1,46 @@
+Description: Downloads the latest GitHub CLI (gh) arm64 build and verifies its code signature.
+Identifier: com.github.smithjw-actions.download.GitHub_CLI
+MinimumVersion: '2.9'
+
+Input:
+  NAME: GitHub CLI
+  SOFTWARE_TITLE: GitHub_CLI
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: '^gh_.*_macOS_arm64\.zip$'
+      github_repo: cli/cli
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-arm64.zip'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: Unarchiver
+    Arguments:
+      archive_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.zip'
+      destination_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64'
+      purge_destination: true
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64/gh_*_macOS_arm64/bin/gh'
+      destination_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64/gh'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64/gh'
+      requirement: identifier "gh" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "VEKTX9H2N7"
+      strict_verification: true
