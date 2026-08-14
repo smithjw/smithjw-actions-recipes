@@ -1,0 +1,59 @@
+Description: Packages the gh binary as a system-wide installer at /usr/local/bin/gh.
+Identifier: com.github.smithjw-actions.pkg.GitHub_CLI
+ParentRecipe: com.github.smithjw-actions.download.GitHub_CLI
+MinimumVersion: '2.9'
+
+Input:
+  NAME: GitHub CLI
+  SOFTWARE_TITLE: GitHub_CLI
+
+Process:
+  - Processor: com.github.smithjw.processors/CLIVersionExtractor
+    Arguments:
+      binary_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64/gh'
+      binary_parameter: '--version'
+      version_regex: '([0-9]+\.[0-9]+\.[0-9]+)'
+
+  - Processor: PkgRootCreator
+    Arguments:
+      pkgroot: '%RECIPE_CACHE_DIR%/payload'
+      pkgdirs:
+        pkgroot: '0775'
+        scripts: '0775'
+
+  - Processor: Copier
+    Arguments:
+      source_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-arm64/gh'
+      destination_path: '%RECIPE_CACHE_DIR%/payload/scripts/gh'
+
+  - Processor: FileCreator
+    Arguments:
+      file_path: '%RECIPE_CACHE_DIR%/payload/scripts/postinstall'
+      file_mode: '0755'
+      file_content: |
+        #!/bin/bash
+        set -euo pipefail
+
+        /bin/mkdir -p /usr/local/bin
+        /bin/cp "gh" /usr/local/bin/gh
+        /usr/sbin/chown root:wheel /usr/local/bin/gh
+        /bin/chmod +x /usr/local/bin/gh
+
+        exit 0
+
+  - Processor: PkgCreator
+    Arguments:
+      pkg_request:
+        id: com.github.cli
+        options: purge_ds_store
+        pkgdir: '%RECIPE_CACHE_DIR%'
+        pkgname: '%SOFTWARE_TITLE%-%version%'
+        pkgroot: '%RECIPE_CACHE_DIR%/payload/pkgroot'
+        scripts: '%RECIPE_CACHE_DIR%/payload/scripts'
+        version: '%version%'
+
+  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
+    Arguments:
+      fail_deleter_silently: true
+      path_list:
+        - '%RECIPE_CACHE_DIR%/payload'
