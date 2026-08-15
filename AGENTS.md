@@ -99,12 +99,23 @@ Description: |
    - `GitHubReleasesInfoProvider` (most common — open-source apps on GitHub)
    - `SparkleUpdateInfoProvider` (apps with a Sparkle appcast)
    - direct URL via `URLDownloaderPython` argument `url:` (vendor-hosted statics)
-2. **`URLDownloaderPython`** — uses the new processor that **does not redownload** on
+2. **`URLDownloaderPython`** — uses the custom processor that **does not redownload** on
    re-runs and respects HTTP caching headers. Always pass `download_missing_file:
    '%DOWNLOAD_MISSING_FILE%'`.
+
+   > **Pending migration to core.** `URLDownloaderPython` here is a fork
+   > (`SharedProcessors/URLDownloaderPython.py`) referenced as
+   > `com.github.smithjw-actions.processors/URLDownloaderPython`. AutoPkg core now ships a
+   > built-in `URLDownloaderPython`, but it lacks the `download_missing_file` input our
+   > recipes rely on. Once autopkg/autopkg PR #1056 (adds those inputs/validation) is
+   > merged **and in a released AutoPkg**, drop the fork, switch recipes to the core
+   > `URLDownloaderPython` (no processor-identifier prefix), and bump `MinimumVersion`
+   > accordingly. This happens as the recipes are written back to `autopkg/smithjw-recipes`
+   > (namespace `com.github.smithjw-actions.*` → `com.github.smithjw.*`). Until then, keep
+   > the fork.
 3. **`EndOfCheckPhase`** — boundary marker; below this is "we have a new file".
 4. **`StopProcessingIf`** — short-circuit when the file is unchanged so we don't waste
-   CI minutes. Predicate: `download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%`.
+   CI minutes. Predicate: `download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False`.
 5. **`CodeSignatureVerifier`** — verify the downloaded artefact (`.pkg`, `.app`, or binary).
    Always include this; it's our trust boundary against upstream compromise.
 
@@ -123,121 +134,91 @@ For Microsoft fwlink `.pkg`:
 - See `Microsoft/Microsoft_Package.download.recipe.yaml` — uses `FlatPkgUnpacker` +
   `PkgPayloadUnpacker` + `Versioner` + `PkgCopier` to re-stamp with a friendly name.
 
-## Universal binaries vs separate-arch builds
+## Architecture strategy
 
-**Always prefer universal binaries when the vendor publishes them.** A universal `.app`
-or `.pkg` runs natively on both Apple Silicon and Intel macs and downloads with one
-fetch.
+Pick the arch approach by this priority. Stop at the first that the vendor supports.
 
-**When the vendor publishes separate `arm64` and `x86_64` artefacts**, the recipe pair
-must:
+### 1. True universal artefact (preferred)
 
-1. **Download recipe** — fetch BOTH artefacts via two separate `URLDownloaderPython`
-   steps. Verify the signature on each before continuing.
-2. **Package recipe** — use `AppPkgCreator` to build separate arm64 and x86_64
-   component pkgs that each install the correctly named `.app` into `/Applications/`,
-   then use `PkgCreator` to wrap them in a top-level pkg whose `postinstall` script
-   detects the device architecture and runs only the matching component pkg. Do
-   **not** install both `.app` bundles and delete one afterward.
+If the vendor publishes a **single universal** `.app`, `.pkg`, or binary (native on both
+Apple silicon and Intel), use it: one download, one verify, no arch inputs. Always prefer
+this over anything below.
 
-**Reference (CLI binary):** `wizcli/wizcli.pkg.recipe.yaml` — multi-arch postinstall
-that picks the right binary for `/usr/local/bin/wizcli` based on `arch`.
+- If the universal artefact is itself signed, verify it directly (`CodeSignatureVerifier`
+  by authority chain or requirement string). **Reference:** `Zoom/` (universal IT pkg).
+- If only a *wrapper* is unsigned but it carries a signed universal binary (common for
+  GitHub-released CLI pkgs), unpack it (`FlatPkgUnpacker` → `FileFinder '*.pkg/Payload'` →
+  `PkgPayloadUnpacker`) and verify the extracted binary — that binary is the trust
+  boundary. The `pkg` recipe is then just a `PkgCopier` rename. **Reference:**
+  `GitHub_CLI/` (universal `gh` pkg; `lipo -archs` confirms `x86_64 arm64`).
 
-**Reference (.app bundle, this repo):** `DBeaver/`, `KeePassXC/`, `OBS_Studio/`,
-`Figma/`, `GitHub_Desktop/` (Docker-style wrapper pkg pattern).
+Don't hand-merge two per-arch builds into a pseudo-universal pkg — if the vendor doesn't
+ship a true universal artefact, drop to a single-arch recipe (below) instead.
 
-### Multi-arch download skeleton
+### 2. Single-arch, defaulting to Apple silicon (when there's no universal)
+
+When the vendor ships **separate** `arm64` and `x86_64` artefacts and no universal, build a
+**single-arch** recipe that **defaults to arm64** and is switchable via two inputs.
+Document the switch in the `Description`. Do **not** download both arches.
+
+Two distinct inputs, because the Jamf-facing name and the vendor's download token often
+differ:
+
+- **`ARCHITECTURE`** — names the artefact for Jamf. Always one of `arm64` / `x86_64`.
+- **`DOWNLOAD_ARCH`** — matches the vendor's own asset/URL naming (e.g. `arm64`, `x64`,
+  `amd64`). Used only in the `asset_regex` / `url` / `re_pattern`.
+
+If the vendor's naming already uses `arm64` / `x86_64`, set `DOWNLOAD_ARCH: '%ARCHITECTURE%'`
+and drive both from one value. When they differ (e.g. Intel is `x64` or `amd64`), default
+`DOWNLOAD_ARCH: arm64` explicitly and document the Intel pairing.
+
+**References:** `Microsoft_Scout/` (vendor uses `arm64`/`x64`), `GitHub_Copilot/` (vendor
+uses `arm64`/`x64`).
 
 ```yaml
+Input:
+  NAME: <App>
+  SOFTWARE_TITLE: <App>
+  ARCHITECTURE: arm64          # arm64 | x86_64 — names the artefact for Jamf
+  DOWNLOAD_ARCH: arm64         # vendor token: arm64 | x64 | amd64 — or '%ARCHITECTURE%'
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: null
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
 Process:
-  - Processor: <SourceInfoProvider>            # GitHubReleasesInfoProvider, etc.
+  - Processor: <SourceInfoProvider>            # GitHubReleasesInfoProvider, URLTextSearcher, etc.
     Arguments:
-      asset_regex: <pattern matching arm64 asset>
-      ...
+      asset_regex: '<App>-.*-%DOWNLOAD_ARCH%\.dmg$'
 
-  - Processor: URLDownloaderPython
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
     Arguments:
       download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARE_TITLE%-arm64.dmg'
-      # uses %url% from the SourceInfoProvider step
-
-  - Processor: URLDownloaderPython
-    Arguments:
-      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
-      filename: '%SOFTWARE_TITLE%-x86_64.dmg'
-      url: <explicit Intel URL or %url% with re-fetched info>
+      filename: '%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg'
 
   - Processor: EndOfCheckPhase
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
-  - Processor: CodeSignatureVerifier   # arm64
+  - Processor: CodeSignatureVerifier
     Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/<App>.app'
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg/<App>.app'
       requirement: <full requirement string>
-
-  - Processor: CodeSignatureVerifier   # x86_64
-    Arguments:
-      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/<App>.app'
-      requirement: <full requirement string — usually identical to arm64>
 ```
 
-### Multi-arch package skeleton
+The `pkg` (and any `upload`) recipe carries `ARCHITECTURE: arm64` too and references the
+downloaded artefact by `%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg`, so an Intel override just
+sets `ARCHITECTURE=x86_64` + `DOWNLOAD_ARCH=x64` on the whole chain.
 
-```yaml
-Process:
-  - Processor: PkgRootCreator
-    Arguments:
-      pkgroot: '%RECIPE_CACHE_DIR%/wrapper'
-      pkgdirs:
-        pkgroot: '0755'
-        scripts: '0755'
+### 3. Deprecated: download-both-and-merge wrapper pkg
 
-  - Processor: AppPkgCreator
-    Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-arm64.dmg/<App>.app'
-      force_pkg_build: true
-      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-arm64.pkg'
-
-  - Processor: AppPkgCreator
-    Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-x86_64.dmg/<App>.app'
-      force_pkg_build: true
-      pkg_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/%SOFTWARE_TITLE%-x86_64.pkg'
-
-  - Processor: FileCreator
-    Arguments:
-      file_path: '%RECIPE_CACHE_DIR%/wrapper/scripts/postinstall'
-      file_mode: '0755'
-      file_content: |
-        #!/bin/bash
-        set -euo pipefail
-        if [[ $( /usr/bin/arch ) = arm64* ]]; then
-          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-arm64.pkg" -target "$3"
-        else
-          /usr/sbin/installer -pkg "%SOFTWARE_TITLE%-x86_64.pkg" -target "$3"
-        fi
-        exit 0
-
-  - Processor: PkgCreator
-    Arguments:
-      pkg_request:
-        id: <bundle.id>
-        options: purge_ds_store
-        pkgdir: '%RECIPE_CACHE_DIR%'
-        pkgname: '%SOFTWARE_TITLE%-%version%'
-        pkgroot: '%RECIPE_CACHE_DIR%/wrapper/pkgroot'
-        scripts: '%RECIPE_CACHE_DIR%/wrapper/scripts'
-        version: '%version%'
-
-  - Processor: com.github.smithjw.processors/FriendlyPathDeleter
-    Arguments:
-      fail_deleter_silently: true
-      path_list:
-        - '%RECIPE_CACHE_DIR%/wrapper'
-```
+Older recipes download **both** arches and wrap them in a top-level pkg whose `postinstall`
+installs only the matching component. **Don't use this for new recipes** — prefer a true
+universal artefact (1) or a single-arch default (2). It survives only for maintenance of
+existing recipes: `wizcli/`, `DBeaver/`, `KeePassXC/`, `OBS_Studio/`, `Figma/`,
+`GitHub_Desktop/`. If one of those vendors starts shipping a universal artefact, migrate it
+down to (1).
 
 ### Jamf upload recipe (`.upload.jamf.recipe.yaml`)
 

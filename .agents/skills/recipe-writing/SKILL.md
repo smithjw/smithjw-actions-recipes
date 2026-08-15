@@ -34,15 +34,24 @@ What kind of artefact does the vendor publish?
 ├── A Microsoft fwlink to a .pkg            → Pattern E (use Microsoft_Package parent)
 ├── A Sparkle/AppCast feed                  → Pattern F (e.g. Royal TSX, Suitcase Fusion)
 ├── Universal binary in a single artefact   → use any of A–F above; one URL, one verify
-├── Separate arm64 + x86_64 artefacts       → Pattern H (multi-arch — DBeaver, OBS, etc.)
+│   └── universal pkg with an unsigned wrapper → unpack + verify the signed binary (GitHub_CLI)
+├── Separate arm64 + x86_64 artefacts       → Pattern I (single-arch, default arm64 — Microsoft_Scout, GitHub_Copilot)
 └── A standalone unsigned binary            → Pattern G (e.g. wizcli — multi-arch CLI)
 ```
 
 If two patterns could apply, prefer the most stable one in this order:
-**A > B > C > D > E > F > H > G** (lower-numbered = simpler signature lifecycle).
+**A > B > C > D > E > F > I > G** (lower-numbered = simpler signature lifecycle).
 
-**Rule:** always prefer a single universal artefact when the vendor publishes one. Drop
-to Pattern H only when arm64 and x86_64 ship as distinct files.
+**Arch rule (priority order):**
+
+1. **True universal artefact** — always prefer it when the vendor ships one. One URL, one
+   verify. If only the pkg *wrapper* is unsigned but it carries a signed universal binary,
+   unpack it (`FlatPkgUnpacker` → `FileFinder '*.pkg/Payload'` → `PkgPayloadUnpacker`) and
+   verify the binary; the `pkg` recipe is then a one-line `PkgCopier`. Reference: `GitHub_CLI/`.
+2. **Single-arch, default arm64** (Pattern I) — when the vendor ships separate arm64 /
+   x86_64 files and no universal. Download one arch, default Apple silicon.
+3. **Deprecated** — the old download-both-and-merge wrapper pkg (Pattern H). Don't use for
+   new recipes; kept only to maintain existing ones.
 
 ## Pattern A — GitHub release `.pkg`
 
@@ -80,7 +89,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
@@ -150,7 +159,7 @@ Process:
 
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
@@ -199,7 +208,7 @@ Process:
   - Processor: EndOfCheckPhase
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
@@ -266,7 +275,7 @@ Process:
   - Processor: EndOfCheckPhase
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
@@ -280,13 +289,79 @@ download.
 
 **Reference recipes:** `Royal_TSX/`, `Suitcase_Fusion/`, `Principle/`.
 
-## Pattern H — Multi-arch `.app` bundle (separate arm64 + x86_64)
+## Pattern I — Single-arch, default Apple silicon (arm64)
 
-Use when the vendor publishes architecture-specific `.dmg` / `.zip` / `.pkg` files and
-no universal artefact exists. The recipe pulls both and verifies both. The package
-recipe uses `AppPkgCreator` to build separate arm64 and x86_64 component pkgs,
-then uses `PkgCreator` for a top-level wrapper pkg whose `postinstall` runs only
-the matching component pkg.
+Use when the vendor publishes architecture-specific `.dmg` / `.zip` / `.pkg` files and no
+universal artefact exists. **Download one arch, defaulting to arm64**, and make it
+switchable via two inputs. Do **not** download both arches.
+
+Two distinct inputs, because the Jamf-facing name and the vendor's download token often
+differ:
+
+- **`ARCHITECTURE`** — names the artefact for Jamf. Always `arm64` / `x86_64`.
+- **`DOWNLOAD_ARCH`** — matches the vendor's own asset/URL naming (`arm64`, `x64`, `amd64`,
+  …). Used only in `asset_regex` / `url` / `re_pattern`. Set to `'%ARCHITECTURE%'` when the
+  vendor's naming already matches; default it to `arm64` explicitly when they differ.
+
+Document the switch in the `Description`. The `pkg` and `upload` recipes carry
+`ARCHITECTURE: arm64` too and reference the artefact by `%SOFTWARE_TITLE%-%ARCHITECTURE%`,
+so an Intel override just sets `ARCHITECTURE=x86_64` (+ the matching `DOWNLOAD_ARCH`) on the
+whole chain.
+
+**Worked example — `GitHub_Copilot/` (vendor ships `darwin-arm64` / `darwin-x64` DMGs, no
+universal). Validated end-to-end.**
+
+```yaml
+Description: |
+  Downloads GitHub Copilot ... arm64/x64, no universal artefact.
+
+  Set DOWNLOAD_ARCH to arm64 or x64  (matches the vendor's asset naming)
+  Set ARCHITECTURE  to arm64 or x86_64  (names the artefact for Jamf)
+Input:
+  NAME: GitHub Copilot
+  SOFTWARE_TITLE: GitHub_Copilot
+  ARCHITECTURE: arm64
+  DOWNLOAD_ARCH: arm64
+  INCLUDE_PRERELEASES: null
+  DOWNLOAD_MISSING_FILE: 'True'
+  BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED: 'False'
+
+Process:
+  - Processor: GitHubReleasesInfoProvider
+    Arguments:
+      asset_regex: 'GitHub-Copilot-darwin-%DOWNLOAD_ARCH%\.dmg$'
+      github_repo: github/app
+      include_prereleases: '%INCLUDE_PRERELEASES%'
+
+  - Processor: com.github.smithjw-actions.processors/URLDownloaderPython
+    Arguments:
+      download_missing_file: '%DOWNLOAD_MISSING_FILE%'
+      filename: '%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg'
+
+  - Processor: EndOfCheckPhase
+
+  - Processor: StopProcessingIf
+    Arguments:
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
+
+  - Processor: CodeSignatureVerifier
+    Arguments:
+      deep_verification: true
+      input_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg/GitHub Copilot.app'
+      requirement: identifier "com.github.githubapp" and anchor apple generic and certificate 1[field.1.2.840.113635.100.6.2.6] /* exists */ and certificate leaf[field.1.2.840.113635.100.6.1.13] /* exists */ and certificate leaf[subject.OU] = "VEKTX9H2N7"
+      strict_verification: true
+```
+
+The `pkg` recipe references the same `%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg` in its
+`AppPkgCreator app_path`. **Reference recipes:** `Microsoft_Scout/`, `GitHub_Copilot/`.
+
+## Pattern H — Deprecated: download-both-and-merge wrapper pkg
+
+**Don't use for new recipes** — prefer a true universal artefact or Pattern I. Kept only to
+maintain existing recipes (`DBeaver/`, `KeePassXC/`, `OBS_Studio/`, `Figma/`,
+`GitHub_Desktop/`). It downloads both arches and wraps them in a top-level pkg whose
+`postinstall` runs only the matching component. If one of those vendors starts shipping a
+universal artefact, migrate it to the universal pattern.
 
 **Skeleton (`download` — two URLs in one recipe):**
 
@@ -312,7 +387,7 @@ Process:
   - Processor: EndOfCheckPhase
   - Processor: StopProcessingIf
     Arguments:
-      predicate: 'download_changed == %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED%'
+      predicate: 'download_changed == False AND %BYPASS_STOP_PROCESSING_IF_DOWNLOAD_UNCHANGED% == False'
 
   - Processor: CodeSignatureVerifier
     Arguments:
