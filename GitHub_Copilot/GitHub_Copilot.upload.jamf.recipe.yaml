@@ -1,6 +1,9 @@
 Description: |
   Downloads the latest GitHub Copilot dmg, packages it, and uploads to Jamf
   Pro, pruning old packages to keep PKG_TO_KEEP versions.
+
+  ARCHITECTURE must match the value used by the download recipe (arm64 or
+  x86_64).
 Identifier: com.github.smithjw-actions.jamf.upload.GitHub_Copilot
 ParentRecipe: com.github.smithjw-actions.pkg.GitHub_Copilot
 MinimumVersion: '2.9'
