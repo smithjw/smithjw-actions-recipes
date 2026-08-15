@@ -1,5 +1,8 @@
 Description: |
   Packages the downloaded GitHub Copilot.app into GitHub_Copilot-<version>.pkg.
+
+  ARCHITECTURE must match the value used by the download recipe (arm64 or
+  x86_64) so this recipe finds the correct downloaded DMG.
 Identifier: com.github.smithjw-actions.pkg.GitHub_Copilot
 ParentRecipe: com.github.smithjw-actions.download.GitHub_Copilot
 MinimumVersion: '2.9'
@@ -7,9 +10,10 @@ MinimumVersion: '2.9'
 Input:
   NAME: GitHub Copilot
   SOFTWARE_TITLE: GitHub_Copilot
+  ARCHITECTURE: arm64
 
 Process:
   - Processor: AppPkgCreator
     Arguments:
-      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%.dmg/GitHub Copilot.app'
+      app_path: '%RECIPE_CACHE_DIR%/downloads/%SOFTWARE_TITLE%-%ARCHITECTURE%.dmg/GitHub Copilot.app'
       pkg_path: '%RECIPE_CACHE_DIR%/%SOFTWARE_TITLE%-%version%.pkg'
